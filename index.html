@@ -314,18 +314,17 @@ h1,h2,h3{ font-weight:400; text-wrap:balance; }
   -webkit-text-fill-color:transparent; color:transparent;
 }
 .nm-join{
-  display:block; font-family:var(--ff-label); font-weight:700;
+  display:flex; align-items:center; justify-content:center; gap:1.2em;
+  font-family:var(--ff-label); font-weight:700;
   font-size:clamp(10px,2.3vw,13px); letter-spacing:.56em; text-indent:.56em;
-  text-transform:uppercase; color:var(--gold-hi); margin-block:clamp(28px,5.4vw,48px);
-  position:relative;
+  text-transform:uppercase; color:var(--gold-hi);
+  margin-block:clamp(28px,5.4vw,48px);
 }
-/* two hairlines flanking it, drawn to the width of the word */
 .nm-join::before,.nm-join::after{
-  content:""; position:absolute; top:50%; width:clamp(26px,7vw,74px); height:1px;
+  content:""; height:1px; width:clamp(26px,7vw,74px); flex:0 0 auto;
   background:linear-gradient(90deg, rgba(246,222,159,0), rgba(246,222,159,.6));
 }
-.nm-join::before{ right:calc(50% + 5.4em); }
-.nm-join::after{ left:calc(50% + 5.4em); transform:scaleX(-1); }
+.nm-join::after{ transform:scaleX(-1); }
 .hero-sub{
   margin-top:clamp(20px,4vw,36px);
   font-family:var(--ff-roman); font-weight:600; font-size:clamp(11px,2.8vw,14px);
