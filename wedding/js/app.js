@@ -583,9 +583,10 @@
     sts.forEach(function (st) {
       var ft = $('.ft', st), words = $('div', st), n = $('.n', st), flip = st.classList.contains('r') ? -1 : 1;
       G.set(n, { xPercent: -50, yPercent: -50, x: 0, y: 0 });     // keep it centred while it scales
+      G.set(ft, { rotation: 0, scaleX: flip, scaleY: 1 });          // a mirror, read by GSAP as a half turn otherwise
       var tl = G.timeline({ scrollTrigger: { trigger: st, containerAnimation: tw, start: 'left 100%', end: 'left 38%', scrub: true } });
       tl.fromTo(n, { opacity: 0, scale: 0.86 }, { opacity: 0.075, scale: 1, ease: 'none', duration: 1 }, 0)
-        .fromTo(ft, { opacity: 0, scaleX: flip * 1.25, scaleY: 1.25, y: -10 }, { opacity: 1, scaleX: flip, scaleY: 1, y: 0, ease: 'power2.out', duration: 0.6 }, 0.15)
+        .fromTo(ft, { opacity: 0, rotation: 0, scaleX: flip * 1.25, scaleY: 1.25, y: -10 }, { opacity: 1, rotation: 0, scaleX: flip, scaleY: 1, y: 0, ease: 'power2.out', duration: 0.6 }, 0.15)
         .fromTo(words, { opacity: 0, y: 18 }, { opacity: 1, y: 0, ease: 'power1.out', duration: 0.6 }, 0.4);
     });
     G.from('.sap-outro > *', { opacity: 0, y: 20, stagger: 0.18, duration: 1, ease: 'power2.out', scrollTrigger: { trigger: '.sap-outro', containerAnimation: tw, start: 'left 72%', toggleActions: 'play none none reverse' } });
