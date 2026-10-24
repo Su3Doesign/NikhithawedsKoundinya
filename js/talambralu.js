@@ -8,7 +8,8 @@
 (function () {
   'use strict';
 
-  function create(canvas) {
+  function create(canvas, opts) {
+    opts = opts || {};
     var ctx = canvas.getContext('2d');
     var W = 1, H = 1, dpr = 1, spr = null, big = 1;
     var band = { top: 0, bottom: 1 };
@@ -17,7 +18,8 @@
 
     api.resize = function () {
       var r = canvas.getBoundingClientRect();
-      W = r.width; H = r.height; dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = r.width; H = r.height; dpr = opts.dpr || Math.min(window.devicePixelRatio || 1, 1.5);
+      if (!W || !H) return;
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       big = W < 700 ? 1 : 1.15;
       spr = Rice.set(11 * big, 4.3 * big);

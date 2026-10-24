@@ -44,7 +44,8 @@
     return c;
   }
 
-  function create(canvas) {
+  function create(canvas, opts) {
+    opts = opts || {};
     var ctx = canvas.getContext('2d');
     var W = 1, H = 1, dpr = 1, scale = 10, cx = 0, cy = 0, zmax = 30;
     var warm = sprite('255,244,222', 64), cool = sprite('200,215,255', 64), gold = sprite('255,214,150', 64);
@@ -57,7 +58,7 @@
     // three layers of field stars; the deeper ones only show as we zoom
     var rnd = rng(7), field = [];
     for (var L = 0; L < 3; L++) {
-      var n = [700, 900, 1400][L], span = [70, 14, 2.4][L];
+      var n = Math.round([700, 900, 1400][L] * (opts.low ? 0.5 : 1)), span = [70, 14, 2.4][L];
       for (var i = 0; i < n; i++) {
         var ox = L === 0 ? 0 : mid.x, oy = L === 0 ? 0 : mid.y;
         field.push({ x: ox + (rnd() - 0.5) * span * (L === 0 ? 1.4 : 1), y: oy + (rnd() - 0.5) * span, m: rnd(), tw: rnd() * 6.28, L: L, c: rnd() < 0.25 ? 1 : 0 });
@@ -73,7 +74,8 @@
     api.focus = function (x, y, r) { focus.x = x; focus.y = y; focus.r = r; focus.set = true; };
     api.resize = function () {
       var r = canvas.getBoundingClientRect();
-      W = r.width; H = r.height; dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = r.width; H = r.height; dpr = opts.dpr || Math.min(window.devicePixelRatio || 1, 1.5);
+      if (!W || !H) return;
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       // fit the dipper (about 24 x 13 degrees) below the heading
       scale = Math.min(W * 0.76 / 25, H * 0.4 / 13);
@@ -191,10 +193,10 @@
       else { ty = y - 31; ey = y - 16; }
       ctx.textAlign = al;
       ctx.fillStyle = '#E8C98A';
-      ctx.font = te + ' Mandali, "Noto Sans Telugu", sans-serif';
+      ctx.font = te + ' "Anek Telugu", "Noto Sans Telugu", sans-serif';
       ctx.fillText(s.te, tx, ty);
       ctx.fillStyle = 'rgba(243,235,221,.7)';
-      ctx.font = en + ' "Fragment Mono", ui-monospace, monospace';
+      ctx.font = en + ' Jost, system-ui, sans-serif';
       ctx.fillText(s.en.toUpperCase(), tx, ey);
     }
 
