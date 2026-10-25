@@ -1,7 +1,7 @@
 /* ==================================================================
    Nikhitha · Sai Koundinya
-   One quiet modern face for English (Jost), a modern Telugu face
-   (Anek Telugu), and a script only for the couple's names.
+   One quiet modern face for English (Jost), traditional Telugu
+   print faces (Noto Serif Telugu and Suranna), and a script for English names.
    Built to work on old phones: no libraries, no WebGL, sticky scenes.
    ================================================================== */
 :root{
@@ -9,7 +9,8 @@
   --kum:#B3261E; --kum-d:#A4201B; --tur:#E0A526; --leaf:#3E5B2E; --gold:#B8945A;
   --night:#0E0D14; --cream:#F4ECDD;
   --sans:'Jost',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-  --te:'Anek Telugu','Noto Sans Telugu','Nirmala UI','Gautami','Telugu Sangam MN',sans-serif;
+  --te:'Noto Serif Telugu','Gautami','Telugu Sangam MN',serif;
+  --te-display:'Suranna','Noto Serif Telugu','Gautami',serif;
   --script:'Pinyon Script','Snell Roundhand','Apple Chancery',cursive;
   --vh:1vh;
 }
@@ -22,6 +23,7 @@ h1,h2,h3,p,ol,ul,figure{ margin:0; padding:0; }
 button{ font:inherit; color:inherit; }
 a{ color:inherit; }
 [hidden]{ display:none!important; }
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 .te{ font-family:var(--te); }
 .script{ font-family:var(--script); font-weight:400; }
 .ph{ opacity:.55; }
@@ -38,7 +40,7 @@ a{ color:inherit; }
 .btns{ text-align:center; margin-top:22px; }
 .btn{ display:inline-block; margin:5px; padding:13px 22px; border:1px solid var(--kum); border-radius:999px; background:transparent;
   font:400 13px/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; color:var(--kum); text-decoration:none; cursor:pointer; }
-.btn:focus-visible,.link:focus-visible,.music:focus-visible,.lang button:focus-visible{ outline:2px solid var(--tur); outline-offset:3px; }
+.btn:focus-visible,.link:focus-visible,.music:focus-visible,.auto-scroll button:focus-visible,.auto-scroll select:focus-visible,.lang button:focus-visible{ outline:2px solid var(--tur); outline-offset:3px; }
 .btn-solid{ background:var(--kum); color:#FFF8EE; }
 .btn-tur{ background:var(--tur); border-color:var(--tur); color:#2A1E0C; }
 .btn-tur .te{ font-size:16px; letter-spacing:0; text-transform:none; margin-right:6px; }
@@ -50,7 +52,7 @@ a{ color:inherit; }
 .progress{ position:fixed; z-index:30; left:0; right:0; top:0; height:2px; pointer-events:none; }
 .progress i{ display:block; height:100%; background:var(--tur); -webkit-transform-origin:0 50%; transform-origin:0 50%; -webkit-transform:scaleX(0); transform:scaleX(0); }
 .music{ position:fixed; z-index:30; left:12px; bottom:14px; left:calc(12px + env(safe-area-inset-left,0px)); bottom:calc(14px + env(safe-area-inset-bottom,0px));
-  display:flex; align-items:center; height:42px; min-width:42px; padding:0 12px 0 11px; border:1px solid rgba(35,29,24,.16); border-radius:999px;
+  display:flex; align-items:center; height:44px; min-width:44px; padding:0 12px 0 11px; border:1px solid rgba(35,29,24,.16); border-radius:999px;
   background:rgba(246,240,228,.94); color:var(--kum); font:400 11px/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; cursor:pointer;
   box-shadow:0 6px 18px rgba(40,20,10,.12); }
 .music-note{ display:block; width:18px; height:18px; flex:none; }
@@ -68,13 +70,31 @@ a{ color:inherit; }
 .music.hint{ -webkit-animation:ring 2.4s ease-out 3; animation:ring 2.4s ease-out 3; }
 .music.dark{ background:rgba(20,18,26,.8); color:var(--tur); border-color:rgba(244,236,221,.2); }
 .music.dark .music-t{ color:var(--cream); }
+.music[aria-busy="true"]{ opacity:.7; }
+.playback-message{ position:fixed; z-index:31; left:12px; right:12px; bottom:68px; bottom:calc(68px + env(safe-area-inset-bottom,0px));
+  width:fit-content; max-width:320px; padding:10px 14px; border:1px solid var(--line); border-radius:12px; background:var(--paper); color:var(--ink); font:400 14px/1.5 var(--sans); }
+.playback-message:empty{ display:none; }
+.auto-scroll{ position:fixed; z-index:30; right:12px; bottom:14px; right:calc(12px + env(safe-area-inset-right,0px)); bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  display:flex; align-items:center; border:1px solid rgba(35,29,24,.16); border-radius:999px; background:rgba(246,240,228,.94); color:var(--kum); box-shadow:0 6px 18px rgba(40,20,10,.12); }
+.auto-scroll button{ display:flex; align-items:center; gap:7px; min-height:44px; padding:0 12px; background:none; border:0; border-radius:999px; cursor:pointer;
+  font:400 11px/1 var(--sans); letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+.auto-scroll svg{ width:16px; height:16px; flex:none; }
+.scroll-pause,.auto-scroll.on .scroll-play{ display:none; }
+.auto-scroll.on .scroll-pause{ display:block; }
+.auto-scroll select{ min-height:44px; width:58px; margin-right:6px; padding:0 4px; border:0; border-left:1px solid var(--line); border-radius:0; background:transparent; color:inherit; font:400 12px/1 var(--sans); cursor:pointer; }
+.auto-scroll option{ background:var(--paper); color:var(--ink); }
+.auto-scroll.dark{ background:rgba(20,18,26,.9); color:var(--tur); border-color:rgba(244,236,221,.2); }
+@media (max-width:480px){
+  .music .music-t{ display:none; }
+  .music{ padding:0 12px; }
+}
 @-webkit-keyframes eq{ 0%,100%{ height:3px; } 50%{ height:12px; } }
 @keyframes eq{ 0%,100%{ height:3px; } 50%{ height:12px; } }
 @-webkit-keyframes ring{ 0%{ box-shadow:0 0 0 0 rgba(224,165,38,.55); } 100%{ box-shadow:0 0 0 14px rgba(224,165,38,0); } }
 @keyframes ring{ 0%{ box-shadow:0 0 0 0 rgba(224,165,38,.55); } 100%{ box-shadow:0 0 0 14px rgba(224,165,38,0); } }
 
 /* keep scrolling */
-.cue{ position:fixed; z-index:25; right:14px; bottom:18px; right:calc(14px + env(safe-area-inset-right,0px)); bottom:calc(18px + env(safe-area-inset-bottom,0px));
+.cue{ position:fixed; z-index:25; right:14px; bottom:72px; right:calc(14px + env(safe-area-inset-right,0px)); bottom:calc(72px + env(safe-area-inset-bottom,0px));
   display:flex; align-items:center; padding:9px 16px 10px;
   border-radius:999px; background:rgba(35,29,24,.78); color:#F6F0E4; font:400 11px/1 var(--sans); letter-spacing:.2em; text-transform:uppercase;
   opacity:0; transition:opacity .5s ease; pointer-events:none; white-space:nowrap; }
@@ -117,18 +137,6 @@ a{ color:inherit; }
 .scene{ position:relative; }
 .stage{ position:relative; overflow:hidden; padding:80px 0; }
 .motion .stage{ position:-webkit-sticky; position:sticky; top:0; height:100vh; padding:0; }
-
-/* ---------------------------------------------------------------- photograph to painting */
-.sc-couple .stage{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
-.nm .script{ display:block; font-size:44px; font-size:clamp(40px,11vw,66px); line-height:1.1; padding:0 .1em; }
-.nm .te{ display:block; font-size:17px; font-weight:500; color:var(--leaf); }
-.arch{ position:relative; width:72vw; max-width:360px; width:min(72vw,360px,calc((var(--vh) * 100 - 250px) * .75)); margin:14px 0;
-  border-radius:50% 50% 0 0 / 37.5% 37.5% 0 0; overflow:hidden; background:var(--paper-2); box-shadow:0 0 0 1px var(--line); }
-.arch::before{ content:""; display:block; padding-top:133.333%; }
-.arch img{ position:absolute; left:0; top:0; width:100%; height:100%; max-width:none; object-fit:cover; }
-.cp-line,.cp-art{ opacity:0; }
-.motion .cp-art{ -webkit-mask-image:radial-gradient(circle at 50% 46%, #000 0, #000 var(--r,0%), transparent calc(var(--r,0%) + 22%));
-  mask-image:radial-gradient(circle at 50% 46%, #000 0, #000 var(--r,0%), transparent calc(var(--r,0%) + 22%)); }
 
 /* ---------------------------------------------------------------- the letter */
 .letter{ padding:84px 0 70px; text-align:center; }
@@ -232,7 +240,7 @@ a{ color:inherit; }
 .motion .sakha{ flex:none; margin:0; padding:0 22px 92px; opacity:0; transition:opacity .7s ease; }
 .motion .sakha.on{ opacity:1; }
 
-/* ---------------------------------------------------------------- arundhati and the moon */
+/* ---------------------------------------------------------------- Arundhati and Vasishtha */
 .sc-sky{ background:var(--night); color:var(--cream); text-align:center; }
 .sc-sky .head .te{ color:#E8C98A; }
 .sc-sky .head .lab{ color:rgba(244,236,221,.72); }
@@ -240,26 +248,10 @@ a{ color:inherit; }
 .sky-cap{ max-width:30em; margin:0 auto; padding:0 22px; }
 .sky-cap .te{ display:block; font-size:24px; font-weight:500; color:#E8C98A; line-height:1.4; }
 .sky-cap .en{ display:block; margin-top:4px; font-size:15px; color:rgba(244,236,221,.82); }
-.moon{ position:relative; width:84vw; max-width:420px; margin:36px auto 0; }
-.moon::before{ content:""; display:block; padding-top:166.667%; }
-.moon img{ position:absolute; max-width:none; }
-.moon-sil,.moon-lit{ left:0; top:0; width:100%; height:100%; }
-.moon-sil{ display:none; -webkit-filter:brightness(0); filter:brightness(0); }
-.moon-disc{ left:14.583%; top:2.5%; width:70.833%; height:auto; }
-.moon-glow,.moon-spark{ display:none; position:absolute; pointer-events:none; border-radius:50%; }
-.moon-glow{ left:50.065%; top:23.76%; width:118%; height:70.8%; margin:0;
-  -webkit-mask-image:linear-gradient(to bottom, #000 0, #000 46%, transparent 66%); mask-image:linear-gradient(to bottom, #000 0, #000 46%, transparent 66%); background:radial-gradient(closest-side, rgba(255,160,50,0) 52%, rgba(255,146,40,.34) 56%, rgba(255,120,30,.1) 70%, rgba(255,100,20,0) 100%); }
-.moon-spark{ left:50.065%; top:23.76%; width:110px; height:110px; margin:-55px 0 0 -55px; background:radial-gradient(closest-side, #fff 0, rgba(255,244,214,.95) 8%, rgba(255,200,120,.4) 22%, rgba(255,160,60,0) 62%); }
 .motion .sc-sky .stage{ overflow:hidden; }
 .motion .sky{ position:absolute; left:0; top:0; width:100%; height:100%; }
 .motion .sc-sky .head{ position:absolute; z-index:3; left:0; right:0; top:64px; margin:0; }
 .motion .sky-cap{ position:absolute; z-index:3; left:0; right:0; bottom:92px; opacity:0; }
-.motion .moon{ position:absolute; z-index:2; left:50%; bottom:0; margin:0; width:auto; max-width:none; height:92%; -webkit-transform:translateX(-50%); transform:translateX(-50%); }
-.motion .moon::before{ display:none; }
-.motion .moon{ aspect-ratio:1080/1800; }
-.motion .moon-sil,.motion .moon-glow,.motion .moon-spark{ display:block; }
-.motion .moon-disc,.motion .moon-sil,.motion .moon-lit,.motion .moon-glow,.motion .moon-spark{ opacity:0; }
-
 /* ---------------------------------------------------------------- your blessing */
 .bless{ padding:84px 0 90px; text-align:center; }
 .pol{ width:64vw; max-width:280px; margin:0 auto 34px; padding:10px 10px 30px; background:#FFFDF8; box-shadow:0 18px 40px rgba(60,40,20,.14);
@@ -291,13 +283,8 @@ a{ color:inherit; }
   .toranam{ height:110px; }
   .ganesha{ width:60px; }
   .sc-couple .stage{ flex-direction:row; }
-  .sc-couple .nm{ width:28vw; max-width:360px; }
-  .sc-couple .nm:first-child{ text-align:right; }
-  .sc-couple .nm:last-child{ text-align:left; }
-  .arch{ width:min(30vw,420px,calc((var(--vh) * 100 - 140px) * .75)); margin:0 4vw; }
   .kn-view{ width:34vw; }
   .walk{ max-width:620px; }
-  .moon{ max-width:440px; }
 }
 @media (max-width:380px){
   .ev h3 .en{ display:block; margin-left:0; }
@@ -322,5 +309,81 @@ a{ color:inherit; }
   .letter-te p{ font-size:18px; }
 }
 @media (prefers-reduced-motion: reduce){
-  .cue i,.music-ico i,.toranam svg{ -webkit-animation:none!important; animation:none!important; }
+  .cue i,.music,.music-ico i,.toranam svg{ -webkit-animation:none!important; animation:none!important; }
 }
+
+/* The printed invitation and supplied photographs. */
+.auspicious { font-size:14px; color:var(--kum); margin-bottom:18px; }
+.auspicious span { margin:0 1em; }
+.cover-family { margin-top:18px; line-height:1.3; color:var(--kum); font-weight:500; }
+.cover-family span { display:block; font-size:28px; }
+.cover-family strong { display:block; font-size:52px; font-weight:600; }
+.cover-names { font-size:35px; line-height:1.3; color:#49321f; }
+.cover-union { display:block; font-size:22px; color:var(--gold); margin:8px 0; }
+.hero-sub.te { font-size:18px; color:var(--leaf); }
+.hero-date.te { font-size:17px; letter-spacing:0; }
+.sc-couple .stage { flex-direction:column; }
+.portrait-heading { flex:none; }
+.portrait-sequence { width:min(88%,600px); }
+.portrait-slide { display:flex; flex-direction:column; align-items:center; margin-bottom:30px; }
+.portrait-slide img { display:block; width:100%; max-height:72vh; object-fit:contain; object-position:center; border-radius:0; }
+.portrait-slide figcaption { flex:none; padding:12px 6px 0; font-size:21px; line-height:1.5; color:#72512f; }
+.portrait-slide figcaption span { color:var(--gold); padding:0 .2em; }
+.motion .portrait-sequence { position:relative; height:calc(var(--vh) * 100 - 150px); }
+.motion .portrait-slide { position:absolute; inset:0; height:100%; margin:0; opacity:0; }
+.motion .portrait-slide.is-first { opacity:1; }
+.motion .portrait-slide img { flex:1; min-height:0; height:calc(100% - 44px); max-height:none; }
+.patrika { color:#69402c; }
+.patrika .wrap { max-width:600px; }
+.patrika-masthead { padding-bottom:18px; border-bottom:1px solid #b58b4b88; margin-bottom:17px; }
+.patrika-auspicious { color:#916c38; font-size:14px; }
+.patrika-masthead h2 { font-size:42px; font-weight:600; line-height:1.35; color:#a12e27; margin:10px 0 4px; }
+.patrika-masthead h2 span { display:block; font-size:25px; font-weight:500; }
+.patrika-subtitle { font-size:18px; }
+.patrika-flow { font-size:18px; line-height:1.6; }
+.patrika-opening { font-size:.9em; margin-bottom:18px; }
+.patrika-person { margin:16px 0; }
+.patrika-role { font-size:.8em; color:#98723a; }
+.patrika-person h3 { font-size:32px; line-height:1.4; font-weight:600; color:#a12e27; margin:2px 0 3px; }
+.patrika-person h3 small { font-size:.49em; font-weight:400; color:#80613e; }
+.patrika-muhurtham { border-top:1px solid #b58b4b55; border-bottom:1px solid #b58b4b55; padding:12px 0; margin:18px 0; }
+.patrika-muhurtham strong { font-weight:600; color:#a12e27; }
+.patrika-invitation { margin:15px 0; }
+.patrika-signoff { margin-top:17px; }
+.patrika-signoff strong { color:#a12e27; font-weight:500; }
+.star-names { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:36px 16px; color:#f4dcab; font-family:var(--te); }
+.star-names-ornament { font-size:24px; color:#c7a368; margin-bottom:24px; }
+.star-name-bride,.star-name-groom { font-size:clamp(32px,8vw,62px); line-height:1.5; font-weight:500; }
+.star-names-union { font:italic 28px/1.6 Georgia,serif; color:#bc9b60; }
+.star-names-rule { width:58px; height:1px; background:#bda37077; margin:25px 0; }
+.star-names-blessing { font-size:18px; line-height:1.8; color:#d0c0a5; }
+.motion .star-names { position:absolute; z-index:3; inset:0; opacity:0; }
+.end-names { font-size:32px; line-height:1.4; }
+.end-names>span { display:block; color:var(--gold); font:italic 22px/1.6 Georgia,serif; }
+
+/* Telugu printed-card typography, inspired by the supplied lagna patrikas. */
+.cover-family,.cover-names,.head .te,.patrika-masthead h2,.patrika-person h3,
+.star-name-bride,.star-name-groom,.end-names { font-family:var(--te-display); font-weight:400; }
+.patrika { --frame-top:42px; --frame-side:16px; --frame-bottom:12px; position:relative; color:#49502c; background:#f6e8c8; padding:54px 0 26px; }
+.patrika::before { content:""; position:absolute; z-index:0; inset:0; pointer-events:none; border:0 solid transparent; border-image-source:url("img/patrika-frame-clear.png"); border-image-slice:230 85 65 85; border-image-width:var(--frame-top) var(--frame-side) var(--frame-bottom); border-image-repeat:stretch; }
+.patrika .wrap { position:relative; z-index:1; padding:0 28px; max-width:720px; }
+.patrika-masthead { border:0; padding-bottom:4px; margin-bottom:9px; }
+.patrika-auspicious { display:flex; justify-content:space-between; gap:8px; font-size:11px; color:#876c3e; }
+.patrika-masthead h2 { color:#682b20; font-size:47px; line-height:1.15; margin:15px 0 4px; }
+.patrika-masthead h2 span { font-size:31px; font-weight:400; line-height:1.15; }
+.patrika-subtitle { font-size:13px; line-height:1.6; color:#5a6137; }
+.patrika-flow { font-size:16px; line-height:1.8; }
+.patrika-opening { font-size:.82em; color:#82663b; margin:7px 0 14px; }
+.patrika-person { margin:14px 0; }
+.patrika-person h3 { font-size:39px; line-height:1.25; margin:6px 0 0; color:#742b24; }
+.patrika-person h3 small { font-size:.52em; color:inherit; }
+.patrika-muhurtham { position:relative; border-color:#aa79495c; margin:17px 0; padding:13px 0; line-height:1.8; }
+.patrika-muhurtham::before,.patrika-muhurtham::after { content:"❖"; position:absolute; left:50%; transform:translateX(-50%); background:#f6e8c8; color:#965b30; padding:0 9px; font:15px/1 Georgia,serif; }
+.patrika-muhurtham::before { top:-8px; }.patrika-muhurtham::after { bottom:-8px; }
+.patrika-muhurtham strong { color:#5e3621; font-weight:600; }
+.patrika-invitation { font-size:.92em; line-height:1.8; margin:14px 0; text-wrap:balance; }
+.patrika-signoff { font-size:.92em; line-height:1.7; margin-top:12px; }
+.patrika-signoff strong { color:#723526; font-weight:600; }
+.patrika-flow { font-weight:500; }
+.patrika-masthead h2,.patrika-person h3 { font-weight:600; }
+.patrika-masthead h2 { line-height:1.25; margin-bottom:10px; }

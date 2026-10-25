@@ -1,11 +1,70 @@
 /* ------------------------------------------------------------------
-   Music, made in the browser: a slow shehnai line over soft strings
+   Use the owner's song from details.js when provided. Otherwise,
+   music is made in the browser: a slow shehnai line over soft strings
    and a tanpura drone, in a minor raga (D, with komal ga, dha and ni).
    It is an original tune, written to be quiet: long notes, slides
    between them, and rests. Off until the guest taps the button.
    ------------------------------------------------------------------ */
 (function () {
   'use strict';
+  var config = (window.INVITE || {}).music || {};
+  var source = typeof config.src === 'string' ? config.src.trim() : '';
+  var volume = typeof config.volume === 'number' && isFinite(config.volume) ? Math.max(0, Math.min(1, config.volume)) : 0.36;
+  var requested = false, requestId = 0, message = '', listener = null;
+  function notify() { if (listener) listener(); }
+  function subscribe(fn) { listener = fn; notify(); }
+  // Returning to the invitation never restarts sound without another tap.
+  document.addEventListener('visibilitychange', function () { if (document.hidden && window.Music) Music.pause(); });
+  window.addEventListener('pagehide', function () { if (window.Music) Music.pause(); });
+
+  if (source) {
+    var track = new Audio();
+    track.preload = 'none'; track.loop = true; track.volume = volume;
+    track.setAttribute('playsinline', '');
+    track.src = source;
+    var playing = false;
+    function trackFailed(id, error) {
+      if (id !== requestId || !requested) return;
+      requested = false; playing = false;
+      track.pause();
+      message = error && error.name === 'NotAllowedError' ? 'Tap Play music to enable sound.' : 'The music could not load. Tap Play music to retry.';
+      notify();
+    }
+    function setTrack(want) {
+      var id = ++requestId;
+      requested = want; message = '';
+      if (!want) { track.pause(); playing = false; notify(); return; }
+      notify();
+      try {
+        // A failed download needs a fresh load before retrying.
+        if (track.error) track.load();
+        var p = track.play();
+        if (p && p.catch) p.catch(function (error) { trackFailed(id, error); });
+      } catch (error) { trackFailed(id, error); }
+    }
+    track.addEventListener('playing', function () {
+      if (!requested) { track.pause(); return; }
+      playing = true; message = ''; notify();
+    });
+    track.addEventListener('waiting', function () { playing = false; notify(); });
+    track.addEventListener('pause', function () {
+      if (track.paused) { playing = false; requested = false; notify(); }
+    });
+    track.addEventListener('error', function () { trackFailed(requestId, track.error); });
+    window.Music = {
+      supported: function () { return !!track.canPlayType; },
+      play: function () { setTrack(true); },
+      pause: function () { setTrack(false); },
+      toggle: function () { setTrack(!requested); },
+      isOn: function () { return playing; },
+      isPending: function () { return requested && !playing; },
+      error: function () { return message; },
+      subscribe: subscribe,
+      chime: function () {}       // keep the chosen song free of synthesized bells
+    };
+    return;
+  }
+
   var AC = window.AudioContext || window.webkitAudioContext;
   var ctx = null, master = null, verb = null, dry = null, on = false, timer = 0, next = 0, step = 0, silent = null, plucks = null;
   var SA = 293.66;                         // D4
@@ -162,7 +221,7 @@
   // iPhones on silent mute Web Audio unless a media element is playing: play a silent one alongside
   function unmuteIOS() {
     try {
-      if (silent) { silent.play(); return; }
+      if (silent) { var again = silent.play(); if (again && again.catch) again.catch(function () {}); return; }
       var sr = 8000, n = 4000, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
       function w(o, s) { for (var i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); }
       w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true);
@@ -175,25 +234,55 @@
   }
 
   function set(want) {
-    if (want && !init()) return false;
-    if (!ctx) return false;
-    on = want;
-    var t = ctx.currentTime;
+    var id = ++requestId;
+    requested = want; message = '';
     clearTimeout(timer);
-    master.gain.cancelScheduledValues(t);
-    master.gain.setValueAtTime(master.gain.value, t);
-    if (want) {
-      unmuteIOS();
-      if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
-      master.gain.linearRampToValueAtTime(0.36, t + 2.5);
-      next = Math.max(next, ctx.currentTime + 0.25);
-      schedule();
-    } else {
-      master.gain.linearRampToValueAtTime(0, t + 0.8);
+    if (!want) {
+      on = false;
+      if (master) {
+        var t = ctx.currentTime;
+        master.gain.cancelScheduledValues(t);
+        master.gain.setValueAtTime(master.gain.value, t);
+        master.gain.linearRampToValueAtTime(0, t + 0.8);
+      }
       if (silent) try { silent.pause(); } catch (e) {}
-      setTimeout(function () { if (!on && ctx.suspend) ctx.suspend(); }, 1200);
+      setTimeout(function () {
+        if (!requested && ctx && ctx.suspend) {
+          var p = ctx.suspend(); if (p && p.catch) p.catch(function () {});
+        }
+      }, 1200);
+      notify();
+      return;
     }
-    return on;
+    function failed() {
+      if (id !== requestId) return;
+      on = false; requested = false;
+      if (silent) silent.pause();
+      message = 'Music could not start. Tap Play music to retry.';
+      notify();
+    }
+    function started() {
+      if (id !== requestId || !requested) return;
+      if (ctx.state !== 'running') { failed(); return; }
+      on = true;
+      var t = ctx.currentTime;
+      master.gain.cancelScheduledValues(t);
+      master.gain.setValueAtTime(master.gain.value, t);
+      master.gain.linearRampToValueAtTime(volume, t + 2.5);
+      next = Math.max(next, t + 0.25);
+      schedule();
+      notify();
+    }
+    try {
+      if (!init()) { failed(); return; }
+      notify();
+      unmuteIOS();
+      if (ctx.state !== 'running' && ctx.resume) {
+        var p = ctx.resume();
+        if (p && p.then) p.then(started, failed);
+        else started();
+      } else started();
+    } catch (e) { failed(); }
   }
 
   /* a small temple bell, only when the music is on */
@@ -212,8 +301,13 @@
 
   window.Music = {
     supported: function () { return !!AC; },
-    toggle: function () { return set(!on); },
+    play: function () { set(true); },
+    pause: function () { set(false); },
+    toggle: function () { set(!requested); },
     isOn: function () { return on; },
+    isPending: function () { return requested && !on; },
+    error: function () { return message; },
+    subscribe: subscribe,
     chime: chime
   };
 })();

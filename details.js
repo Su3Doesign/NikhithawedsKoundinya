@@ -7,6 +7,23 @@
    calendar link, the closing card and the WhatsApp message.
    ------------------------------------------------------------------ */
 window.INVITE = {
+  /* Chosen song: "Dichotomy of Fame".
+     Upload audio/dichotomy-of-fame.mp3, then set src to that exact path.
+     See audio/README.md. Background song: a local path
+     or a direct HTTPS audio URL, not a YouTube/Spotify page.
+     Leave src empty for the original instrumental. Volume: 0 to 1.
+     Music starts only when the guest taps Play music, and loops. */
+  music: {
+    src: "",
+    volume: 0.36,
+  },
+
+  /* Auto-scroll starts only when the guest taps its button.
+     The speed menu multiplies this base pace, in pixels per second. */
+  autoScroll: {
+    pixelsPerSecond: 80,
+  },
+
   bride: {
     name: "Nikhitha",
     te: "నిఖిత",

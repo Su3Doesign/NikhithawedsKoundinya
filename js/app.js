@@ -8,6 +8,7 @@
 (function () {
   'use strict';
   var D = window.INVITE || {};
+  var BOOK = window.Book || null;
   var doc = document, root = doc.documentElement;
   function $(s, r) { return (r || doc).querySelector(s); }
   function $$(s, r) { return Array.prototype.slice.call((r || doc).querySelectorAll(s)); }
@@ -33,6 +34,7 @@
   var EN_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   var TE_DAYS = ['ఆదివారం', 'సోమవారం', 'మంగళవారం', 'బుధవారం', 'గురువారం', 'శుక్రవారం', 'శనివారం'];
   var EN_MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var TE_MON = ['జనవరి', 'ఫిబ్రవరి', 'మార్చి', 'ఏప్రిల్', 'మే', 'జూన్', 'జూలై', 'ఆగస్టు', 'సెప్టెంబర్', 'అక్టోబర్', 'నవంబర్', 'డిసెంబర్'];
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   var when = (function () {
     var m = String(D.muhurtham || '').match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{1,2}):(\d{2})/);
@@ -44,6 +46,8 @@
   if (when) {
     F.dateShort = pad(when.d) + ' · ' + pad(when.mo + 1) + ' · ' + when.y;
     F.dateLong = when.d + ' ' + EN_MON[when.mo] + ' ' + when.y;
+    F.dateLongTe = when.d + ' ' + TE_MON[when.mo] + ' ' + when.y;
+    F.timeTe = (when.h < 12 ? 'ఉదయం ' : when.h < 16 ? 'మధ్యాహ్నం ' : when.h < 19 ? 'సాయంత్రం ' : 'రాత్రి ') + (when.h % 12 || 12) + ':' + pad(when.mi) + ' గంటలకు';
     F.weekday = EN_DAYS[when.wd];
     F.weekdayTe = TE_DAYS[when.wd];
     F.time = (when.h % 12 || 12) + ':' + pad(when.mi) + (when.h < 12 ? ' am' : ' pm');
@@ -111,6 +115,7 @@
   // the letter, in Telugu or English
   safe(function () {
     var bt = $$('.lang button'), te = $('.letter-te'), en = $('.letter-en');
+    if (!bt.length || !te || !en) return;
     function set(l) {
       te.hidden = l !== 'te'; en.hidden = l !== 'en';
       bt.forEach(function (b) { var on = b.getAttribute('data-lang') === l; b.classList[on ? 'add' : 'remove']('on'); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
@@ -169,8 +174,8 @@
       if (svg.indexOf('<svg') === -1) return;
       safe(function () {
         var a = $('#sigOpen'), b = $('#sigEnd');
-        a.innerHTML = svg; b.innerHTML = svg.replace(/sigMaskA/g, 'sigMaskB');
-        sigs[0] = prepSig(a); sigs[1] = prepSig(b);
+        if (!a.hasAttribute('data-static-signature')) { a.innerHTML = svg; sigs[0] = prepSig(a); }
+        if (!b.hasAttribute('data-static-signature')) { b.innerHTML = svg.replace(/sigMaskA/g, 'sigMaskB'); sigs[1] = prepSig(b); }
         writeSig(sigs[0], 3200, 250);
         if (endSeen) writeSig(sigs[1], 2400, 300);
       });
@@ -217,16 +222,19 @@
     return s;
   }
   function layout() {
-    vh = window.innerHeight; vw = window.innerWidth;
+    var view = BOOK ? BOOK.viewport() : { height: window.innerHeight, width: window.innerWidth };
+    vh = view.height; vw = view.width;
     root.style.setProperty('--vh', (vh * 0.01) + 'px');
     scenes.forEach(function (s) {
-      if (MOTION) { s.el.style.height = Math.round(s.len * vh) + 'px'; s.stage.style.height = vh + 'px'; }
+      var sceneHeight = BOOK ? BOOK.viewport(s.el.id).height : vh;
+      if (MOTION) { s.el.style.height = Math.round((BOOK ? 1 : s.len) * sceneHeight) + 'px'; s.stage.style.height = sceneHeight + 'px'; }
     });
     scenes.forEach(function (s) { if (s.h.resize) safe(s.h.resize); });
     docH = Math.max(doc.body.scrollHeight, root.scrollHeight);
     update(true);
   }
   function update(force) {
+    if (BOOK) { drawPage(BOOK.currentId(), BOOK.progress(), force); return; }
     var y = window.pageYOffset || root.scrollTop || 0;
     var tops = scenes.map(function (s) { return s.el.getBoundingClientRect().top + y; });
     scenes.forEach(function (s, i) {
@@ -239,19 +247,28 @@
     });
     chrome(y);
   }
+  function drawPage(id, progress, force) {
+    scenes.forEach(function (s) {
+      var active = s.el.id === id && !doc.hidden;
+      if (active !== s.on) { s.on = active; if (s.h.active) safe(function () { s.h.active(active); }); }
+      if (active && MOTION && (force || progress !== s.p)) {
+        s.p = progress; safe(function () { s.fn(progress); });
+      }
+    });
+  }
 
-  /* 01 · the photograph becomes a painting */
+  /* 01 · the couple and the two supplied portraits, always uncropped */
   safe(function () {
-    var photo = $('.cp-photo'), line = $('.cp-line'), art = $('.cp-art');
-    var maskOK = !LOW && window.CSS && CSS.supports && CSS.supports('--a', '0') &&
-      (CSS.supports('-webkit-mask-image', 'radial-gradient(#000, transparent)') || CSS.supports('mask-image', 'radial-gradient(#000, transparent)'));
-    if (!maskOK) art.style.webkitMaskImage = art.style.maskImage = 'none';
+    var portraits = $$('#portraitSequence .portrait-slide');
+    if (!portraits.length) return;
     scene('couple', function (p) {
-      var a = smooth(span(p, 0.1, 0.4)), b = smooth(span(p, 0.44, 0.84));
-      photo.style.opacity = (1 - a).toFixed(3);
-      line.style.opacity = (a * (1 - b)).toFixed(3);
-      if (maskOK) { art.style.opacity = b > 0.001 ? '1' : '0'; art.style.setProperty('--r', (b * 100).toFixed(1) + '%'); }
-      else art.style.opacity = b.toFixed(3);
+      var bride = smooth(span(p, 0.18, 0.32));
+      var groom = smooth(span(p, 0.58, 0.72));
+      var opacity = [1 - bride, bride * (1 - groom), groom];
+      portraits.forEach(function (portrait, i) {
+        portrait.style.opacity = opacity[i].toFixed(3);
+        portrait.setAttribute('aria-hidden', opacity[i] < 0.5 ? 'true' : 'false');
+      });
     });
   });
 
@@ -354,15 +371,14 @@
     } });
   });
 
-  /* 05 · Arundhati, and the moon */
+  /* 05 · Arundhati and Vasishtha become a dedication in their names */
   safe(function () {
     if (!window.Sky) return;
-    var stage = $('#arundhati .stage'), cv = $('#sky'), moon = $('#moon'), head = $('#arundhati .head'), cap = $('#skyCap');
-    var disc = $('.moon-disc'), sil = $('.moon-sil'), lit = $('.moon-lit'), glow = $('.moon-glow'), spark = $('.moon-spark');
-    var sky = Sky.create(cv, { dpr: DPR, low: LOW }), q = 0, live = false, looping = false, rang = false;
-    var MX = 0.50065, MY = 0.2376, MR = 0.32928;
-    // scene progress to the sky's own timeline (lines, zoom, the meeting of the two stars)
-    var MAP = [[0, 0], [0.12, 0.27], [0.36, 0.56], [0.46, 0.6], [0.56, 0.74], [0.62, 0.8], [1, 0.8]];
+    var stage = $('#arundhati .stage'), cv = $('#sky'), head = $('#arundhati .head');
+    var cap = $('#skyCap'), names = $('#starNames');
+    var sky = Sky.create(cv, { dpr: DPR, low: LOW });
+    var q = MOTION ? 0 : 1, live = false, looping = false, rang = false;
+    var MAP = [[0, 0], [0.12, 0.27], [0.36, 0.56], [0.46, 0.6], [0.56, 0.74], [0.68, 0.8], [1, 0.8]];
     function skyP(x) {
       for (var i = 0; i < MAP.length - 1; i++) {
         var a = MAP[i], b = MAP[i + 1];
@@ -370,55 +386,36 @@
       }
       return 0.8;
     }
-    function tf(el, s) { el.style.webkitTransform = s; el.style.transform = s; }
     function paint(t) {
       sky.draw(skyP(q), t / 1000);
-      head.style.opacity = (1 - smooth(span(q, 0.1, 0.16))).toFixed(3);
-      cap.style.opacity = (smooth(span(q, 0.3, 0.35)) * (1 - smooth(span(q, 0.46, 0.5)))).toFixed(3);
-      // the light opens where their faces meet
-      var b = span(q, 0.54, 0.7), s = Math.max(0.001, 1 - Math.pow(1 - b, 3));
-      tf(disc, 'scale(' + s.toFixed(4) + ')');
-      disc.style.opacity = smooth(b / 0.1).toFixed(3);
-      tf(glow, 'translate(-50%,-50%) scale(' + s.toFixed(4) + ')');
-      glow.style.opacity = (smooth(b / 0.35) * (1 - 0.75 * smooth(span(q, 0.64, 0.72)))).toFixed(3);
-      sil.style.opacity = smooth(span(q, 0.5, 0.54)).toFixed(3);
-      var c = smooth(span(q, 0.72, 0.86));
-      lit.style.opacity = c.toFixed(3);
-      tf(lit, 'translateY(' + ((1 - c) * 10).toFixed(1) + 'px)');
-      var fl = smooth(span(q, 0.5, 0.54)) * (1 - smooth(span(q, 0.57, 0.64)));
-      spark.style.opacity = fl.toFixed(3);
-      tf(spark, 'scale(' + (0.3 + fl * 0.9 + b * 1.2).toFixed(3) + ')');
-      if (q > 0.55 && !rang) { rang = true; if (window.Music) Music.chime(0.5); }
-      if (q < 0.45) rang = false;
+      var reveal = smooth(span(q, 0.62, 0.86));
+      head.style.opacity = (1 - smooth(span(q, 0.16, 0.25))).toFixed(3);
+      cap.style.opacity = (smooth(span(q, 0.28, 0.35)) * (1 - smooth(span(q, 0.5, 0.6)))).toFixed(3);
+      cv.style.opacity = (1 - reveal * 0.76).toFixed(3);
+      names.style.opacity = reveal.toFixed(3);
+      names.style.transform = 'translateY(' + ((1 - reveal) * 12).toFixed(1) + 'px)';
+      names.setAttribute('aria-hidden', reveal < 0.5 ? 'true' : 'false');
+      if (q > 0.65 && !rang) { rang = true; if (window.Music) Music.chime(0.5); }
+      if (q < 0.5) rang = false;
     }
     function loop(t) { paint(t); if (live) raf(loop); else looping = false; }
     function place() {
-      if (MOTION) {
-        var mh = stage.clientHeight * 0.92;
-        moon.style.height = mh + 'px'; moon.style.width = (mh * 0.6) + 'px';
-      }
       sky.resize();
-      var a = stage.getBoundingClientRect(), r = moon.getBoundingClientRect();
-      sky.focus(r.left - a.left + r.width * MX, r.top - a.top + r.height * MY, r.width * MR);
-    }
-    if (!MOTION) {
-      var still = function () { safe(function () { sky.resize(); sky.draw(0.27, 0); }); };
-      still(); window.addEventListener('resize', still);
-      if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(still);
-      return;
+      sky.focus(stage.clientWidth * 0.5, stage.clientHeight * 0.38, Math.min(stage.clientWidth, stage.clientHeight) * 0.15);
+      paint(now());
     }
     scene('arundhati', function (p) { q = p; if (!looping) paint(now()); }, {
-      resize: function () { place(); paint(now()); },
-      active: function (on) { live = on && !LOW; if (live && !looping) { looping = true; raf(loop); } }
+      resize: place,
+      active: function (on) { live = on && MOTION && !LOW; if (live && !looping) { looping = true; raf(loop); } }
     });
-    if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(function () { paint(now()); });
+    if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(place);
   });
 
   /* ---------------------------------------------------------------- fixed bits: progress, music, keep scrolling */
-  var bar = $('#progress'), musicBtn = $('#music'), cue = $('#cue');
+  var bar = $('#progress'), musicBtn = $('#music'), scrollControls = $('#autoScrollControls'), cue = $('#cue');
   var darkIds = ['knots', 'talambralu', 'arundhati', 'end'];
   var probeY = function () { return vh - 34; };
-  var idle = 0, cueOn = false;
+  var idle = 0;
   function chrome(y) {
     var p = clamp(y / Math.max(1, docH - vh), 0, 1);
     var t = 'scaleX(' + p.toFixed(4) + ')';
@@ -427,12 +424,15 @@
     var probe = probeY(), dark = false;
     darkIds.forEach(function (id) { var el = doc.getElementById(id); if (!el) return; var r = el.getBoundingClientRect(); if (r.top <= probe && r.bottom > probe) dark = true; });
     musicBtn.classList[dark ? 'add' : 'remove']('dark');
+    if (scrollControls) scrollControls.classList[dark ? 'add' : 'remove']('dark');
     // the words beside the button fold away once the guest has scrolled on
     if (y > vh * 0.6) musicBtn.classList.add('short');
   }
   function showCue(on) {
+    if (BOOK) return;
+    if (window.AutoScroll && AutoScroll.isOn()) on = false;
     if ((window.pageYOffset || 0) > vh * 0.5) cue.classList.add('small');
-    if (on !== cueOn) { cueOn = on; cue.classList[on ? 'add' : 'remove']('on'); }
+    cue.classList[on ? 'add' : 'remove']('on');
   }
   function cueCheck() {
     var y = window.pageYOffset || 0, end = doc.getElementById('end');
@@ -448,13 +448,21 @@
 
   safe(function () {
     if (!window.Music || !Music.supported()) { musicBtn.hidden = true; return; }
+    musicBtn.hidden = false;
     musicBtn.classList.add('hint');
-    musicBtn.addEventListener('click', function () {
-      var on = Music.toggle();
-      musicBtn.classList.remove('hint'); musicBtn.classList.add('used');
+    Music.subscribe(function () {
+      var on = Music.isOn(), pending = Music.isPending();
       musicBtn.classList[on ? 'add' : 'remove']('on');
       musicBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-      musicBtn.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+      musicBtn.setAttribute('aria-busy', pending ? 'true' : 'false');
+      musicBtn.setAttribute('aria-label', pending ? 'Cancel loading music' : on ? 'Pause music' : 'Play music');
+      musicBtn.title = pending ? 'Loading music…' : on ? 'Pause music' : 'Play music';
+      $('.music-t', musicBtn).textContent = pending ? 'Loading music…' : on ? 'Pause music' : 'Tap for music';
+      $('#musicStatus').textContent = Music.error();
+    });
+    musicBtn.addEventListener('click', function () {
+      musicBtn.classList.remove('hint'); musicBtn.classList.add('used');
+      Music.toggle();
     });
   });
 
@@ -521,7 +529,9 @@
       raf(function () { raf(function () { path.style.transition = 'stroke-dashoffset 4.2s ease-in-out'; path.style.strokeDashoffset = '0'; }); });
     }
     draw(false);
-    if (MOTION && IO) {
+    if (BOOK) {
+      doc.addEventListener('bookpagechange', function () { if (BOOK.currentId() === 'when') draw(MOTION); });
+    } else if (MOTION && IO) {
       var io = new IntersectionObserver(function (es) {
         if (es[0].isIntersecting && !drawn) { drawn = true; draw(true); io.disconnect(); }
       }, { threshold: 0.35 });
@@ -578,6 +588,15 @@
     function seen() {
       if (!endSeen) { endSeen = true; writeSig(sigs[1], 2400, 300); }
     }
+    if (BOOK) {
+      doc.addEventListener('bookpagechange', function () {
+        var vis = BOOK.currentId() === 'end' && !doc.hidden;
+        if (vis) seen();
+        if (vis && !on && MOTION && !LOW) { on = true; raf(loop); }
+        if (!vis) on = false;
+      });
+      return;
+    }
     if (!IO) { seen(); return; }
     new IntersectionObserver(function (es) {
       var vis = es[0].isIntersecting;
@@ -593,7 +612,7 @@
   window.addEventListener('resize', function () {
     var w = window.innerWidth, h = window.innerHeight;
     // a phone's toolbar sliding away changes the height a little: ignore that, or the page would jump
-    if (w !== lastW || Math.abs(h - lastH) > 140) { lastW = w; lastH = h; clearTimeout(rt); rt = setTimeout(layout, 150); }
+    if (BOOK || w !== lastW || Math.abs(h - lastH) > 140) { lastW = w; lastH = h; clearTimeout(rt); rt = setTimeout(layout, 150); }
   });
   var ticking = false;
   window.addEventListener('scroll', function () {
@@ -605,6 +624,10 @@
   if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(layout);
   if (MOTION) root.className += ' motion';
   layout();
+  if (BOOK) {
+    doc.addEventListener('visibilitychange', function () { drawPage(BOOK.currentId(), BOOK.progress(), true); });
+    BOOK.connect(drawPage, layout); return;
+  }
   var target = location.hash && doc.getElementById(location.hash.slice(1));
   if (target) setTimeout(function () { window.scrollTo(0, target.getBoundingClientRect().top + (window.pageYOffset || 0)); }, 60);
   else window.scrollTo(0, 0);

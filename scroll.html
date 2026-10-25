@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nikhitha weds Sai Koundinya</title>
+<meta name="description" content="శుభలేఖ · The wedding of Nikhitha and Sai Koundinya.">
+<meta name="theme-color" content="#F6F0E4">
+<meta property="og:title" content="Nikhitha weds Sai Koundinya · శుభలేఖ">
+<meta property="og:description" content="You are invited to the wedding of Nikhitha and Sai Koundinya.">
+<meta property="og:image" content="img/share.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Telugu:wght@400;500;600&family=Suranna&family=Jost:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&text=NikhtaSKoundy%26&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ramabhadra&text=%E0%B0%B6%E0%B1%81%E0%B0%AD%E0%B0%82&display=swap">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.className = 'js';</script>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><i id="progress"></i></div>
+
+<button class="music" id="music" type="button" aria-pressed="false" aria-label="Play music" hidden>
+  <svg class="music-note" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18.5a2.5 2.5 0 1 1-2.5-2.5c.53 0 1 .14 1.5.4V5.8l11-2.3v12.9a2.5 2.5 0 1 1-2.5-2.5c.53 0 1 .14 1.5.4V8.1l-9 1.9v8.5z" fill="currentColor"/></svg>
+  <span class="music-ico" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span class="music-t">Tap for music</span>
+</button>
+<p class="playback-message" id="musicStatus" role="status"></p>
+
+<div class="auto-scroll" id="autoScrollControls" role="group" aria-label="Auto-scroll controls" hidden>
+  <button id="autoScroll" type="button" aria-pressed="false" aria-label="Start auto-scroll">
+    <svg class="scroll-play" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 3 10 7-10 7z" fill="currentColor"/></svg>
+    <svg class="scroll-pause" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 3h3v14H5zm7 0h3v14h-3z" fill="currentColor"/></svg>
+    <span id="autoScrollLabel">Auto-scroll</span>
+  </button>
+  <select id="autoScrollSpeed" aria-label="Auto-scroll speed">
+    <option value="0.5">0.5×</option>
+    <option value="1" selected>1×</option>
+    <option value="1.5">1.5×</option>
+  </select>
+</div>
+<p class="sr-only" id="scrollStatus" role="status"></p>
+
+<p class="cue" id="cue" aria-hidden="true"><span>Keep scrolling</span><i></i></p>
+
+<main>
+
+<!-- the card's face -->
+<header class="hero" id="top" lang="te">
+  <div class="toranam" id="toranam" aria-hidden="true"></div>
+  <div class="hero-in">
+    <p class="auspicious te">శ్రీరస్తు <span>శుభమస్తు</span> అవిఘ్నమస్తు</p>
+    <img class="ganesha" src="img/ganesha.png" alt="" width="273" height="330">
+    <p class="te om">శ్రీ గణేశాయ నమః</p>
+    <h1 class="cover-family te"><span>చల్లపల్లి వారి</span><strong>పెళ్లి పిలుపు</strong></h1>
+    <div class="sign cover-names te" id="sigOpen" data-static-signature>
+      <p>నిఖిత</p><span class="cover-union" aria-label="మరియు">❦</span><p>సాయి కౌండిన్య</p>
+    </div>
+    <p class="hero-sub te">వివాహ మహోత్సవ శుభ ఆహ్వానం</p>
+    <p class="hero-date te" data-f="dateLongTe"></p>
+  </div>
+</header>
+
+<!-- their photographs, with every portrait shown in full -->
+<section class="scene sc-couple" id="couple" data-len="2.6" aria-label="Nikhitha and Sai Koundinya photographs">
+  <div class="stage">
+    <h2 class="head portrait-heading"><span class="te" lang="te">వధూవరులు</span><span class="lab">Nikhitha &amp; Sai Koundinya</span></h2>
+    <div class="portrait-sequence" id="portraitSequence">
+      <figure class="portrait-slide is-first" data-portrait="couple">
+        <img src="img/pair-silk-1086.webp" width="1086" height="1448" alt="Nikhitha and Sai Koundinya together, shown without cropping" decoding="async">
+        <figcaption class="te" lang="te">నిఖిత <span>&amp;</span> సాయి కౌండిన్య</figcaption>
+      </figure>
+      <figure class="portrait-slide" data-portrait="bride">
+        <img src="img/portraits/nikhitha.jpg" width="863" height="1090" alt="The supplied portrait of Nikhitha with her decorated bridal braid" decoding="async">
+        <figcaption class="te" lang="te">నిఖిత</figcaption>
+      </figure>
+      <figure class="portrait-slide" data-portrait="groom">
+        <img src="img/portraits/sai-koundinya.jpg" width="794" height="1126" alt="The supplied full-length portrait of Sai Koundinya in blue" decoding="async">
+        <figcaption class="te" lang="te">సాయి కౌండిన్య</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- the invitation -->
+<section class="letter patrika" id="letter" lang="te" aria-labelledby="patrikaTitle">
+  <div class="wrap te">
+    <header class="patrika-masthead">
+      <p class="patrika-auspicious"><span>శ్రీరస్తు</span><span>శుభమస్తు</span><span>అవిఘ్నమస్తు</span></p>
+      <h2 id="patrikaTitle"><span>చల్లపల్లి వారి</span>పెళ్లి పిలుపు</h2>
+      <p class="patrika-subtitle">వివాహ మహోత్సవ శుభ ఆహ్వానము</p>
+    </header>
+    <div class="patrika-flow">
+      <p class="patrika-opening">శ్రీ గణేశాయ నమః</p>
+      <div class="patrika-person">
+        <p class="patrika-role sr-only">వధువు</p>
+        <p>శ్రీ చల్లపల్లి శ్రీధర్ గారు<br>శ్రీమతి వెంకట కృష్ణవేణి గార్ల కుమార్తె</p>
+        <h3><small>చి.ల.సౌ.</small> నిఖిత</h3>
+      </div>
+      <div class="patrika-person">
+        <p class="patrika-role sr-only">వరుడు</p>
+        <p>కొవ్వూరు వాస్తవ్యులు<br>శ్రీ కె.వి.వి. హరిమోహన్ గారు<br>శ్రీమతి శైలజ గార్ల కుమారుడు</p>
+        <h3><small>చి.</small> సాయి కౌండిన్య</h3>
+      </div>
+      <div class="patrika-muhurtham">
+        <p>వీరి వివాహ మహోత్సవము</p>
+        <p><strong data-f="dateLongTe"></strong> <span data-f="weekdayTe"></span></p>
+        <p><strong data-f="timeTe"></strong> సుముహూర్తమున</p>
+      </div>
+      <p class="patrika-invitation">మీరు సకుటుంబ సపరివార సమేతంగా విచ్చేసి,<br>నూతన వధూవరులను ఆశీర్వదించవలసినదిగా<br>సాదరంగా ఆహ్వానిస్తున్నాము.</p>
+      <p class="patrika-signoff">ఇట్లు,<br><strong>చల్లపల్లి కుటుంబ సభ్యులు</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- when and where -->
+<section class="when" id="when" aria-labelledby="whenTitle">
+  <div class="wrap">
+    <h2 class="head rv" id="whenTitle"><span class="te" lang="te">సుముహూర్తం</span><span class="lab">Muhurtham</span></h2>
+    <div class="when-card rv">
+      <p class="w-day"><span class="lab" data-f="weekday"><span class="ph">Weekday</span></span><span class="te" lang="te" data-f="weekdayTe"></span></p>
+      <p class="w-date" data-f="dateLong"><span class="ph">DD Month YYYY</span></p>
+      <p class="w-time" data-f="time"><span class="ph">Time</span></p>
+      <p class="panch te" id="panch" lang="te" hidden></p>
+      <div class="cd" id="cd" hidden>
+        <div><b data-u="d">00</b><span>days</span></div>
+        <div><b data-u="h">00</b><span>hours</span></div>
+        <div><b data-u="m">00</b><span>minutes</span></div>
+        <div><b data-u="s">00</b><span>seconds</span></div>
+      </div>
+    </div>
+    <div class="muggu-card">
+    <svg class="mug rv" id="mug" viewBox="0 0 280 280" role="img" aria-label="A muggu, one line drawn around a grid of dots"></svg>
+    <button class="link" id="mugAgain" type="button">Draw another muggu</button>
+    </div>
+    <div class="venue rv">
+      <p class="lab">Venue</p>
+      <h3 class="v-name" data-f="venueName"><span class="ph">Venue name</span></h3>
+      <p class="v-te te" lang="te" data-f="venueNameTe"></p>
+      <p class="v-adr" data-f="venueAddress"><span class="ph">Street, area, city</span></p>
+      <p class="btns">
+        <a class="btn" id="mapLink" href="#when" target="_blank" rel="noopener">Directions</a>
+        <a class="btn" id="calMain" href="#when" target="_blank" rel="noopener">Add to calendar</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- the gatherings -->
+<section class="events" id="events" aria-labelledby="evTitle">
+  <div class="wrap">
+    <h2 class="head rv" id="evTitle"><span class="te" lang="te">వేడుకలు</span><span class="lab">Celebrations</span></h2>
+    <ul class="ev">
+      <li class="rv" data-ev="haldi"><img src="img/art/marigold.png" width="200" height="200" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">హల్దీ</span><span class="en">Haldi</span></h3><p data-f="ev.haldi.when"><span class="ph">Date · Time</span></p><p class="where" data-f="ev.haldi.where"></p></div></li>
+      <li class="rv" data-ev="gorintaku"><img src="img/art/gorintaku.webp" width="420" height="618" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">గోరింటాకు</span><span class="en">Mehendi</span></h3><p data-f="ev.gorintaku.when"><span class="ph">Date · Time</span></p><p class="where" data-f="ev.gorintaku.where"></p></div></li>
+      <li class="rv" data-ev="pellikuthuru"><img src="img/art/bangles.webp" width="480" height="360" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">పెళ్ళికూతురు</span><span class="en">Pellikuthuru</span></h3><p data-f="ev.pellikuthuru.when"><span class="ph">Date · Time</span></p><p class="where" data-f="ev.pellikuthuru.where"></p></div></li>
+      <li class="rv" data-ev="sangeet"><img src="img/art/dholak.webp" width="560" height="280" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">సంగీత్</span><span class="en">Sangeet</span></h3><p data-f="ev.sangeet.when"><span class="ph">Date · Time</span></p><p class="where" data-f="ev.sangeet.where"></p></div></li>
+      <li class="rv" data-ev="vivaham"><img src="img/art/kalasham.webp" width="520" height="686" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">వివాహం</span><span class="en">Wedding</span></h3><p data-f="ev.vivaham.when"><span class="ph">Date · Muhurtham</span></p><p class="where" data-f="ev.vivaham.where"></p></div></li>
+      <li class="rv" data-ev="vindu"><img src="img/art/banana-leaf.webp" width="600" height="300" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">విందు</span><span class="en">Reception</span></h3><p data-f="ev.vindu.when"><span class="ph">Date · Time</span></p><p class="where" data-f="ev.vindu.where"></p></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- three knots -->
+<section class="scene sc-knots" id="knots" data-len="2" aria-labelledby="knTitle">
+  <div class="stage">
+    <h2 class="head" id="knTitle"><span class="te" lang="te">మూడు ముళ్ళు</span><span class="lab">Three knots</span></h2>
+    <div class="kn-view" id="knView">
+      <div class="kn-world" id="knWorld">
+        <img class="kn-base" src="img/art/mangal.jpg" width="1200" height="2100" alt="A mangalasutram: a turmeric-yellow thread with two gold pustelu, its ends tied with three knots." loading="lazy" decoding="async">
+        <picture><source type="image/webp" srcset="img/art/knots.webp"><img class="kn-hi" src="img/art/knots.jpg" width="768" height="1772" alt="" loading="lazy" decoding="async"></picture>
+      </div>
+      <p class="kn-n" aria-hidden="true"><b lang="te">౧</b></p>
+      <p class="kn-n" aria-hidden="true"><b lang="te">౨</b></p>
+      <p class="kn-n" aria-hidden="true"><b lang="te">౩</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- talambralu -->
+<section class="scene sc-tal" id="talambralu" data-len="2.4" aria-labelledby="talTitle">
+  <div class="stage">
+    <canvas class="tal-cv" id="talCv" aria-hidden="true"></canvas>
+    <h2 class="head" id="talTitle"><span class="te" lang="te">తలంబ్రాలు</span><span class="lab">Talambralu</span></h2>
+    <ol class="verse" id="verse">
+      <li><p class="te" lang="te">జానక్యాః కమలాంజలి పుటే యాః పద్మరాగాయితాః</p><p class="en">In Janaki's cupped hands, they looked like rubies.</p></li>
+      <li><p class="te" lang="te">న్యస్తా రాఘవ మస్తకే చ విలసత్ కుంద ప్రసూనాయితాః</p><p class="en">Placed on Rama's head, they shone like jasmine.</p></li>
+      <li><p class="te" lang="te">స్రస్తాః శ్యామల కాయ కాంతి కలితాః యా ఇంద్రనీలాయితాః</p><p class="en">Falling across his dark skin, they turned to sapphires.</p></li>
+      <li><p class="te" lang="te">ముక్తాస్తాః శుభదా భవంతు భవతాం శ్రీరామ వైవాహికాః</p><p class="en">May those pearls from Sri Rama's wedding bring you every good thing.</p></li>
+    </ol>
+    <p class="tap lab" id="talTap">Tap to throw talambralu</p>
+  </div>
+</section>
+
+<!-- seven steps -->
+<section class="scene sc-sap" id="saptapadi" data-len="2" aria-labelledby="sapTitle">
+  <div class="stage">
+    <h2 class="head" id="sapTitle"><span class="te" lang="te">సప్తపది</span><span class="lab">Seven steps</span></h2>
+    <div class="walk" id="walk" aria-hidden="true">
+      <span class="ft"><img src="img/art/footprint.png" width="220" height="324" alt="" loading="lazy" decoding="async"><b lang="te">౧</b></span>
+      <span class="ft r"><img src="img/art/footprint.png" width="220" height="324" alt="" loading="lazy" decoding="async"><b lang="te">౨</b></span>
+      <span class="ft"><img src="img/art/footprint.png" width="220" height="324" alt="" loading="lazy" decoding="async"><b lang="te">౩</b></span>
+      <span class="ft r"><img src="img/art/footprint.png" width="220" height="324" alt="" loading="lazy" decoding="async"><b lang="te">౪</b></span>
+      <span class="ft"><img src="img/art/footprint.png" width="220" height="324" alt="" loading="lazy" decoding="async"><b lang="te">౫</b></span>
+      <span class="ft r"><img src="img/art/footprint.png" width="220" height="324" alt="" loading="lazy" decoding="async"><b lang="te">౬</b></span>
+      <span class="ft"><img src="img/art/footprint.png" width="220" height="324" alt="" loading="lazy" decoding="async"><b lang="te">౭</b></span>
+    </div>
+    <p class="sakha"><span class="te" lang="te">సఖా సప్తపదా భవ</span><span class="en">Seven steps together. Now, be my friend.</span></p>
+  </div>
+</section>
+
+<!-- Arundhati and Vasishtha resolve into their names -->
+<section class="scene sc-sky" id="arundhati" data-len="3" aria-labelledby="skyTitle">
+  <div class="stage">
+    <canvas class="sky" id="sky" aria-hidden="true"></canvas>
+    <h2 class="head" id="skyTitle"><span class="te" lang="te">అరుంధతి</span><span class="lab">Arundhati</span></h2>
+    <p class="sky-cap" id="skyCap"><span class="te" lang="te">వసిష్ఠుని పక్కనే, అరుంధతి.</span><span class="en">The faint star beside Vasishtha. She has never left his side.</span></p>
+    <div class="star-names" id="starNames" lang="te">
+      <span class="star-names-ornament" aria-hidden="true">✦</span>
+      <p class="star-name-bride">నిఖిత</p>
+      <span class="star-names-union" aria-label="మరియు">&amp;</span>
+      <p class="star-name-groom">సాయి కౌండిన్య</p>
+      <span class="star-names-rule" aria-hidden="true"></span>
+      <p class="star-names-blessing">కలిసి నడిచే ప్రతి అడుగూ…<br>ఒక అందమైన ఆరంభం.</p>
+    </div>
+  </div>
+</section>
+
+<!-- your blessing -->
+<section class="bless" id="rsvp" aria-labelledby="blessTitle">
+  <div class="wrap">
+    <figure class="pol rv"><img src="img/pair-silk-1086.webp" width="1086" height="1448" alt="Nikhitha and Sai Koundinya together" loading="lazy" decoding="async"></figure>
+    <h2 class="head rv" id="blessTitle"><span class="te" lang="te">మీ ఆశీస్సులతో</span><span class="lab">Come bless them</span></h2>
+    <p class="btns rv">
+      <a class="btn btn-solid" id="rsvpLink" href="#rsvp" target="_blank" rel="noopener">RSVP on WhatsApp</a>
+      <a class="btn" id="calBless" href="#when" target="_blank" rel="noopener">Add to calendar</a>
+    </p>
+    <p class="call rv">Or call <span data-f="rsvpDisplay"><span class="ph">+91 ••••• •••••</span></span></p>
+    <p class="ak rv"><button class="btn btn-tur" id="akBtn" type="button"><span class="te" lang="te">అక్షింతలు</span> Throw akshintalu</button></p>
+    <p class="ak-n" id="akN" aria-live="polite"></p>
+  </div>
+</section>
+
+<!-- శుభం -->
+<footer class="subham" id="end">
+  <canvas class="film" id="film" aria-hidden="true"></canvas>
+  <div class="subham-in">
+    <p class="subham-w" lang="te">శుభం</p>
+    <div class="sign sign-end end-names te" id="sigEnd" data-static-signature lang="te"><p>నిఖిత</p><span>&amp;</span><p>సాయి కౌండిన్య</p></div>
+    <p class="lab" data-f="dateShort"><span class="ph">DD · MM · YYYY</span></p>
+    <a class="back lab" href="#top">Back to the beginning ↑</a>
+  </div>
+</footer>
+
+</main>
+
+<canvas class="burst" id="burst" aria-hidden="true"></canvas>
+
+<script src="details.js"></script>
+<script src="js/rice.js"></script>
+<script src="js/talambralu.js"></script>
+<script src="js/sky.js"></script>
+<script src="js/music.js"></script>
+<script src="js/auto-scroll.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+/* A tall right-hand reading leaf, on a real overhead pooja setting. */
+.book-mode { --book-width:min(46vw,560px); --book-height:calc(100dvh - 132px); --book-x:25vw; --book-top:52px; background:#88572e; }
+.book-mode body { height:100vh; height:100dvh; overflow:hidden; background:#88572e; }
+.book-set { position:fixed; inset:0; overflow:hidden; background:#ad7947 url("img/pooja-overhead.png") right center / cover no-repeat; }
+.pooja-surround { position:absolute; inset:0; pointer-events:none; }
+.desk-heading { position:absolute; z-index:2; left:32px; top:22px; display:flex; align-items:center; gap:16px; color:#f3dfbb; }
+.desk-monogram { font:400 26px/1 Georgia,serif; letter-spacing:.08em; }
+.desk-monogram i { font:italic 19px Georgia,serif; color:#d6b17a; }
+.desk-caption { font:400 10px/1.5 var(--sans); text-transform:uppercase; letter-spacing:.2em; }
+.scroll-version { position:absolute; z-index:25; right:30px; top:28px; color:#fff1d7; font:400 11px/1 var(--sans); letter-spacing:.08em; text-decoration:none; border-bottom:1px solid #fff1d76b; padding-bottom:5px; }
+.book-spread { position:absolute; z-index:3; left:var(--book-x); top:var(--book-top); width:var(--book-width); height:var(--book-height); perspective:2000px; }
+.book-cover { position:absolute; z-index:0; inset:0 -13px -14px -102%; background:linear-gradient(100deg,#49231e,#78372a 45%,#351511 50%,#6c3027 54%,#7e4331); border-radius:4px 10px 12px 4px; border:1px solid #a67953; transform:rotate(-.4deg); box-shadow:8px 28px 40px #2f160b80,2px 4px 8px #29120890; }
+.left-page { position:absolute; right:100%; width:100%; height:100%; color:#997146; background:linear-gradient(90deg,#e8d9b5,#f0e4c9 55%,#eee0c1 86%,#bba27b 99%,#705238); border-radius:5px 0 0 5px; box-shadow:inset 0 2px 3px #fff9e9,0 6px 0 #d0b994,0 8px 0 #8a6843; overflow:hidden; }
+.left-page::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,#4629190d,transparent 70%,#5b361a20); }
+.left-page-border { position:absolute; inset:28px; border:1px solid #b4915e5c; outline:1px solid #c7ab8044; outline-offset:5px; }
+.left-page-print { position:absolute; inset:12% 14%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; opacity:.54; }
+.left-page-print>.te { font-size:19px; }
+.left-page-print>img { width:78%; max-width:260px; margin:25px 0; filter:sepia(1) brightness(.65); }
+.left-names { font:italic 29px/1.1 Georgia,serif; }
+.left-names i { font-size:18px; line-height:2; }
+.left-page-print>span { margin-top:24px; text-transform:uppercase; font-size:9px; letter-spacing:.2em; }
+.page-stack { position:absolute; inset:5px -7px -8px 1px; border-radius:0 7px 9px 0; background:repeating-linear-gradient(0deg,#e8d9b8 0 2px,#bfa67e 2px 3px,#f6e8ca 3px 4px); border-right:1px solid #c1a171; box-shadow:3px 7px 5px #2f190c55; }
+.binding { position:absolute; z-index:15; top:0; bottom:0; left:-13px; width:28px; background:linear-gradient(90deg,transparent,#5b351a35 35%,#40261155 46%,#e7d6b730 53%,transparent); pointer-events:none; }
+.book-ribbon { position:absolute; z-index:2; top:-13px; right:8px; width:22px; height:60px; background:linear-gradient(90deg,#6c201d,#af4031 45%,#7e2722); clip-path:polygon(0 0,100% 0,100% 100%,50% 87%,0 100%); transform:rotate(5deg); box-shadow:2px 4px 5px #3a1e1844; }
+.book-pages,#invitation { position:absolute; inset:0; perspective:2000px; }
+.book-leaf { position:absolute; inset:0; visibility:hidden; pointer-events:none; transform-origin:0 50%; transform-style:preserve-3d; }
+.book-leaf.is-current { visibility:visible; pointer-events:auto; z-index:3; }
+.book-leaf.is-turning { visibility:visible; pointer-events:none; z-index:10; }
+.leaf-front,.leaf-back { position:absolute; inset:0; border-radius:0 5px 6px 0; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden; background-color:#f8efd9; background-image:linear-gradient(90deg,#ae90652e,transparent 7%,#fff9ec60 40%,transparent 85%,#b9945b14),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath filter='url(%23f)' opacity='.055' d='M0 0h120v120H0z'/%3E%3C/svg%3E"); box-shadow:inset -1px 0 2px #92744b44; }
+.leaf-front::after { content:""; position:absolute; inset:12px; border:1px solid #b99a6440; border-left:0; pointer-events:none; }
+.leaf-back { transform:rotateY(180deg); background-color:#e8d8b5; background-image:linear-gradient(90deg,#906b3533,transparent 15%,#fff5d935 60%,#77502d30); }
+.leaf-back::after { content:none; }
+.page-heading { position:absolute; left:36px; right:29px; top:18px; display:flex; justify-content:space-between; color:#907547; font:400 8px/1.4 var(--sans); letter-spacing:.18em; text-transform:uppercase; }
+.page-heading span:last-child { font-size:10px; letter-spacing:0; }
+.page-content { position:absolute; top:44px; bottom:39px; left:24px; right:24px; overflow:hidden; overflow:clip; container-type:size; }
+.page-foot { position:absolute; bottom:17px; left:36px; right:29px; color:#a1804e; text-align:center; font:400 10px/1 var(--sans); letter-spacing:.12em; }
+.page-foot::before,.page-foot::after { content:""; display:inline-block; width:34px; height:1px; margin:0 15px 3px; background:#bea16d66; }
+.leaf-progress { position:absolute; bottom:34px; left:34%; right:34%; height:1px; background:#ab8a5526; }
+.leaf-progress i { display:block; height:100%; background:#af8a4b; transform-origin:left; transform:scaleX(0); }
+.scene-replay { position:absolute; bottom:10px; right:27px; padding:7px 0; border:0; border-bottom:1px solid #b79b6c55; background:none; color:#95764c; font:400 9px/1 var(--sans); letter-spacing:.06em; cursor:pointer; }
+.book-nav { position:absolute; top:calc(100% + 16px); left:0; right:0; display:flex; align-items:center; justify-content:space-between; color:#fcefd6; }
+.page-arrow { width:44px; height:38px; border:1px solid #f0d8a95c; border-radius:50%; background:#5d32204a; color:#fbe7c0; font:300 24px/1 var(--sans); cursor:pointer; transition:background .2s,transform .2s; }
+.page-arrow:hover { background:#4723149c; transform:translateY(-2px); }
+.page-arrow:disabled { opacity:.3; cursor:default; transform:none; }
+.chapter-picker { display:flex; flex-direction:column; align-items:center; }
+.chapter-picker select { appearance:none; background:transparent; color:#fff0d5; border:0; text-align:center; font:400 12px/1.5 var(--sans); letter-spacing:.12em; padding:3px 20px; cursor:pointer; max-width:260px; }
+.chapter-picker option { color:#4a2e24; background:#f6ecd8; }
+.page-count { color:#e0c397; font:400 9px/1.5 var(--sans); letter-spacing:.22em; }
+.book-instruction { position:absolute; bottom:19px; left:0; right:0; text-align:center; color:#e2c49b; font:400 10px/1.5 var(--sans); letter-spacing:.14em; pointer-events:none; }
+.book-mode :focus-visible { outline:2px solid #bc8e34; outline-offset:3px; }
+.book-mode .progress,.book-mode .cue { display:none; }
+.book-mode .music { left:25px; bottom:22px; background:#4a241b99; color:#f0ce8d; border-color:#dfbb7a55; box-shadow:none; }
+.book-mode .music-t { color:#f0dfc0; }
+.book-mode .auto-scroll { right:25px; bottom:22px; background:#4a241b99; color:#f0dfc0; border-color:#dfbb7a55; box-shadow:none; }
+.book-mode .auto-scroll select { border-color:#dfbb7a55; }
+.book-mode .music.hint { animation:none; }
+.book-mode .playback-message { bottom:76px; }
+/* One complete section per leaf. The whole printed composition fits the paper. */
+.book-mode .page-content>section { min-height:0; display:flow-root; }
+.book-mode .page-content>.hero,.book-mode .page-content>.subham { height:100%; min-height:0; }
+.book-measuring .rv { transform:none!important; transition:none!important; }
+.book-mode .rv { transform:none; }
+.book-mode .rv.in { transform:none; }
+.book-mode .wrap { padding-inline:12px; }
+.book-mode .toranam { display:none; }
+.book-mode .hero-in { padding:12px 6px; gap:0; }
+.book-mode .auspicious { font-size:clamp(11px,2cqh,14px); margin-bottom:clamp(8px,2.4cqh,22px); }
+.book-mode .ganesha { width:clamp(28px,7cqh,52px); }
+.book-mode .om { font-size:clamp(12px,2cqh,15px); margin-top:8px; }
+.book-mode .cover-family { margin-top:clamp(12px,3cqh,26px); }
+.book-mode .cover-family span { font-size:clamp(20px,4cqh,29px); }
+.book-mode .cover-family strong { font-size:clamp(32px,6.4cqh,49px); }
+.book-mode .cover-names { width:100%; max-width:none; font-size:clamp(25px,4.8cqh,37px); margin:clamp(14px,3.6cqh,30px) 0 0; }
+.book-mode .cover-union { margin:4px 0; font-size:20px; }
+.book-mode .hero-sub.te { font-size:clamp(13px,2.5cqh,18px); margin-top:clamp(12px,3.3cqh,25px); }
+.book-mode .hero-date.te { font-size:clamp(13px,2.4cqh,17px); margin-top:10px; }
+.book-mode .head { margin-bottom:18px; }
+.book-mode .head .te { font-size:clamp(26px,5.2cqh,38px); }
+.book-mode .head .lab { font-size:10px; letter-spacing:.16em; }
+.book-mode .scene,.book-mode .scene .stage { height:100%; min-height:0; }
+.book-mode .scene .stage { padding:0; }
+.book-mode.motion .stage { position:relative; top:auto; }
+.book-mode .sc-couple .stage { display:flex; flex-direction:column; padding:8px 4px 0; }
+.book-mode .portrait-heading { margin-bottom:16px; }
+.book-mode .portrait-sequence { width:100%; flex:1; min-height:0; height:auto; }
+.book-mode .portrait-slide figcaption { font-size:clamp(16px,3cqh,21px); padding:10px 0 2px; }
+.book-mode .portrait-slide img { width:100%; object-fit:contain; object-position:center; border-radius:0; }
+.book-mode .letter { padding:5px 2px; }
+.book-mode .patrika .wrap { padding:0 10px; }
+.book-mode .patrika-masthead { padding-bottom:clamp(6px,1.6cqh,14px); margin-bottom:clamp(6px,1.6cqh,14px); }
+.book-mode .patrika-auspicious { font-size:clamp(11px,1.8cqh,14px); }
+.book-mode .patrika-masthead h2 { font-size:clamp(28px,5cqh,39px); margin:6px 0 2px; line-height:1.25; }
+.book-mode .patrika-masthead h2 span { font-size:clamp(18px,3cqh,23px); }
+.book-mode .patrika-subtitle { font-size:clamp(12px,2.4cqh,17px); }
+.book-mode .patrika-flow { font-size:clamp(14px,2.25cqh,18px); line-height:1.5; }
+.book-mode .patrika-opening { margin-bottom:clamp(8px,1.6cqh,14px); }
+.book-mode .patrika-person { margin:clamp(7px,1.3cqh,13px) 0; }
+.book-mode .patrika-person h3 { font-size:clamp(25px,4cqh,32px); margin:0; }
+.book-mode .patrika-muhurtham { padding:clamp(6px,1.4cqh,12px) 0; margin:clamp(9px,1.8cqh,16px) 0; }
+.book-mode .patrika-invitation { margin:clamp(9px,1.8cqh,16px) 0; }
+.book-mode .patrika-signoff { margin-top:clamp(9px,1.8cqh,16px); }
+.book-mode .when { padding:8px 0; background:transparent; }
+.book-mode .w-date { font-size:clamp(25px,4.8cqh,34px); }
+.book-mode .w-time { font-size:20px; }
+.book-mode .cd { margin-top:14px; }
+.book-mode .cd div { width:50px; }
+.book-mode .cd b { font-size:27px; }
+.book-mode .cd span { font-size:9px; }
+.book-mode .mug { width:clamp(72px,22cqh,155px); margin:14px auto 0; }
+.book-mode .muggu-card { margin-top:8px; }
+.book-mode .muggu-card .link { font-size:10px; padding:9px 2px; }
+.book-mode .venue { margin-top:14px; }
+.book-mode .v-name { font-size:23px; }
+.book-mode .v-adr { font-size:15px; }
+.book-mode .btns { margin-top:14px; }
+.book-mode .btn { font-size:10px; padding:11px 14px; line-height:1.4; margin:4px 2px; }
+.book-mode .events { padding:10px 0; }
+.book-mode .ev li { padding:13px 0; }
+.book-mode .ev img { width:44px; height:44px; margin-right:14px; }
+.book-mode .ev h3 .te { font-size:21px; }
+.book-mode .ev h3 .en { font-size:10px; letter-spacing:.1em; }
+.book-mode .ev p { font-size:14px; }
+.book-mode .sc-knots,.book-mode .sc-tal,.book-mode .sc-sky,.book-mode .subham { border-radius:2px; }
+.book-mode.motion .sc-knots .head,.book-mode.motion .sc-tal .head,.book-mode.motion .sc-sap .head { padding-top:clamp(10px,4cqh,26px); }
+.book-mode.motion .verse { bottom:clamp(42px,10cqh,72px); height:8em; padding:0 12px; }
+.book-mode .verse .te { font-size:clamp(18px,3.6cqh,25px); }
+.book-mode .verse .en { font-size:clamp(11px,2cqh,14px); }
+.book-mode.motion .verse li { left:18px; right:18px; }
+.book-mode.motion .tap { bottom:20px; font-size:9px; }
+.book-mode .sc-sap { background:transparent; }
+.book-mode.motion .sakha { padding:0 10px 24px; }
+.book-mode .sakha .te { font-size:clamp(23px,4.5cqh,32px); }
+.book-mode .sakha .en { font-size:clamp(12px,2cqh,15px); }
+.book-mode.motion .sc-sky .head { top:clamp(16px,4cqh,30px); }
+.book-mode.motion .sky-cap { bottom:30px; padding:0 16px; }
+.book-mode .sky-cap .te { font-size:22px; }
+.book-mode .sky-cap .en { font-size:13px; }
+.book-mode .star-name-bride,.book-mode .star-name-groom { font-size:clamp(28px,9cqw,50px); line-height:1.5; }
+.book-mode .star-names-blessing { font-size:clamp(14px,2.7cqh,19px); }
+.book-mode .bless { padding:12px 0; }
+.book-mode .pol { width:clamp(90px,28cqh,200px); max-width:65%; margin-bottom:20px; padding:7px 7px 17px; transform:none; }
+.book-mode .pol.rv,.book-mode .pol.rv.in { transform:none; }
+.book-mode .ak { margin-top:14px; }
+.book-mode .call { font-size:13px; }
+.book-mode .ak-n { min-height:24px; }
+.book-mode .subham { padding:24px 12px; }
+.book-mode .subham-w { font-size:clamp(60px,17cqh,125px); }
+.book-mode .sign-end { width:100%; margin:clamp(12px,3cqh,26px) auto; }
+.book-mode .end-names { font-size:clamp(24px,5cqh,37px); }
+.book-mode .subham .lab { font-size:10px; }
+.book-leaf.is-turning .leaf-front,.book-leaf.is-turning .leaf-back { box-shadow:inset 24px 0 40px #79522526,8px 6px 18px #432a1a33; }
+@media (min-width:1500px) { .book-mode { --book-x:28vw; --book-width:min(44vw,610px); } }
+@media (max-width:1000px) { .book-mode { --book-x:17vw; --book-width:64vw; }.desk-caption,.book-instruction { display:none; } }
+@media (max-width:700px) {
+  .book-mode { --book-x:7vw; --book-width:87vw; --book-top:44px; --book-height:calc(100dvh - 152px); }
+  .book-set { background-position:right top; }
+  .desk-heading { left:20px; top:13px; }.desk-monogram { font-size:21px; }
+  .scroll-version { top:18px; right:20px; font-size:10px; }
+  .book-cover { inset:0 -8px -9px -102%; }.left-page-border { inset:20px; }
+  .page-content { top:36px; bottom:34px; left:13px; right:13px; }
+  .page-heading { top:14px; left:21px; right:25px; font-size:6px; }.page-heading span:last-child { font-size:8px; }
+  .leaf-front::after { inset:8px; }.page-foot { bottom:14px; font-size:9px; }
+  .book-ribbon { width:17px; height:48px; right:6px; }
+  .book-nav { top:calc(100% + 12px); }.page-arrow { width:38px; height:36px; }
+  .chapter-picker select { font-size:10px; max-width:220px; letter-spacing:.06em; }
+  .book-mode .music { left:18px; bottom:9px; height:40px; }.book-mode .auto-scroll { right:18px; bottom:9px; }
+  .book-mode .auto-scroll button,.book-mode .auto-scroll select { min-height:40px; }
+  .scene-replay { font-size:8px; right:20px; bottom:8px; }.leaf-progress { bottom:29px; }
+  .book-mode .head .lab { font-size:9px; }
+  .book-mode .patrika .wrap { padding-inline:4px; }
+  .book-mode .ev h3 .en { display:block; margin:0; }.book-mode .ev img { width:38px; height:38px; margin-right:10px; }
+  .book-mode .ev h3 .te { font-size:19px; }.book-mode .ev p { font-size:13px; }
+  .book-mode .sky-cap .te { font-size:20px; }.book-mode .sky-cap .en { font-size:12px; }
+}
+@media (max-height:500px) and (orientation:landscape) {
+  .book-mode { --book-x:19vw; --book-width:54vw; --book-top:10px; --book-height:calc(100dvh - 70px); }
+  .desk-heading,.scroll-version,.book-instruction { display:none; }
+  .page-content { top:27px; bottom:26px; left:18px; right:18px; }.page-heading { top:9px; }.page-foot { bottom:10px; }
+  .book-nav { top:calc(100% + 9px); }.scene-replay { bottom:3px; }.leaf-progress { bottom:23px; }
+  .book-mode .music { left:8px; bottom:10px; }.book-mode .auto-scroll { right:8px; bottom:10px; }
+  .book-mode .music-t { display:none; }.book-mode .music { padding-inline:11px; }
+  .book-mode .auto-scroll button { padding-inline:8px; }.book-mode .auto-scroll select { width:49px; margin-right:2px; }
+  .book-mode .hero-in { display:grid; grid-template-columns:1fr 1fr; align-content:center; justify-items:center; padding:0 5px; gap:3px 8px; }
+  .book-mode .auspicious { grid-column:1/-1; margin:0 0 4px; }
+  .book-mode .ganesha { grid-column:1; grid-row:2; width:24px; }
+  .book-mode .om { grid-column:1; grid-row:3; margin:0; font-size:11px; }
+  .book-mode .cover-family { grid-column:1; grid-row:4/6; margin:0; }.book-mode .cover-family span { font-size:16px; }.book-mode .cover-family strong { font-size:25px; }
+  .book-mode .cover-names { grid-column:2; grid-row:2/6; margin:0; font-size:23px; }.book-mode .cover-union { font-size:15px; margin:0; }
+  .book-mode .hero-sub.te { grid-column:1/-1; margin:3px 0 0; font-size:12px; }.book-mode .hero-date.te { grid-column:1/-1; margin:0; font-size:12px; }
+  .book-mode .head { margin-bottom:8px; }.book-mode .head .te { font-size:23px; }.book-mode .head .lab { font-size:8px; }
+  .book-mode .patrika-masthead h2 { font-size:22px; line-height:1.2; }
+  .book-mode .patrika-masthead h2 span span { display:inline; font-size:17px; margin-right:7px; }
+  .book-mode .patrika-masthead { padding-bottom:5px; margin-bottom:5px; }.book-mode .patrika-subtitle { font-size:11px; }
+  .book-mode .letter { padding:0 2px; }
+  .book-mode .patrika-flow { font-size:14px; line-height:1.4; }.book-mode .patrika-person { margin:5px 0; }.book-mode .patrika-person h3 { font-size:23px; }
+  .book-mode .patrika-invitation br { display:none; }
+  .book-mode .w-date { font-size:25px; }.book-mode .w-time { font-size:17px; }.book-mode .cd { margin-top:10px; }
+  .book-mode .sc-couple .stage { padding-top:0; }.book-mode .portrait-heading { margin-bottom:5px; }
+  .book-mode .portrait-slide figcaption { font-size:14px; padding-top:3px; }
+  .book-mode.motion .verse { bottom:29px; height:6em; }.book-mode .verse .te { font-size:17px; }.book-mode .verse .en { font-size:11px; }
+  .book-mode.motion .tap { bottom:7px; font-size:8px; }
+  .book-mode.motion .sakha { padding-bottom:8px; }.book-mode .sakha .te { font-size:21px; }.book-mode .sakha .en { font-size:11px; }
+  .book-mode .star-names { padding:6px; }.book-mode .star-names-ornament { font-size:16px; margin-bottom:2px; }
+  .book-mode .star-name-bride,.book-mode .star-name-groom { font-size:27px; line-height:1.2; }.book-mode .star-names-union { font-size:18px; }
+  .book-mode .star-names-rule { margin:8px 0; }.book-mode .star-names-blessing { font-size:12px; line-height:1.5; }
+  .book-mode .subham { padding:8px; }.book-mode .subham-in { display:grid; grid-template-columns:1fr 1fr; gap:4px 16px; }
+  .book-mode .subham-w { font-size:62px; }.book-mode .sign-end { margin:0; font-size:23px; }
+  .book-mode .subham-in>.lab { grid-column:1/-1; font-size:8px; }.book-mode .subham .back { margin-top:5px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .book-mode * { scroll-behavior:auto!important; }
+  .book-mode .book-leaf { transition:none!important; }
+  .book-mode .scene .stage { height:100%; padding:12px 4px; }
+  .book-mode .portrait-sequence { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; align-items:center; }
+  .book-mode .portrait-slide { position:static; height:100%; margin:0; justify-content:center; }
+  .book-mode .portrait-slide img { height:calc(100% - 50px); min-height:0; max-height:none; }
+  .book-mode .portrait-slide figcaption { font-size:13px; }
+  .book-mode .kn-view { height:calc(100% - 78px); width:auto; }.book-mode .kn-world { height:100%; }.book-mode .kn-base { width:100%; height:100%; object-fit:contain; }
+  .book-mode .walk { max-width:80%; gap:8px; }.book-mode .ft { width:clamp(18px,6cqh,42px); margin:4px; }
+  .book-mode .sakha { margin-top:18px; }
+  .book-mode .verse { padding:0 12px; }.book-mode .verse li { margin-bottom:12px; }.book-mode .verse .te { font-size:clamp(13px,3cqh,21px); }.book-mode .verse .en { font-size:clamp(10px,1.7cqh,12px); }
+  .book-mode .sc-sky .head,.book-mode .sky-cap { display:none; }
+  .book-mode .sky { position:absolute; inset:0; width:100%; height:100%; }.book-mode .star-names { position:absolute; inset:0; }
+}
+
+@media (max-height:660px) and (max-width:700px) and (orientation:portrait) {
+  .book-mode .hero-in { padding:4px; }
+  .book-mode .auspicious { font-size:10px; margin-bottom:5px; }
+  .book-mode .ganesha { width:26px; }
+  .book-mode .om { font-size:11px; margin-top:5px; }
+  .book-mode .cover-family { margin-top:9px; }
+  .book-mode .cover-family span { font-size:19px; }
+  .book-mode .cover-family strong { font-size:30px; }
+  .book-mode .cover-names { margin-top:12px; font-size:23px; }
+  .book-mode .cover-union { font-size:17px; margin:1px 0; }
+  .book-mode .hero-sub.te { font-size:12px; margin-top:12px; }
+  .book-mode .hero-date.te { font-size:12px; margin-top:8px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .book-mode .sc-tal,.book-mode .sc-tal .stage { height:auto; }
+}
+
+/* Use the whole reading leaf, with ornament confined to reserved edge bands. */
+.page-content.has-fit { display:flex; align-items:center; justify-content:center; }
+.page-fit { position:relative; flex:none; overflow:hidden; overflow:clip; }
+.page-fit>section { display:flow-root; min-height:0; left:0; top:0; transform-origin:top left; }
+.book-leaf[data-chapter="top"] .page-content,
+.book-leaf[data-chapter="letter"] .page-content { inset:8px 8px 25px; }
+.book-leaf[data-chapter="top"] .page-heading,
+.book-leaf[data-chapter="letter"] .page-heading { display:none; }
+.book-leaf[data-chapter="top"] .leaf-front::after,
+.book-leaf[data-chapter="letter"] .leaf-front::after { content:none; }
+.book-mode .hero,.book-mode .patrika { --frame-top:42px; --frame-side:16px; --frame-bottom:12px; }
+.book-mode .hero::before { content:""; position:absolute; inset:0; pointer-events:none; border:0 solid transparent; border-image-source:url("img/patrika-frame-clear.png"); border-image-slice:230 85 65 85; border-image-width:var(--frame-top) var(--frame-side) var(--frame-bottom); border-image-repeat:stretch; }
+.book-mode .hero-in { position:relative; height:100%; padding:54px 26px 24px; }
+.book-mode .cover-family span { font-size:clamp(24px,4.5cqh,34px); }
+.book-mode .cover-family strong { font-size:clamp(38px,7.5cqh,58px); line-height:1.2; }
+.book-mode .cover-names { font-size:clamp(29px,5.5cqh,42px); line-height:1.25; }
+.book-mode .hero-sub.te { line-height:1.8; font-size:clamp(12px,2cqh,15px); }
+.book-mode .hero-date.te { font-size:clamp(12px,2cqh,15px); }
+.book-mode .head .te { font-weight:400; font-size:clamp(31px,6cqh,46px); line-height:1.25; }
+.book-mode .letter { padding:54px 0 24px; background:transparent; }
+.book-mode .patrika .wrap { display:flex; flex-direction:column; height:100%; max-width:none; padding:0 26px; }
+.book-mode .patrika-masthead { flex:none; border:0; padding-bottom:2px; margin-bottom:4px; }
+.book-mode .patrika-auspicious { font-size:clamp(9px,1.5cqh,11px); }
+.book-mode .patrika-masthead h2 { font-size:clamp(32px,6cqh,47px); line-height:1.25; margin:10px 0; }
+.book-mode .patrika-masthead h2 span { font-size:clamp(23px,4cqh,32px); line-height:1.2; }
+.book-mode .patrika-subtitle { font-size:clamp(10px,1.9cqh,13px); line-height:1.65; }
+.book-mode .patrika-flow { flex:1; display:flex; flex-direction:column; justify-content:space-evenly; font-size:clamp(13px,2cqh,16px); line-height:1.7; }
+.book-mode .patrika-flow>* { flex:none; }
+.book-mode .patrika-opening { margin:6px 0; font-size:.8em; }
+.book-mode .patrika-person { margin:clamp(5px,1cqh,9px) 0; }
+.book-mode .patrika-person h3 { font-size:clamp(30px,5cqh,39px); margin:5px 0 0; line-height:1.25; }
+.book-mode .patrika-muhurtham { padding:9px 0; margin:11px 0; line-height:1.75; }
+.book-mode .patrika-muhurtham::before,.book-mode .patrika-muhurtham::after { background:#f8efd9; }
+.book-mode .patrika-invitation { margin:10px 0; font-size:.9em; line-height:1.8; }
+.book-mode .patrika-signoff { margin-top:7px; font-size:.9em; line-height:1.7; }
+@media (max-width:700px) and (orientation:portrait) {
+  .book-mode { --book-top:49px; --book-height:calc(100dvh - 112px); }
+  .book-mode .music { top:6px; bottom:auto; left:14px; height:35px; min-width:35px; padding-inline:9px; }
+  .book-mode .auto-scroll { top:6px; bottom:auto; right:14px; }
+  .book-mode .auto-scroll button,.book-mode .auto-scroll select { min-height:35px; }
+  .book-mode .auto-scroll button { font-size:9px; padding-inline:9px; }
+  .book-mode .auto-scroll select { font-size:10px; width:45px; }
+  .desk-heading { left:65px; top:13px; }.desk-monogram { font-size:19px; }
+  .scroll-version { display:none; }
+  .book-mode .playback-message { top:47px; bottom:auto; }
+  .page-content { top:29px; bottom:28px; left:10px; right:10px; }
+  .page-heading { top:10px; }.page-foot { bottom:11px; }
+  .book-nav { top:calc(100% + 12px); }
+  .book-mode .auspicious { font-size:10px; }
+  .book-mode .hero-date.te { margin-top:10px; }
+}
+@media (max-height:660px) and (max-width:700px) and (orientation:portrait) {
+  .book-mode .hero-in { padding:42px 24px 22px; }
+  .book-mode .cover-family { margin-top:10px; }
+  .book-mode .cover-family span { font-size:23px; }
+  .book-mode .cover-family strong { font-size:35px; }
+  .book-mode .cover-names { margin-top:10px; font-size:28px; }
+  .book-mode .cover-union { margin:0; font-size:15px; }
+  .book-mode .hero-sub.te { font-size:11px; margin-top:9px; }
+  .book-mode .hero-date.te { font-size:11px; margin-top:6px; }
+}
+@container (max-height:660px) {
+  .book-mode .hero,.book-mode .patrika { --frame-top:28px; --frame-side:13px; --frame-bottom:10px; }
+  .book-mode .letter { padding:35px 0 18px; }
+  .book-mode .patrika .wrap { padding-inline:22px; }
+  .book-mode .patrika-auspicious { font-size:8px; }
+  .book-mode .patrika-masthead { margin-bottom:3px; }
+  .book-mode .patrika-masthead h2 { font-size:30px; line-height:1.2; margin:6px 0; }
+  .book-mode .patrika-masthead h2 span { font-size:22px; line-height:1.15; }
+  .book-mode .patrika-subtitle { font-size:9px; line-height:1.5; }
+  .book-mode .patrika-flow { font-size:11.5px; line-height:1.5; }
+  .book-mode .patrika-opening { margin:2px 0; font-size:8px; }
+  .book-mode .patrika-person { margin:2px 0; }
+  .book-mode .patrika-person h3 { font-size:27px; line-height:1.2; margin:2px 0 0; }
+  .book-mode .patrika-muhurtham { padding:4px 0; margin:6px 0; line-height:1.5; }
+  .book-mode .patrika-invitation { font-size:10.5px; line-height:1.6; margin:4px 0; }
+  .book-mode .patrika-signoff { font-size:10.5px; line-height:1.5; margin-top:3px; }
+  .book-mode .patrika-muhurtham::before,.book-mode .patrika-muhurtham::after { font-size:12px; }
+}
+@media (max-height:500px) and (orientation:landscape) {
+  .book-mode { --book-x:15vw; --book-width:70vw; }
+  .book-mode .hero-in { padding:35px 24px 18px; gap:2px 8px; }
+  .book-mode .cover-family span { font-size:18px; }.book-mode .cover-family strong { font-size:27px; }
+  .book-mode .cover-names { font-size:25px; }.book-mode .hero-sub.te,.book-mode .hero-date.te { font-size:10px; }
+  .book-mode .head .te { font-size:28px; }.book-mode .head .lab { font-size:8px; }
+  .book-mode .letter { padding:31px 0 16px; }
+  .book-mode .patrika-masthead h2 { margin:2px 0; font-size:24px; line-height:1.15; }
+  .book-mode .patrika-masthead h2 span { display:inline; margin-right:8px; font-size:18px; }
+  .book-mode .patrika-subtitle { font-size:8px; }
+  .book-mode .patrika-flow { display:grid; grid-template-columns:1fr 1fr; align-content:space-evenly; align-items:center; gap:3px 18px; font-size:10px; line-height:1.5; }
+  .book-mode .patrika-opening,.book-mode .patrika-signoff { grid-column:1/-1; margin:0; }
+  .book-mode .patrika-person { margin:0; }
+  .book-mode .patrika-person h3 { font-size:23px; margin-top:2px; }
+  .book-mode .patrika-muhurtham { margin:5px 0; padding:5px 0; }
+  .book-mode .patrika-invitation { margin:0; font-size:9px; line-height:1.65; }
+  .book-mode .patrika-invitation br { display:none; }
+  .book-mode .patrika-signoff { font-size:9px; }
+  .book-mode .patrika-signoff br { display:none; }
+  .book-mode .patrika-signoff strong { margin-left:6px; }
+}
