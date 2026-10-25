@@ -5,7 +5,8 @@
 The previous generated instrumental has been removed; no substitute tune plays.
 
 The site attempts audible playback on opening. If the browser blocks autoplay,
-the first tap or key press anywhere on the invitation starts the recording.
+the first tap or key press anywhere on the invitation starts the recording
+without pausing auto-read or auto-scroll.
 The music button also plays, pauses, and resumes it. Music loops and pauses
 when the tab is hidden. Browser autoplay restrictions cannot be overridden by
 the website.

@@ -7,6 +7,7 @@
   var volume = typeof config.volume === 'number' && isFinite(config.volume) ? Math.max(0, Math.min(1, config.volume)) : 0.36;
   var requested = false, playing = false, requestId = 0;
   var message = '', listener = null, retryOnInteraction = false;
+  var autoStartPending = true;
   var track = source ? new Audio(source) : null;
 
   function notify() { if (listener) listener(); }
@@ -21,6 +22,7 @@
   }
   function setTrack(want, automatic) {
     var id = ++requestId;
+    autoStartPending = false;
     retryOnInteraction = false;
     requested = !!track && want; message = '';
     if (!track) { notify(); return; }
@@ -66,11 +68,18 @@
     setTrack(true, true);
   }
   document.addEventListener('pointerdown', firstInteraction, true);
+  // WebKit and older touch browsers may accept touchend/click rather than pointerdown.
+  document.addEventListener('touchend', firstInteraction, true);
+  document.addEventListener('click', firstInteraction, true);
   document.addEventListener('keydown', firstInteraction, true);
+  function startOnOpening() {
+    if (autoStartPending && !document.hidden) setTrack(true, true);
+  }
   // Stop in background tabs; only an explicit play resumes after a pause.
   document.addEventListener('visibilitychange', function () {
-    if (document.hidden) setTrack(false, false);
+    if (document.hidden) { if (!autoStartPending) setTrack(false, false); }
+    else startOnOpening();
   });
   window.addEventListener('pagehide', function () { setTrack(false, false); });
-  if (!document.hidden) setTrack(true, true);
+  startOnOpening();
 })();

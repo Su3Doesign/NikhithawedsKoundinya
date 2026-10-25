@@ -55,7 +55,7 @@
     position = y(); last = null;
     running = true; started = true;
     render();
-    status.textContent = 'Auto-scroll started. Scroll, touch the page, or press Escape to pause.';
+    status.textContent = 'Auto-scroll started. Use Pause scroll, scroll manually, or press Escape to pause.';
     var cue = doc.getElementById('cue');
     if (cue) cue.classList.remove('on');
     frame = window.requestAnimationFrame(tick);
@@ -70,14 +70,8 @@
   button.addEventListener('click', function () { if (running) pause(); else start(); });
   speed.addEventListener('change', function () { status.textContent = 'Auto-scroll speed: ' + speed.options[speed.selectedIndex].text + '.'; });
   doc.addEventListener('wheel', function () { pause(); }, { passive: true });
-  function manual(e) { if (!inControls(e.target)) pause(); }
-  if (window.PointerEvent) doc.addEventListener('pointerdown', manual, { passive: true });
-  else {
-    doc.addEventListener('mousedown', manual);
-    doc.addEventListener('touchstart', manual, { passive: true });
-  }
-  doc.addEventListener('touchmove', function () { pause(); }, { passive: true });
-  doc.addEventListener('focusin', manual);
+  // Taps and focus changes can unlock music without stopping the tour.
+  // Real touch scrolling is handled by the scroll-position check below.
   doc.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' || (!inControls(e.target) && /^(ArrowUp|ArrowDown|PageUp|PageDown|Home|End| |Spacebar)$/.test(e.key))) pause();
   });

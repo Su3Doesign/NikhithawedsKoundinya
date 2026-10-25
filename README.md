@@ -37,8 +37,9 @@ scenes retain their effects and have pause/replay controls.
 scene, and turns the page after time to read it. The speed menu controls reading
 and scene playback. The new **1×** is the previous **1.5×** pace, and the new
 **0.5×** is the previous **1×** pace; the fastest **1.5×** option uses a 2×
-multiplier of the original pace. Touching the page, changing
-chapters, pressing Escape, or hiding the tab pauses automatic page turning.
+multiplier of the original pace. Tapping the page, starting music and focusing
+controls keep auto-read running. The Pause control, changing chapters, swiping
+to another page, pressing Escape, or hiding the tab pauses automatic page turning.
 Music remains independent. Reduced-motion mode skips the 3D turn and presents
 still content; the invitation also remains readable without JavaScript.
 
@@ -76,7 +77,9 @@ volume. The previous generated instrumental has been removed.
 
 The invitation tries to play the recording when it opens. Browsers that block
 audible autoplay require an interaction first; in that case, the first tap or
-key press anywhere on the invitation starts music. The music button also starts
+key press anywhere on the invitation starts music while auto-read continues.
+An initially hidden tab attempts music and auto-read on its first visibility.
+The music button also starts
 it and lets guests pause or resume. A deliberate pause stays paused during
 navigation. Music loops and pauses when the tab is hidden. Loading failures
 allow retry without stopping the invitation. These controls apply to both the
@@ -88,7 +91,8 @@ Auto-scroll starts when the page opens. Use pause/resume and **0.5×**, **1×**
 or **1.5×** speed. `autoScroll.pixelsPerSecond` in `details.js` is the original
 base pace (80); the new speed options apply 1×, 1.5× and 2× multipliers, so the
 default pace is 120 pixels per second. Set `autoScroll.startAutomatically` to
-`false` to disable automatic start in both views. Manual navigation or hiding
+`false` to disable automatic start in both views. Taps, music controls and focus
+changes keep scrolling. Manual scrolling, navigation, the Pause control or hiding
 the tab pauses the tour. It stops at the end, where **Replay** starts again.
 An initially hidden tab starts on first visibility; a guest pause stays paused.
 Music attempts playback on opening and uses the first interaction when the browser requires it.

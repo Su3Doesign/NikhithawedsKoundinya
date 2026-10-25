@@ -169,7 +169,7 @@
   }
   function startReading() {
     autoStartPending = false; reading = true; pausedEffects = false; last = null;
-    status.textContent = 'Auto-read started. Pages turn after each scene. Touch the page or press Escape to pause.';
+    status.textContent = 'Auto-read started. Pages turn after each scene. Use the Pause control or press Escape to pause.';
     sync(); kick();
   }
   function autoStart() {
@@ -257,8 +257,6 @@
   controls.setAttribute('aria-label', 'Automatic page turning'); controls.hidden = false;
   speed.addEventListener('change', function () { last = null; });
   main.addEventListener('wheel', function () { pauseReading(); }, { passive: true });
-  main.addEventListener('pointerdown', function () { pauseReading(); }, { passive: true });
-  main.addEventListener('focusin', function () { pauseReading(); });
   main.addEventListener('click', function (e) {
     var anchor = e.target.closest('a[href^="#"]');
     if (!anchor || anchor.hasAttribute('aria-disabled')) return;
@@ -267,7 +265,7 @@
   });
   var gesture = null;
   main.addEventListener('touchstart', function (e) {
-    pauseReading();
+    // A tap can unlock music. Pause only when a completed swipe changes pages.
     if (e.touches.length === 1 && !interactive(e.target)) gesture = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     else gesture = null;
   }, { passive: true });
