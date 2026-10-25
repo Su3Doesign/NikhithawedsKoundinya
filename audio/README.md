@@ -1,26 +1,16 @@
-# Add the wedding song
+# Wedding music
 
-1. Upload your MP3 of **Dichotomy of Fame** into this folder with the exact filename:
-   `dichotomy-of-fame.mp3`
-2. In the repository's `details.js`, change the music setting to:
+`dichotomy-of-fame.mp3` is the uploaded recording and default background song.
+`details.js` selects `audio/dichotomy-of-fame.mp3` at volume `0.36`.
+The previous generated instrumental has been removed; no substitute tune plays.
 
-   ```js
-   music: {
-     src: "audio/dichotomy-of-fame.mp3",
-     volume: 0.36,
-   },
-   ```
+The site attempts audible playback on opening. If the browser blocks autoplay,
+the first tap or key press anywhere on the invitation starts the recording.
+The music button also plays, pauses, and resumes it. Music loops and pauses
+when the tab is hidden. Browser autoplay restrictions cannot be overridden by
+the website.
 
-The file's full repository path is `audio/dichotomy-of-fame.mp3` (beside the
-root `index.html` there is an `audio` folder). In the Sites deployment checkout,
-these files are under `dist/`; do not include `dist/` in the `src` value.
-
-Use a real MP3 audio file. Stereo, 44.1 kHz, and 128–192 kbps work well on phones.
-Renaming a different file extension to `.mp3` does not convert the audio.
-
-Commit/upload both the MP3 and the `details.js` change, then deploy that version.
-Tap the music button to check it. The owner's chosen song loops; guests have
-only play/pause controls, with no file upload or song selector.
-
-The song file is not included yet. Until it is uploaded, `src` is intentionally
-empty and the invitation uses its original generated instrumental.
+To replace the music, upload a real MP3 here and update `music.src` in
+`details.js` if its filename changes. Keep paths relative to the site's root;
+do not add `dist/` to the path. Commit both the audio and configuration before
+deploying. Loading failures display a retry message instead of another tune.

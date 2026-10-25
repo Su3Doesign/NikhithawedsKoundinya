@@ -7,14 +7,11 @@
    calendar link, the closing card and the WhatsApp message.
    ------------------------------------------------------------------ */
 window.INVITE = {
-  /* Chosen song: "Dichotomy of Fame".
-     Upload audio/dichotomy-of-fame.mp3, then set src to that exact path.
-     See audio/README.md. Background song: a local path
-     or a direct HTTPS audio URL, not a YouTube/Spotify page.
-     Leave src empty for the original instrumental. Volume: 0 to 1.
-     Music starts only when the guest taps Play music, and loops. */
+  /* The uploaded recording is the only background music.
+     Try playing on opening; browsers that block sound until interaction
+     start it on the first tap or key press. Volume: 0 to 1. */
   music: {
-    src: "",
+    src: "audio/dichotomy-of-fame.mp3",
     volume: 0.36,
   },
 

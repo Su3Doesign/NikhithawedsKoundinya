@@ -44,37 +44,26 @@ photos, Telugu invitation and star-to-names sequence in a linear layout.
 `js/app.js` contains shared effects; `js/book.js` manages fitting and turns;
 `book.css` styles the book and surroundings.
 
-## Add Dichotomy of Fame
+## Background music
 
-1. Upload a real MP3 file named **`dichotomy-of-fame.mp3`** into the repository's
-   **`audio/`** folder. Its complete path is **`audio/dichotomy-of-fame.mp3`**.
-2. In **`details.js`**, set:
+The uploaded **Dichotomy of Fame** recording at `audio/dichotomy-of-fame.mp3`
+is the default and only background music. `details.js` selects its path and
+volume. The previous generated instrumental has been removed.
 
-   ```js
-   music: {
-     src: "audio/dichotomy-of-fame.mp3",
-     volume: 0.36,
-   },
-   ```
-
-3. Commit/upload both files and redeploy. Tap the music button to check it.
-
-MP3, 44.1 kHz stereo at 128–192 kbps is a good choice for phones. A direct HTTPS
-audio URL also works; YouTube/Spotify player links do not. Renaming another
-format's extension to `.mp3` does not convert it. See `audio/README.md`.
-
-The song file is not supplied yet, so `music.src` is currently empty and the
-original generated instrumental plays. The owner's song replaces that
-instrumental when configured; guests only have play/pause, with no song picker
-or upload control. Music begins on a tap, loops, and pauses when the tab is
-hidden. Loading failures allow retry without stopping the invitation.
+The invitation tries to play the recording when it opens. Browsers that block
+audible autoplay require an interaction first; in that case, the first tap or
+key press anywhere on the invitation starts music. The music button also starts
+it and lets guests pause or resume. A deliberate pause stays paused during
+navigation. Music loops and pauses when the tab is hidden. Loading failures
+allow retry without stopping the invitation. These controls apply to both the
+book and scroll views. See `audio/README.md` to replace the recording.
 
 ## Auto-scroll in the scroll view
 
 Tap **Auto-scroll**, then use pause/resume and **0.5×**, **1×** or **1.5×** speed.
 `autoScroll.pixelsPerSecond` in `details.js` controls the base pace (default 80).
 Manual navigation or hiding the tab pauses the tour. It stops at the end, where
-**Replay** starts again. Neither music nor auto-scroll starts on page load.
+**Replay** starts again. Auto-scroll starts only when requested; music attempts playback on page load.
 
 ## Local preview
 
