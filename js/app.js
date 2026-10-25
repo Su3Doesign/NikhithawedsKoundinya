@@ -97,6 +97,7 @@
   setLink($('#mapLink'), V.mapUrl || (V.name ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(V.name + ' ' + (V.address || '')) : null));
   var R = D.rsvp || {};
   setLink($('#rsvpLink'), R.whatsapp ? 'https://wa.me/' + String(R.whatsapp).replace(/\D/g, '') + '?text=' + encodeURIComponent(R.message || '') : null);
+  setLink($('#rsvpCall'), R.whatsapp ? 'tel:+' + String(R.whatsapp).replace(/\D/g, '') : null);
 
   // the countdown shows once the muhurtham is fixed
   safe(function () {
@@ -216,7 +217,7 @@
   var scenes = [];
   function scene(id, fn, hooks) {
     var el = doc.getElementById(id);
-    if (!el) return null;
+    if (!el || el.hidden) return null;
     var s = { el: el, stage: $('.stage', el), len: parseFloat(el.getAttribute('data-len')) || 2, fn: fn, h: hooks || {}, p: -1, on: false };
     scenes.push(s);
     return s;
@@ -315,7 +316,8 @@
   /* 03 · talambralu: a handful of rice with each line of the verse */
   var rice = null;
   safe(function () {
-    if (!window.Talambralu || !window.Rice) return;
+    var section = $('#talambralu');
+    if (!section || section.hidden || !window.Talambralu || !window.Rice) return;
     var stage = $('#talambralu .stage'), cv = $('#talCv'), lines = $$('#verse li'), head = $('#talambralu .head'), verse = $('#verse'), tap = $('#talTap');
     rice = Talambralu.create(cv, { dpr: DPR, low: LOW });
     var tossed = [false, false, false, false], looping = false, until = 0;
@@ -629,6 +631,10 @@
     BOOK.connect(drawPage, layout); return;
   }
   var target = location.hash && doc.getElementById(location.hash.slice(1));
-  if (target) setTimeout(function () { window.scrollTo(0, target.getBoundingClientRect().top + (window.pageYOffset || 0)); }, 60);
-  else window.scrollTo(0, 0);
+  function beginTour() { if (window.AutoScroll && AutoScroll.ready) AutoScroll.ready(); }
+  if (target && !target.hidden) setTimeout(function () {
+    window.scrollTo(0, target.getBoundingClientRect().top + (window.pageYOffset || 0));
+    beginTour();
+  }, 60);
+  else { window.scrollTo(0, 0); beginTour(); }
 })();

@@ -39,9 +39,9 @@
     <span id="autoScrollLabel">Auto-scroll</span>
   </button>
   <select id="autoScrollSpeed" aria-label="Auto-scroll speed">
-    <option value="0.5">0.5×</option>
-    <option value="1" selected>1×</option>
-    <option value="1.5">1.5×</option>
+    <option value="1">0.5×</option>
+    <option value="1.5" selected>1×</option>
+    <option value="2">1.5×</option>
   </select>
 </div>
 <p class="sr-only" id="scrollStatus" role="status"></p>
@@ -156,8 +156,8 @@
   <div class="wrap">
     <h2 class="head rv" id="evTitle"><span class="te" lang="te">వేడుకలు</span><span class="lab">Celebrations</span></h2>
     <ul class="ev">
-      <li class="rv" data-ev="haldi"><img src="img/art/marigold.png" width="200" height="200" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">హల్దీ</span><span class="en">Haldi</span></h3><p data-f="ev.haldi.when"><span class="ph">Date · Time</span></p><p class="where" data-f="ev.haldi.where"></p></div></li>
       <li class="rv" data-ev="gorintaku"><img src="img/art/gorintaku.webp" width="420" height="618" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">గోరింటాకు</span><span class="en">Mehendi</span></h3><p data-f="ev.gorintaku.when"><span class="ph">Date · Time</span></p><p class="where" data-f="ev.gorintaku.where"></p></div></li>
+      <li class="rv" data-ev="haldi"><img src="img/art/marigold.png" width="200" height="200" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">హల్దీ</span><span class="en">Haldi</span></h3><p data-f="ev.haldi.when"><span class="ph">Date · Time</span></p><p class="where" data-f="ev.haldi.where"></p></div></li>
       <li class="rv" data-ev="pellikuthuru"><img src="img/art/bangles.webp" width="480" height="360" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">పెళ్ళికూతురు</span><span class="en">Pellikuthuru</span></h3><p data-f="ev.pellikuthuru.when"><span class="ph">Date · Time</span></p><p class="where" data-f="ev.pellikuthuru.where"></p></div></li>
       <li class="rv" data-ev="sangeet"><img src="img/art/dholak.webp" width="560" height="280" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">సంగీత్</span><span class="en">Sangeet</span></h3><p data-f="ev.sangeet.when"><span class="ph">Date · Time</span></p><p class="where" data-f="ev.sangeet.where"></p></div></li>
       <li class="rv" data-ev="vivaham"><img src="img/art/kalasham.webp" width="520" height="686" alt="" loading="lazy" decoding="async"><div><h3><span class="te" lang="te">వివాహం</span><span class="en">Wedding</span></h3><p data-f="ev.vivaham.when"><span class="ph">Date · Muhurtham</span></p><p class="where" data-f="ev.vivaham.where"></p></div></li>
@@ -182,8 +182,8 @@
   </div>
 </section>
 
-<!-- talambralu -->
-<section class="scene sc-tal" id="talambralu" data-len="2.4" aria-labelledby="talTitle">
+<!-- Retained for restoration: enable sections.talambralu in details.js. -->
+<section class="scene sc-tal" id="talambralu" data-optional-section="talambralu" hidden data-len="2.4" aria-labelledby="talTitle">
   <div class="stage">
     <canvas class="tal-cv" id="talCv" aria-hidden="true"></canvas>
     <h2 class="head" id="talTitle"><span class="te" lang="te">తలంబ్రాలు</span><span class="lab">Talambralu</span></h2>
@@ -240,7 +240,7 @@
       <a class="btn btn-solid" id="rsvpLink" href="#rsvp" target="_blank" rel="noopener">RSVP on WhatsApp</a>
       <a class="btn" id="calBless" href="#when" target="_blank" rel="noopener">Add to calendar</a>
     </p>
-    <p class="call rv">Or call <span data-f="rsvpDisplay"><span class="ph">+91 ••••• •••••</span></span></p>
+    <p class="call rv">Or call <a id="rsvpCall" data-f="rsvpDisplay" aria-disabled="true"><span class="ph">+91 ••••• •••••</span></a></p>
     <p class="ak rv"><button class="btn btn-tur" id="akBtn" type="button"><span class="te" lang="te">అక్షింతలు</span> Throw akshintalu</button></p>
     <p class="ak-n" id="akN" aria-live="polite"></p>
   </div>
@@ -262,6 +262,7 @@
 <canvas class="burst" id="burst" aria-hidden="true"></canvas>
 
 <script src="details.js"></script>
+<script src="js/sections.js"></script>
 <script src="js/rice.js"></script>
 <script src="js/talambralu.js"></script>
 <script src="js/sky.js"></script>

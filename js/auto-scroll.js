@@ -1,4 +1,4 @@
-/* A guest-controlled tour of the invitation. Uses elapsed time rather
+/* An automatic tour with guest pause/resume controls. Uses elapsed time rather
    than frame counts so the pace stays the same on phones and desktops. */
 (function () {
   'use strict';
@@ -14,6 +14,7 @@
   var pace = Number(config.pixelsPerSecond);
   if (!isFinite(pace) || pace <= 0) pace = 80;
   var running = false, started = false, frame = 0, last = null, position = 0;
+  var ready = false, autoStartPending = config.startAutomatically !== false;
 
   function y() { return window.pageYOffset || root.scrollTop || 0; }
   function end() { return Math.max(0, Math.max(root.scrollHeight, doc.body.scrollHeight) - window.innerHeight); }
@@ -26,10 +27,12 @@
     controls.classList[running ? 'add' : 'remove']('on');
   }
   function pause(message) {
+    autoStartPending = false;
     if (!running) return;
     running = false;
     window.cancelAnimationFrame(frame);
     frame = 0; last = null;
+    root.classList.remove('is-auto-scrolling');
     render();
     status.textContent = message || 'Auto-scroll paused. Choose Resume to continue.';
   }
@@ -46,6 +49,8 @@
   }
   function start() {
     if (doc.hidden) return;
+    autoStartPending = false;
+    root.classList.add('is-auto-scrolling');
     if (atEnd()) window.scrollTo(0, 0);
     position = y(); last = null;
     running = true; started = true;
@@ -54,6 +59,9 @@
     var cue = doc.getElementById('cue');
     if (cue) cue.classList.remove('on');
     frame = window.requestAnimationFrame(tick);
+  }
+  function autoStart() {
+    if (ready && autoStartPending && !doc.hidden) start();
   }
   function inControls(target) {
     var music = doc.getElementById('music');
@@ -81,15 +89,21 @@
   window.addEventListener('resize', function () { position = y(); last = null; render(); });
   window.addEventListener('hashchange', function () { pause(); });
   window.addEventListener('pagehide', function () { pause(); });
-  doc.addEventListener('visibilitychange', function () { if (doc.hidden) pause(); });
+  doc.addEventListener('visibilitychange', function () {
+    if (doc.hidden) { if (running) pause(); }
+    else autoStart();
+  });
   if (window.matchMedia) {
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     var motionChanged = function () { if (reduced.matches) pause(); };
     if (reduced.addEventListener) reduced.addEventListener('change', motionChanged);
     else if (reduced.addListener) reduced.addListener(motionChanged);
   }
-  // No automatic start, including for guests who prefer reduced motion.
-  window.AutoScroll = { isOn: function () { return running; }, pause: pause };
+  // app.js signals after layout and any initial chapter-link positioning.
+  window.AutoScroll = {
+    isOn: function () { return running; }, pause: pause,
+    ready: function () { ready = true; autoStart(); }
+  };
   controls.hidden = false;
   render();
 })();

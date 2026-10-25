@@ -15,10 +15,17 @@ window.INVITE = {
     volume: 0.36,
   },
 
-  /* Auto-scroll starts only when the guest taps its button.
-     The speed menu multiplies this base pace, in pixels per second. */
+  /* The tour starts when the invitation opens; guests can pause it.
+     Speed labels 0.5x / 1x / 1.5x use the former 1x / 1.5x / 2x pace. */
   autoScroll: {
+    startAutomatically: true,
     pixelsPerSecond: 80,
+  },
+
+  /* Talambralu is retained, but removed from both invitation views.
+     Set true to bring back its original page, verse and rice effects. */
+  sections: {
+    talambralu: false,
   },
 
   bride: {
@@ -32,8 +39,8 @@ window.INVITE = {
   },
 
   /* The muhurtham, in India time.
-     Format: "YYYY-MM-DDTHH:MM" (24-hour), e.g. "2026-12-13T20:30" */
-  muhurtham: "2026-12-13T20:30",
+     Format: "YYYY-MM-DDTHH:MM" (24-hour), e.g. "2026-12-13T20:22" */
+  muhurtham: "2026-12-13T20:22",
 
   /* How long the calendar entry should run, in hours */
   durationHours: 3,
@@ -63,8 +70,8 @@ window.INVITE = {
      when: free text, e.g. "Friday · 11 December · 6:00 pm"
      where: leave empty if it is at home; the line is then left out. */
   events: {
-    haldi:        { show: true,  when: "Friday · 11 December", where: "" },
-    gorintaku:    { show: true,  when: "Saturday · 12 December", where: "" },
+    gorintaku:    { show: true,  when: "Friday · 11 December", where: "" },
+    haldi:        { show: true,  when: "Saturday · 12 December", where: "" },
     pellikuthuru: { show: true,  when: "Saturday · 12 December", where: "" },
     sangeet:      { show: false, when: "", where: "" },
     vivaham:      { show: true,  when: "", where: "" },   // left blank, it uses the muhurtham and venue above
@@ -73,9 +80,9 @@ window.INVITE = {
 
   rsvp: {
     /* Country code and number, digits only, e.g. "919876543210" */
-    whatsapp: "",
+    whatsapp: "918008292935",
     /* How the number should read on the page, e.g. "+91 98765 43210" */
-    display: "",
+    display: "+91 80082 92935",
     message: "Namaskaram! We will be there to bless Nikhitha and Sai Koundinya.",
   },
 };

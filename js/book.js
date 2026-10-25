@@ -19,10 +19,14 @@
     ['end', 'A beautiful beginning', 'శుభం', 9]
   ];
   // Use the document's actual IDs, including the existing RSVP section.
-  chapters = chapters.filter(function (chapter) { return doc.getElementById(chapter[0]); });
+  chapters = chapters.filter(function (chapter) {
+    var section = doc.getElementById(chapter[0]);
+    return section && !section.hidden;
+  });
   var pages = [], index = 0, renderer = null, layout = null, busy = false;
   var reflowTimer = 0, pendingReflow = false;
   var frame = 0, last = null, elapsed = 0, reading = false, readElapsed = 0, pausedEffects = false;
+  var autoStartPending = ((window.INVITE || {}).autoScroll || {}).startAutomatically !== false;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   var prev = doc.getElementById('previousPage'), next = doc.getElementById('nextPage');
   var select = doc.getElementById('chapterSelect'), count = doc.getElementById('pageCount');
@@ -159,8 +163,17 @@
     updateSceneButton();
   }
   function pauseReading(message) {
+    autoStartPending = false;
     reading = false; sync();
     if (message) status.textContent = message;
+  }
+  function startReading() {
+    autoStartPending = false; reading = true; pausedEffects = false; last = null;
+    status.textContent = 'Auto-read started. Pages turn after each scene. Touch the page or press Escape to pause.';
+    sync(); kick();
+  }
+  function autoStart() {
+    if (autoStartPending && renderer && !doc.hidden) startReading();
   }
   function preload(i) {
     var p = pages[i]; if (!p) return;
@@ -237,10 +250,8 @@
   next.addEventListener('click', function () { go(index === pages.length - 1 ? 0 : index + 1); });
   select.addEventListener('change', function () { go(Number(select.value)); });
   play.addEventListener('click', function () {
-    reading = !reading;
-    if (reading) { pausedEffects = false; status.textContent = 'Auto-read started. Pages turn after each scene. Touch the page or press Escape to pause.'; kick(); }
-    else status.textContent = 'Auto-read paused.';
-    sync();
+    if (reading) pauseReading('Auto-read paused.');
+    else startReading();
   });
   speed.setAttribute('aria-label', 'Reading and scene speed');
   controls.setAttribute('aria-label', 'Automatic page turning'); controls.hidden = false;
@@ -273,7 +284,12 @@
     else if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); go(e.key === 'Home' ? 0 : pages.length - 1); }
     else if (/^(ArrowUp|ArrowDown|PageUp|PageDown| )$/.test(e.key)) pauseReading();
   });
-  function hidden() { if (doc.hidden) { pauseReading(); pausedEffects = true; last = null; updateSceneButton(); } }
+  function hidden() {
+    if (doc.hidden) {
+      if (reading) pauseReading();
+      pausedEffects = true; last = null; updateSceneButton();
+    } else autoStart();
+  }
   doc.addEventListener('visibilitychange', hidden);
   window.addEventListener('pagehide', function () { pauseReading(); pausedEffects = true; });
   window.addEventListener('hashchange', function () {
@@ -290,7 +306,7 @@
       var target = id ? findPage(id) : index, p = pages[target >= 0 ? target : index];
       return { width: p.content.clientWidth, height: p.content.clientHeight };
     },
-    connect: function (draw, resize) { renderer = draw; layout = resize; fitPages(); activate(index, false); },
+    connect: function (draw, resize) { renderer = draw; layout = resize; fitPages(); activate(index, false); autoStart(); },
     go: function (id) { var target = findPage(id); if (target >= 0) go(target); },
     isReading: function () { return reading; }
   };

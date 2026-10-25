@@ -30,11 +30,14 @@ details are not invented.
 The portrait scene crossfades from the original couple photograph to the two
 supplied portraits in `img/portraits/`. Every image uses `object-fit: contain`
 without a rounded mask, so heads and full figures remain visible. The Arundhati
-star sequence ends in the couple's Telugu names. The knots, talambralu and
-seven-step scenes retain their effects and have pause/replay controls.
+star sequence ends in the couple's Telugu names. The knots and seven-step
+scenes retain their effects and have pause/replay controls.
 
-**Auto-read** plays each scene and turns the page after time to read it. The
-speed menu controls reading and scene playback. Touching the page, changing
+**Auto-read starts automatically when the invitation opens**, plays each
+scene, and turns the page after time to read it. The speed menu controls reading
+and scene playback. The new **1×** is the previous **1.5×** pace, and the new
+**0.5×** is the previous **1×** pace; the fastest **1.5×** option uses a 2×
+multiplier of the original pace. Touching the page, changing
 chapters, pressing Escape, or hiding the tab pauses automatic page turning.
 Music remains independent. Reduced-motion mode skips the 3D turn and presents
 still content; the invitation also remains readable without JavaScript.
@@ -43,6 +46,27 @@ The **Scroll version** link opens `scroll.html`, which shares the corrected
 photos, Telugu invitation and star-to-names sequence in a linear layout.
 `js/app.js` contains shared effects; `js/book.js` manages fitting and turns;
 `book.css` styles the book and surroundings.
+
+## Current event and RSVP details
+
+- Mehndi: Friday, **11 December 2026**.
+- Haldi and Pelli Kuthuru: Saturday, **12 December 2026**.
+- Wedding: Sunday, **13 December 2026, 8:22 pm IST**.
+- Calls and WhatsApp: **+91 80082 92935**. Both links use `rsvp.whatsapp`.
+
+The calendar, countdown, Telugu invitation and wedding event row all use
+`muhurtham` in `details.js`. Venue name/address, pre-wedding event times and
+locations, and panchangam details are still unprovided. The existing map link
+works; unfilled optional lines are hidden, so there are no empty pages.
+
+## Bring back Talambralu
+
+Talambralu is disabled in both the book and scroll views, leaving ten book
+pages. Its full markup, four verses, rice animation, assets, styling and
+original chapter position are retained. To restore it, set
+**`sections.talambralu: true` in `details.js`** and redeploy.
+`js/sections.js` applies that setting before chapters and effects initialize.
+The HTML also keeps it hidden when JavaScript is unavailable.
 
 ## Background music
 
@@ -60,10 +84,14 @@ book and scroll views. See `audio/README.md` to replace the recording.
 
 ## Auto-scroll in the scroll view
 
-Tap **Auto-scroll**, then use pause/resume and **0.5×**, **1×** or **1.5×** speed.
-`autoScroll.pixelsPerSecond` in `details.js` controls the base pace (default 80).
-Manual navigation or hiding the tab pauses the tour. It stops at the end, where
-**Replay** starts again. Auto-scroll starts only when requested; music attempts playback on page load.
+Auto-scroll starts when the page opens. Use pause/resume and **0.5×**, **1×**
+or **1.5×** speed. `autoScroll.pixelsPerSecond` in `details.js` is the original
+base pace (80); the new speed options apply 1×, 1.5× and 2× multipliers, so the
+default pace is 120 pixels per second. Set `autoScroll.startAutomatically` to
+`false` to disable automatic start in both views. Manual navigation or hiding
+the tab pauses the tour. It stops at the end, where **Replay** starts again.
+An initially hidden tab starts on first visibility; a guest pause stays paused.
+Music attempts playback on opening and uses the first interaction when the browser requires it.
 
 ## Local preview
 
