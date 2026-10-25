@@ -95,6 +95,17 @@
     (V.name ? '&location=' + encodeURIComponent(V.name + (V.address ? ', ' + V.address : '')) : V.mapUrl ? '&location=' + encodeURIComponent(V.mapUrl) : '') : null;
   setLink($('#calMain'), cal); setLink($('#calBless'), cal);
   setLink($('#mapLink'), V.mapUrl || (V.name ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(V.name + ' ' + (V.address || '')) : null));
+  if (V.previewImage && V.mapUrl) {
+    var mapPreview = $('#venueMap'), mapImage = $('#venueMapImage');
+    if (mapPreview && mapImage) {
+      mapImage.src = V.previewImage;
+      mapPreview.hidden = false;
+      mapPreview.parentElement.classList.add('has-map');
+      setLink($('#mapPreviewLink'), V.mapUrl);
+      var mugguCard = $('.muggu-card');
+      if (mugguCard) mugguCard.hidden = true;
+    }
+  }
   var R = D.rsvp || {};
   setLink($('#rsvpLink'), R.whatsapp ? 'https://wa.me/' + String(R.whatsapp).replace(/\D/g, '') + '?text=' + encodeURIComponent(R.message || '') : null);
   setLink($('#rsvpCall'), R.whatsapp ? 'tel:+' + String(R.whatsapp).replace(/\D/g, '') : null);

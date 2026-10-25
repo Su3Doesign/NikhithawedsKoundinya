@@ -56,9 +56,14 @@ photos, Telugu invitation and star-to-names sequence in a linear layout.
 - Calls and WhatsApp: **+91 80082 92935**. Both links use `rsvp.whatsapp`.
 
 The calendar, countdown, Telugu invitation and wedding event row all use
-`muhurtham` in `details.js`. Venue name/address, pre-wedding event times and
-locations, and panchangam details are still unprovided. The existing map link
-works; unfilled optional lines are hidden, so there are no empty pages.
+`muhurtham` in `details.js`. The venue is **Kothapali Sri Ramulu Kanakamma
+Lions Club Auditorium, Nidadavolu, Andhra Pradesh 534301**. The terrain preview
+and Directions button both open https://maps.app.goo.gl/Jujf5zxxT4sRujSr8.
+The preview uses OpenTopoMap with a pin from the supplied Plus Code; its
+source and license are recorded in `img/venue-terrain-attribution.md`. It
+replaces the decorative muggu on the venue page so the complete section
+still fits one leaf. Pre-wedding event times/locations and panchangam details
+are still unprovided; unfilled optional lines are hidden.
 
 ## Bring back Talambralu
 

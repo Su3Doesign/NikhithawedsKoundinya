@@ -60,10 +60,11 @@ window.INVITE = {
   },
 
   venue: {
-    name: "",            // e.g. "Sri Kanya Convention"
+    name: "Kothapali Sri Ramulu Kanakamma Lions Club Auditorium",
     nameTe: "",          // e.g. "శ్రీ కన్య కన్వెన్షన్"
-    address: "",         // e.g. "Road No. 2, Banjara Hills, Hyderabad"
-    mapUrl: "https://share.google/GivuVJPLMGz9PauWb",   // opens from the Directions button
+    address: "Nidadavolu, Andhra Pradesh 534301",
+    mapUrl: "https://maps.app.goo.gl/Jujf5zxxT4sRujSr8",   // opens from the Directions button
+    previewImage: "img/venue-terrain.png",  // local terrain map; tapping it opens mapUrl
   },
 
   /* The gatherings, in the order they happen. Set show:false to hide one.

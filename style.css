@@ -169,6 +169,11 @@ a{ color:inherit; }
 .mug circle{ fill:var(--gold); }
 .mug path{ fill:none; stroke:var(--kum); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
 .venue{ margin-top:22px; }
+.venue-map { width:100%; max-width:440px; margin:16px auto 6px; }
+.venue-map-link { display:block; border:1px solid var(--line); border-radius:3px; overflow:hidden; }
+.venue-map img { display:block; width:100%; height:auto; }
+.venue-map figcaption { margin-top:5px; color:var(--ink-2); font:400 10px/1.5 var(--sans); }
+.venue-map figcaption a { text-underline-offset:2px; }
 .v-name{ margin-top:6px; font-weight:500; font-size:26px; line-height:1.3; }
 .v-te{ font-size:19px; font-weight:500; }
 .v-adr{ margin-top:4px; color:var(--ink-2); }

@@ -54,7 +54,7 @@
 .book-mode .auto-scroll { right:25px; bottom:22px; background:#4a241b99; color:#f0dfc0; border-color:#dfbb7a55; box-shadow:none; }
 .book-mode .auto-scroll select { border-color:#dfbb7a55; }
 .book-mode .music.hint { animation:none; }
-.book-mode .playback-message { bottom:76px; }
+.book-mode .playback-message { bottom:76px; font-size:11px; line-height:1.4; padding:6px 9px; max-width:300px; }
 /* One complete section per leaf. The whole printed composition fits the paper. */
 .book-mode .page-content>section { min-height:0; display:flow-root; }
 .book-mode .page-content>.hero,.book-mode .page-content>.subham { height:100%; min-height:0; }
@@ -112,6 +112,10 @@
 .book-mode .venue { margin-top:14px; }
 .book-mode .v-name { font-size:23px; }
 .book-mode .v-adr { font-size:15px; }
+.book-mode .venue.has-map .v-name { font-size:20px; line-height:1.35; margin-top:4px; }
+.book-mode .venue.has-map .v-adr { font-size:13px; line-height:1.5; margin-top:4px; }
+.book-mode .venue-map { max-width:400px; margin:10px auto 0; }
+.book-mode .venue-map figcaption { font-size:9px; line-height:1.4; }
 .book-mode .btns { margin-top:14px; }
 .book-mode .btn { font-size:10px; padding:11px 14px; line-height:1.4; margin:4px 2px; }
 .book-mode .events { padding:10px 0; }
@@ -321,6 +325,18 @@
 }
 @media (max-height:500px) and (orientation:landscape) {
   .book-mode { --book-x:15vw; --book-width:70vw; }
+  .book-mode .playback-message { top:3px; bottom:auto; left:8px; right:auto; }
+  .book-mode .when .wrap { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); align-items:center; max-width:none; gap:5px 16px; }
+  .book-mode .when .head { grid-column:1; margin-bottom:2px; }
+  .book-mode .when-card { grid-column:1; }
+  .book-mode .when .venue { grid-column:2; grid-row:1 / span 2; margin-top:0; }
+  .book-mode .venue.has-map .v-name { font-size:14px; line-height:1.25; }
+  .book-mode .venue.has-map .v-adr { font-size:10px; }
+  .book-mode .venue-map { margin-top:5px; }
+  .book-mode .venue-map figcaption { font-size:8px; line-height:1.2; }
+  .book-mode .when .venue>.lab { font-size:9px; }
+  .book-mode .when .btns { margin-top:4px; }
+  .book-mode .when .btn { font-size:9px; padding:7px 10px; margin:2px; }
   .book-mode .hero-in { padding:35px 24px 18px; gap:2px 8px; }
   .book-mode .cover-family span { font-size:18px; }.book-mode .cover-family strong { font-size:27px; }
   .book-mode .cover-names { font-size:25px; }.book-mode .hero-sub.te,.book-mode .hero-date.te { font-size:10px; }
