@@ -2,6 +2,8 @@
 
 The wedding invitation is the site's home page (`index.html`). Dates, venue and RSVP details go in `details.js`. The earlier engagement invitation is in `engagement/`.
 
+Public invitation for guests: https://su3doesign.github.io/NikhithawedsKoundinya/
+
 ## Invitation book
 
 The home page is a tall open invitation book, with the reading page on the right
@@ -13,6 +15,10 @@ pages. Every section stays on exactly one leaf. The complete composition fits th
 available paper area, including on small screens. There are no continuation
 pages and no internal scrolling.
 The reverse of every turning leaf is blank paper.
+The turn gently lifts the outside edge with a travelling shadow; the content
+remains one intact sheet. Reduced-motion users get an immediate page change.
+The bookmark has been removed. Small textured pasupu and kumkuma touches sit
+in the four outer corners of each leaf, clear of the text.
 
 The main invitation opens in Telugu, with a traditional family, bride, groom,
 muhurtham and invitation hierarchy headed **చల్లపల్లి వారి పెళ్లి పిలుపు**.
@@ -26,12 +32,19 @@ The entire family invitation, muhurtham and signoff remain on the same page.
 The surname follows the existing family spelling, Challapalli / చల్లపల్లి.
 Existing family names and wedding details are preserved; unprovided panchangam
 details are not invented.
+Every occurrence of **చల్లపల్లి** uses a bold weight at the surrounding font size.
 
 The portrait scene crossfades from the original couple photograph to the two
 supplied portraits in `img/portraits/`. Every image uses `object-fit: contain`
-without a rounded mask, so heads and full figures remain visible. The Arundhati
+without a rounded mask, so heads and full figures remain visible. The bride's
+current image is the supplied purple-saree watercolor at
+`img/portraits/nikhitha-watercolor.jpg`. The individual portraits introduce
+**వధువు** and **వరుడు** with a soft ink reveal; the first couple photograph
+has no role watermark. The Arundhati
 star sequence ends in the couple's Telugu names. The knots and seven-step
 scenes retain their effects and have pause/replay controls.
+The Shubham page closes on warm ivory paper with a small muggu, lamps and a
+Telugu blessing. It has no black background.
 
 **Auto-read starts automatically when the invitation opens**, plays each
 scene, and turns the page after time to read it. The speed menu controls reading
@@ -66,13 +79,18 @@ photos, Telugu invitation and star-to-names sequence in a linear layout.
 
 The calendar, countdown, Telugu invitation and wedding event row all use
 `muhurtham` in `details.js`. The venue is **Kothapali Sri Ramulu Kanakamma
-Lions Club Auditorium, Nidadavolu, Andhra Pradesh 534301**. The terrain preview
+Lions Club Auditorium, Nidadavolu, Andhra Pradesh 534301**. The supplied map
 and Directions button both open https://maps.app.goo.gl/Jujf5zxxT4sRujSr8.
-The preview uses OpenTopoMap with a pin from the supplied Plus Code; its
-source and license are recorded in `img/venue-terrain-attribution.md`. It
-replaces the decorative muggu on the venue page so the complete section
-still fits one leaf. Pre-wedding event times/locations and panchangam details
+`img/venue-map.jpg` is the owner's latest map without the white vignette,
+retained without cropping or redrawing. The venue leaf matches its paper color
+(#f5ece3), with no image frame, shadow or added vignette.
+The previous terrain image and its license remain in the repository as an
+unused alternative. The complete venue section still fits one leaf, including
+on a phone in landscape. Pre-wedding event times/locations and panchangam details
 are still unprovided; unfilled optional lines are hidden.
+
+The corner treatment is inspired by the customary application of pasupu and
+kumkuma to a shubhalekha; see the [Telugu reference](https://telugu.hashtagu.in/devotional/why-pasupu-and-kukuma-put-for-wedding-card-what-is-the-reason-of-invitation-cards-247180.html).
 
 ## Bring back Talambralu
 

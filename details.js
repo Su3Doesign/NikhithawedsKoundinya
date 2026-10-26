@@ -64,7 +64,7 @@ window.INVITE = {
     nameTe: "",          // e.g. "శ్రీ కన్య కన్వెన్షన్"
     address: "Nidadavolu, Andhra Pradesh 534301",
     mapUrl: "https://maps.app.goo.gl/Jujf5zxxT4sRujSr8",   // opens from the Directions button
-    previewImage: "img/venue-terrain.png",  // local terrain map; tapping it opens mapUrl
+    previewImage: "img/venue-map.jpg",  // supplied illustrated map; tapping it opens mapUrl
   },
 
   /* The gatherings, in the order they happen. Set show:false to hide one.

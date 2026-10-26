@@ -273,14 +273,27 @@
   /* 01 · the couple and the two supplied portraits, always uncropped */
   safe(function () {
     var portraits = $$('#portraitSequence .portrait-slide');
+    var roles = portraits.map(function (portrait) { return $('.portrait-role', portrait); });
+    var portraitHeading = $('.portrait-heading');
     if (!portraits.length) return;
     scene('couple', function (p) {
       var bride = smooth(span(p, 0.18, 0.32));
       var groom = smooth(span(p, 0.58, 0.72));
       var opacity = [1 - bride, bride * (1 - groom), groom];
+      if (BOOK && portraitHeading) {
+        portraitHeading.style.opacity = (1 - bride).toFixed(3);
+        portraitHeading.setAttribute('aria-hidden', bride > 0.5 ? 'true' : 'false');
+      }
       portraits.forEach(function (portrait, i) {
         portrait.style.opacity = opacity[i].toFixed(3);
         portrait.setAttribute('aria-hidden', opacity[i] < 0.5 ? 'true' : 'false');
+        if (roles[i]) {
+          var ink = smooth(i === 1 ? span(p, 0.28, 0.43) : span(p, 0.68, 0.83));
+          roles[i].style.opacity = ink.toFixed(3);
+          roles[i].style.clipPath = 'inset(0 ' + ((1 - ink) * 100).toFixed(1) + '% 0 0)';
+          roles[i].style.filter = 'blur(' + ((1 - ink) * 4).toFixed(2) + 'px)';
+          roles[i].style.transform = 'translateY(' + ((1 - ink) * 7).toFixed(1) + 'px) rotate(-5deg)';
+        }
       });
     });
   });
@@ -427,7 +440,7 @@
 
   /* ---------------------------------------------------------------- fixed bits: progress, music, keep scrolling */
   var bar = $('#progress'), musicBtn = $('#music'), scrollControls = $('#autoScrollControls'), cue = $('#cue');
-  var darkIds = ['knots', 'talambralu', 'arundhati', 'end'];
+  var darkIds = ['knots', 'talambralu', 'arundhati'];
   var probeY = function () { return vh - 34; };
   var idle = 0;
   function chrome(y) {

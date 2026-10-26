@@ -21,7 +21,6 @@
 .left-page-print>span { margin-top:24px; text-transform:uppercase; font-size:9px; letter-spacing:.2em; }
 .page-stack { position:absolute; inset:5px -7px -8px 1px; border-radius:0 7px 9px 0; background:repeating-linear-gradient(0deg,#e8d9b8 0 2px,#bfa67e 2px 3px,#f6e8ca 3px 4px); border-right:1px solid #c1a171; box-shadow:3px 7px 5px #2f190c55; }
 .binding { position:absolute; z-index:15; top:0; bottom:0; left:-13px; width:28px; background:linear-gradient(90deg,transparent,#5b351a35 35%,#40261155 46%,#e7d6b730 53%,transparent); pointer-events:none; }
-.book-ribbon { position:absolute; z-index:2; top:-13px; right:8px; width:22px; height:60px; background:linear-gradient(90deg,#6c201d,#af4031 45%,#7e2722); clip-path:polygon(0 0,100% 0,100% 100%,50% 87%,0 100%); transform:rotate(5deg); box-shadow:2px 4px 5px #3a1e1844; }
 .book-pages,#invitation { position:absolute; inset:0; perspective:2000px; }
 .book-leaf { position:absolute; inset:0; visibility:hidden; pointer-events:none; transform-origin:0 50%; transform-style:preserve-3d; }
 .book-leaf.is-current { visibility:visible; pointer-events:auto; z-index:3; }
@@ -153,6 +152,7 @@
 .book-mode .end-names { font-size:clamp(24px,5cqh,37px); }
 .book-mode .subham .lab { font-size:10px; }
 .book-leaf.is-turning .leaf-front,.book-leaf.is-turning .leaf-back { box-shadow:inset 24px 0 40px #79522526,8px 6px 18px #432a1a33; }
+.book-leaf.is-turning .leaf-front { background-image:linear-gradient(100deg,#6b4a1e22,transparent 18%,#fffdfb80 56%,#b98d3929 87%,#fff9e670),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath filter='url(%23f)' opacity='.055' d='M0 0h120v120H0z'/%3E%3C/svg%3E"); }
 @media (min-width:1500px) { .book-mode { --book-x:28vw; --book-width:min(44vw,610px); } }
 @media (max-width:1000px) { .book-mode { --book-x:17vw; --book-width:64vw; }.desk-caption,.book-instruction { display:none; } }
 @media (max-width:700px) {
@@ -164,7 +164,6 @@
   .page-content { top:36px; bottom:34px; left:13px; right:13px; }
   .page-heading { top:14px; left:21px; right:25px; font-size:6px; }.page-heading span:last-child { font-size:8px; }
   .leaf-front::after { inset:8px; }.page-foot { bottom:14px; font-size:9px; }
-  .book-ribbon { width:17px; height:48px; right:6px; }
   .book-nav { top:calc(100% + 12px); }.page-arrow { width:38px; height:36px; }
   .chapter-picker select { font-size:10px; max-width:220px; letter-spacing:.06em; }
   .book-mode .music { left:18px; bottom:9px; height:40px; }.book-mode .auto-scroll { right:18px; bottom:9px; }
@@ -356,3 +355,125 @@
   .book-mode .patrika-signoff br { display:none; }
   .book-mode .patrika-signoff strong { margin-left:6px; }
 }
+
+/* Pasupu touches stay in the outer corners, clear of the printed content. */
+.pasupu-corners { position:absolute; inset:0; z-index:6; pointer-events:none; }
+.pasupu-corners i { position:absolute; width:clamp(27px,8%,42px); aspect-ratio:1; background:url('img/book/pasupu-corner.svg') center / contain no-repeat; }
+.pasupu-corners i:nth-child(1) { left:0; top:0; }
+.pasupu-corners i:nth-child(2) { right:0; top:0; transform:rotate(90deg); }
+.pasupu-corners i:nth-child(3) { right:0; bottom:0; transform:rotate(180deg); }
+.pasupu-corners i:nth-child(4) { left:0; bottom:0; transform:rotate(270deg); }
+.book-mode .portrait-role { font-size:clamp(29px,9cqw,49px); }
+
+/* Keep the complete portrait map with compact, readable venue details. */
+.book-mode .when .wrap { display:flex; flex-direction:column; align-items:center; gap:4px; padding-inline:8px; max-width:none; }
+.book-mode .when .head { margin-bottom:5px; }
+.book-mode .when-card { width:100%; }
+.book-mode .when .venue { display:contents; }
+.book-mode .when .venue>.lab { font-size:8px; margin-top:7px; }
+.book-mode .when .venue.has-map .v-name { margin:0; max-width:440px; font-size:17px; line-height:1.35; }
+.book-mode .when .venue.has-map .v-adr { margin:0; font-size:11px; line-height:1.4; }
+.book-mode .when .venue-map { width:clamp(115px,27cqh,210px); max-width:70%; margin:7px auto 0; }
+.book-mode .when .venue-map figcaption { font-size:8px; margin-top:4px; }
+.book-mode .when .btns { margin-top:6px; }
+.book-mode .when .w-date { font-size:clamp(23px,4cqh,32px); line-height:1.25; margin-top:4px; }
+.book-mode .when .w-time { font-size:20px; margin-top:5px; }
+.book-mode .when .w-day { display:flex; align-items:baseline; justify-content:center; gap:8px; }
+.book-mode .when .w-day .te { font-size:13px; }
+.book-mode .when .w-day .lab { font-size:8px; }
+.book-mode .when .cd { flex-wrap:nowrap; gap:9px; margin-top:10px; }
+.book-mode .when .cd div { width:35px; }
+.book-mode .when .cd b { font-size:18px; }
+.book-mode .when .cd span { font-size:7px; }
+
+/* A warm printed blessing closes the book. */
+.book-mode .subham { padding:20px 13px; }
+.book-mode .subham::before { inset:8px; }
+.book-mode .subham-in { width:100%; }
+.book-mode .subham-ornament { width:clamp(140px,64%,280px); max-height:22cqh; object-fit:contain; margin-bottom:clamp(10px,3cqh,24px); }
+.book-mode .subham-w { font-size:clamp(61px,14cqh,112px); color:#7a3c29; }
+.book-mode .subham-blessing { font-size:clamp(11px,2cqh,15px); line-height:1.9; margin:clamp(12px,2.4cqh,20px) 0 0; }
+.book-mode .subham .sign-end { margin:clamp(14px,4cqh,30px) auto; }
+.book-mode .subham .end-names { font-size:clamp(25px,5cqh,38px); }
+.book-mode .subham .back { margin-top:clamp(14px,3cqh,22px); }
+@media (max-height:660px) {
+  .book-mode .when .cd { display:none; }
+  .book-mode .when .head { margin-bottom:6px; }
+  .book-mode .when .btns { margin-top:5px; }
+}
+@media (max-height:500px) and (orientation:landscape) {
+  .book-mode .when .wrap { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.9fr) minmax(0,1.05fr); gap:4px 13px; }
+  .book-mode .when .head { grid-column:1; grid-row:1/3; }
+  .book-mode .when-card { grid-column:1; grid-row:3/7; }
+  .book-mode .when .venue>.lab { grid-column:2; grid-row:1; margin-top:0; }
+  .book-mode .when .venue.has-map .v-name { grid-column:2; grid-row:2/4; font-size:14px; }
+  .book-mode .when .venue.has-map .v-adr { grid-column:2; grid-row:4/6; font-size:10px; }
+  .book-mode .when .v-te { grid-column:2; grid-row:6; }
+  .book-mode .when .venue-map { grid-column:3; grid-row:1/7; width:calc(62cqh * .73125); max-width:100%; margin:0 auto; }
+  .book-mode .when .btns { grid-column:1/4; grid-row:7; margin-top:2px; }
+  .book-mode .when .btn { font-size:8px; padding:6px 10px; }
+  .book-mode .when .w-date { font-size:22px; }
+  .book-mode .when .w-time { font-size:17px; }
+  .book-mode .portrait-role { font-size:22px; top:3%; padding:4px 8px; }
+  .book-mode .subham { padding:12px 18px; }
+  .book-mode .subham-in { display:grid; grid-template-columns:1fr 1fr; gap:5px 18px; align-items:center; }
+  .book-mode .subham-ornament { display:none; }
+  .book-mode .subham-w { grid-column:1; grid-row:1/3; font-size:62px; }
+  .book-mode .subham .sign-end { grid-column:2; grid-row:1/3; margin:0; font-size:26px; }
+  .book-mode .subham-blessing { grid-column:1/-1; grid-row:3; font-size:10px; margin:2px 0; }
+  .book-mode .subham-in>.lab { grid-column:1; grid-row:4; font-size:8px; }
+  .book-mode .subham .back { grid-column:2; grid-row:4; font-size:8px; margin:0; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .book-mode .portrait-slide { position:relative; }
+  .book-mode .portrait-role { font-size:18px; left:2%; top:14%; padding:3px; }
+}
+
+/* Let the watercolor paper dissolve into the leaf, preserving every face and figure. */
+.book-mode .sc-couple .stage { position:relative; padding:0; }
+.book-mode .portrait-heading { position:absolute; z-index:3; left:0; right:0; top:14px; margin:0; pointer-events:none; }
+.book-mode .portrait-sequence { height:100%; }
+.book-mode .portrait-slide { justify-content:center; gap:12px; }
+.book-mode .portrait-slide img { flex:0 1 auto; width:auto; height:auto; max-width:100%; max-height:calc(100cqh - 120px); }
+.book-mode .portrait-slide.is-first { padding-top:70px; }
+.book-mode .portrait-slide:not(.is-first) img {
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 95%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 95%,transparent);
+  mask-composite:intersect;
+}
+.book-mode [data-portrait="bride"] img { transform:translateY(-4%) scale(1.12); }
+.book-mode .portrait-slide figcaption { padding:0; }
+.book-mode .portrait-role { left:0; right:0; top:6%; max-width:none; text-align:center; font-size:clamp(36px,10cqw,52px); }
+.book-mode .venue-map-link { background:transparent; border:0; box-shadow:none; }
+.book-mode .venue-map img { mix-blend-mode:normal; }
+.book-mode .when .venue.has-map .v-name { font-weight:400; }
+@media (max-height:660px) and (orientation:portrait) {
+  .book-mode .portrait-heading { top:5px; }
+  .book-mode .portrait-heading .te { font-size:29px; }
+  .book-mode .portrait-slide { gap:8px; }
+  .book-mode .portrait-slide img { max-height:calc(100cqh - 75px); }
+  .book-mode .portrait-slide.is-first { padding-top:50px; }
+  .book-mode .portrait-role { top:0; font-size:30px; }
+}
+@media (max-height:500px) and (orientation:landscape) {
+  .book-mode .portrait-heading { top:0; }
+  .book-mode .portrait-heading .te { font-size:22px; }
+  .book-mode .portrait-heading .lab { font-size:7px; }
+  .book-mode .portrait-slide { gap:2px; }
+  .book-mode .portrait-slide img { max-height:calc(100cqh - 43px); }
+  .book-mode .portrait-slide.is-first { padding-top:32px; }
+  .book-mode .portrait-role { left:4%; right:auto; top:20%; font-size:25px; }
+  .book-mode [data-portrait="bride"] img { transform:none; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .book-mode .portrait-heading { position:relative; top:auto; }
+  .book-mode .portrait-slide { gap:8px; }
+  .book-mode .portrait-slide.is-first { padding-top:0; }
+  .book-mode .portrait-slide img { max-height:calc(100cqh - 120px); }
+  .book-mode [data-portrait="bride"] img { transform:none; }
+  .book-mode .portrait-role { top:2%; font-size:18px; }
+}
+
+/* Match the supplied map paper exactly; its original print needs no vignette. */
+.book-leaf[data-chapter="when"] .leaf-front { background-color:var(--map-paper); background-image:none; }

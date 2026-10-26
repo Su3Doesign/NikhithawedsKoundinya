@@ -5,7 +5,7 @@
    Built to work on old phones: no libraries, no WebGL, sticky scenes.
    ================================================================== */
 :root{
-  --paper:#F6F0E4; --paper-2:#EFE6D3; --ink:#231D18; --ink-2:#6A5D50; --line:rgba(184,148,90,.38);
+  --paper:#F6F0E4; --map-paper:#f5ece3; --paper-2:#EFE6D3; --ink:#231D18; --ink-2:#6A5D50; --line:rgba(184,148,90,.38);
   --kum:#B3261E; --kum-d:#A4201B; --tur:#E0A526; --leaf:#3E5B2E; --gold:#B8945A;
   --night:#0E0D14; --cream:#F4ECDD;
   --sans:'Jost',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
@@ -272,13 +272,16 @@ a{ color:inherit; }
 
 /* ---------------------------------------------------------------- శుభం */
 .subham{ position:relative; min-height:100vh; min-height:calc(var(--vh) * 100); display:flex; align-items:center; justify-content:center;
-  overflow:hidden; background:#0B0907; color:#F2E8D6; text-align:center; padding:60px 22px; }
-.film{ position:absolute; left:0; top:0; width:100%; height:100%; opacity:.5; pointer-events:none; }
-.subham-in{ position:relative; display:flex; flex-direction:column; align-items:center; }
+  overflow:hidden; background:radial-gradient(ellipse at 0 100%,#e8bd4c26,transparent 52%),radial-gradient(ellipse at 100% 0,#cb786c16,transparent 48%),#f8efd9; color:#723c2b; text-align:center; padding:60px 22px; }
+.film{ position:absolute; left:0; top:0; width:100%; height:100%; opacity:.12; mix-blend-mode:multiply; pointer-events:none; }
+.subham::before{ content:""; position:absolute; inset:22px; border:1px solid #b28b4e50; border-radius:48% 48% 3px 3px / 18% 18% 3px 3px; pointer-events:none; }
+.subham-in{ position:relative; display:flex; flex-direction:column; align-items:center; width:min(100%,460px); }
+.subham-ornament{ display:block; width:min(78%,310px); height:auto; margin-bottom:14px; }
 .subham-w{ font:400 96px/1 'Ramabhadra',var(--te); font-size:clamp(84px,26vw,190px); letter-spacing:.02em; }
-.sign-end{ width:72vw; max-width:420px; margin:16px auto 10px; color:#F2E8D6; }
-.subham .lab{ color:rgba(242,232,214,.7); }
-.back{ display:inline-block; margin-top:22px; text-decoration:none; border-bottom:1px solid rgba(242,232,214,.35); padding-bottom:4px; }
+.subham-blessing{ margin:19px 0 0; color:#6e7347; font-size:15px; line-height:1.8; }
+.sign-end{ width:72vw; max-width:420px; margin:22px auto 16px; color:#723c2b; }
+.subham .lab{ color:#806747; }
+.back{ display:inline-block; margin-top:22px; text-decoration:none; border-bottom:1px solid #a485555c; padding-bottom:4px; }
 
 .burst{ position:fixed; z-index:40; left:0; top:0; width:100%; height:100%; pointer-events:none; display:none; }
 .burst.on{ display:block; }
@@ -331,10 +334,13 @@ a{ color:inherit; }
 .sc-couple .stage { flex-direction:column; }
 .portrait-heading { flex:none; }
 .portrait-sequence { width:min(88%,600px); }
-.portrait-slide { display:flex; flex-direction:column; align-items:center; margin-bottom:30px; }
+.portrait-slide { position:relative; display:flex; flex-direction:column; align-items:center; margin-bottom:30px; }
 .portrait-slide img { display:block; width:100%; max-height:72vh; object-fit:contain; object-position:center; border-radius:0; }
 .portrait-slide figcaption { flex:none; padding:12px 6px 0; font-size:21px; line-height:1.5; color:#72512f; }
 .portrait-slide figcaption span { color:var(--gold); padding:0 .2em; }
+.portrait-role { position:absolute; z-index:2; left:6%; top:7%; padding:8px 15px; max-width:86%; color:#823950; font:400 clamp(32px,7vw,52px)/1.5 var(--te-display); transform:rotate(-5deg); pointer-events:none; text-shadow:.5px .5px 0 #b5866e25; }
+[data-portrait="groom"] .portrait-role { color:#29536b; }
+[data-portrait="bride"] img,[data-portrait="groom"] img { mix-blend-mode:multiply; }
 .motion .portrait-sequence { position:relative; height:calc(var(--vh) * 100 - 150px); }
 .motion .portrait-slide { position:absolute; inset:0; height:100%; margin:0; opacity:0; }
 .motion .portrait-slide.is-first { opacity:1; }
@@ -393,3 +399,16 @@ a{ color:inherit; }
 .patrika-flow { font-weight:500; }
 .patrika-masthead h2,.patrika-person h3 { font-weight:600; }
 .patrika-masthead h2 { line-height:1.25; margin-bottom:10px; }
+
+/* Keep the family name at its surrounding size; give it a clear printed weight. */
+.cover-family,.cover-family>strong,
+.patrika .patrika-masthead h2,.patrika .patrika-masthead h2>span,
+.patrika .patrika-person h3,.patrika .patrika-flow,
+.patrika .patrika-muhurtham strong,.patrika .patrika-signoff strong { font-weight:400; }
+.family-name { font-size:inherit; line-height:inherit; font-weight:700; }
+
+/* The supplied map is a complete portrait print, never a cropped thumbnail. */
+.venue-map { max-width:310px; }
+.when { background:var(--map-paper); }
+.venue-map-link { background:transparent; border:0; border-radius:0; box-shadow:none; }
+.venue-map img { object-fit:contain; }

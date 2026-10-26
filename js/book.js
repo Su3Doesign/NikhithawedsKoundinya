@@ -55,6 +55,8 @@
     var footer = doc.createElement('p'); footer.className = 'page-foot'; footer.textContent = ''; footer.setAttribute('aria-hidden', 'true');
     var back = doc.createElement('div'); back.className = 'leaf-back'; back.setAttribute('aria-hidden', 'true');
     front.appendChild(heading); front.appendChild(content); front.appendChild(footer);
+    var corners = doc.createElement('span'); corners.className = 'pasupu-corners'; corners.setAttribute('aria-hidden', 'true');
+    corners.innerHTML = '<i></i><i></i><i></i><i></i>'; front.appendChild(corners);
     var meter = null, replay = null;
     if (isScene && !reduced.matches) {
       var line = doc.createElement('div'); line.className = 'leaf-progress'; line.setAttribute('aria-hidden', 'true');
@@ -216,10 +218,13 @@
       if (pendingReflow) scheduleReflow();
     }
     if (reduced.matches || !turning.animate) { done(); return; }
+    // Lift the outer edge and let its shadow travel across the paper. Keep one
+    // intact sheet and an empty reverse, so text is never cloned or mirrored.
     var animation = turning.animate([
-      { transform: forward ? 'rotateY(0deg)' : 'rotateY(-170deg)' },
-      { transform: 'rotateY(-85deg)', offset: 0.52 },
-      { transform: forward ? 'rotateY(-170deg)' : 'rotateY(0deg)' }
+      { transform: forward ? 'rotateY(0deg) rotateX(0deg)' : 'rotateY(-170deg) rotateX(0deg)', boxShadow: '0 2px 3px #492b1210' },
+      { transform: forward ? 'translateZ(18px) rotateY(-38deg) rotateX(1.8deg)' : 'translateZ(26px) rotateY(-85deg) rotateX(2.5deg)', boxShadow: '18px 14px 28px #492b122c', offset: forward ? 0.25 : 0.48 },
+      { transform: forward ? 'translateZ(26px) rotateY(-85deg) rotateX(2.5deg)' : 'translateZ(18px) rotateY(-38deg) rotateX(1.8deg)', boxShadow: '10px 18px 36px #492b123b', offset: forward ? 0.52 : 0.75 },
+      { transform: forward ? 'rotateY(-170deg) rotateX(0deg)' : 'rotateY(0deg) rotateX(0deg)', boxShadow: '0 2px 3px #492b1210' }
     ], { duration: 1050, easing: 'cubic-bezier(.3,.05,.2,1)', fill: 'forwards' });
     animation.onfinish = function () { animation.oncancel = null; animation.cancel(); done(); };
     animation.oncancel = function () { if (busy) done(); };
