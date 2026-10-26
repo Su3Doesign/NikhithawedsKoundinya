@@ -26,6 +26,7 @@
   var pages = [], index = 0, renderer = null, layout = null, busy = false;
   var reflowTimer = 0, pendingReflow = false;
   var frame = 0, last = null, elapsed = 0, reading = false, readElapsed = 0, pausedEffects = false;
+  var presence = window.InvitationPresence, turnAnimation = null, finished = false;
   var autoStartPending = ((window.INVITE || {}).autoScroll || {}).startAutomatically !== false;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   var prev = doc.getElementById('previousPage'), next = doc.getElementById('nextPage');
@@ -60,7 +61,6 @@
       meter = doc.createElement('i'); line.appendChild(meter); front.appendChild(line);
       replay = doc.createElement('button'); replay.type = 'button'; replay.className = 'scene-replay'; replay.textContent = 'Pause scene';
       replay.addEventListener('click', function () {
-        pauseReading();
         if (elapsed >= chapter[3]) { elapsed = 0; pausedEffects = false; }
         else pausedEffects = !pausedEffects;
         updateSceneButton(); kick();
@@ -156,10 +156,10 @@
     next.firstElementChild.textContent = index === pages.length - 1 ? '↺' : '→';
     select.value = String(index); select.disabled = busy;
     count.textContent = pad(index + 1) + ' / ' + pad(pages.length);
-    controls.classList[reading ? 'add' : 'remove']('on');
-    play.setAttribute('aria-pressed', reading ? 'true' : 'false');
-    play.setAttribute('aria-label', reading ? 'Pause automatic page turning' : 'Start automatic page turning');
-    playLabel.textContent = reading ? 'Pause' : 'Auto-read';
+    controls.classList[reading && !finished ? 'add' : 'remove']('on');
+    play.setAttribute('aria-pressed', reading && !finished ? 'true' : 'false');
+    play.setAttribute('aria-label', finished ? 'Read the invitation again' : reading ? 'Pause automatic page turning' : 'Start automatic page turning');
+    playLabel.textContent = finished ? 'Read again' : reading ? 'Pause' : 'Auto-read';
     updateSceneButton();
   }
   function pauseReading(message) {
@@ -169,18 +169,19 @@
   }
   function startReading() {
     autoStartPending = false; reading = true; pausedEffects = false; last = null;
-    status.textContent = 'Auto-read started. Pages turn after each scene. Use the Pause control or press Escape to pause.';
+    if (finished) go(0);
+    status.textContent = 'Auto-read started. Use the Pause button to stop. The invitation waits while you are away and continues when you return.';
     sync(); kick();
   }
   function autoStart() {
-    if (autoStartPending && renderer && !doc.hidden) startReading();
+    if (autoStartPending && renderer && !presence.isAway()) startReading();
   }
   function preload(i) {
     var p = pages[i]; if (!p) return;
     Array.prototype.forEach.call(p.section.querySelectorAll('img'), function (img) { img.loading = 'eager'; });
   }
   function activate(i, announce) {
-    index = i; elapsed = 0; readElapsed = 0; last = null; pausedEffects = false;
+    index = i; elapsed = 0; readElapsed = 0; last = null; pausedEffects = false; finished = false;
     var p = pages[index];
     if (renderer) renderer(p.chapter[0], reduced.matches ? 1 : 0);
     if (layout) layout();
@@ -194,9 +195,10 @@
     progress.style.transform = 'scaleX(' + ((index + 1) / pages.length) + ')';
     sync(); notify(); kick();
   }
-  function go(to, automatic, updateHash) {
+  function go(to, updateHash) {
     if (busy || to < 0 || to >= pages.length || to === index) return;
-    if (!automatic) pauseReading();
+    // Navigation selects a new page; only the dedicated Pause button changes
+    // whether its reading timer runs. Give the new page its full reading time.
     var old = pages[index], incoming = pages[to], forward = to > index;
     busy = true;
     // Move focus out before making the departing page inaccessible.
@@ -208,6 +210,7 @@
     if (updateHash !== false) history.replaceState(null, '', '#' + incoming.chapter[0]);
     activate(to, true);
     function done() {
+      turnAnimation = null;
       turning.classList.remove('is-turning'); turning.style.transform = ''; turning.style.transition = '';
       busy = false; last = null; sync(); kick();
       if (pendingReflow) scheduleReflow();
@@ -220,10 +223,12 @@
     ], { duration: 1050, easing: 'cubic-bezier(.3,.05,.2,1)', fill: 'forwards' });
     animation.onfinish = function () { animation.oncancel = null; animation.cancel(); done(); };
     animation.oncancel = function () { if (busy) done(); };
+    turnAnimation = animation;
+    if (presence.isAway()) animation.pause();
   }
   function tick(time) {
     frame = 0;
-    if (doc.hidden || busy) { last = null; return; }
+    if (presence.isAway() || busy) { last = null; return; }
     var p = pages[index], dt = last === null ? 0 : Math.min((time - last) / 1000, 0.06);
     last = time;
     var multiplier = Number(speed.value) || 1;
@@ -234,29 +239,30 @@
       if (p.meter) p.meter.style.transform = 'scaleX(' + q + ')';
       updateSceneButton();
     }
-    if (reading) {
+    if (reading && !finished) {
       readElapsed += dt * multiplier;
       var readTime = p.chapter[3];
-      if (readElapsed >= readTime + 2 && (!p.scene || reduced.matches || elapsed >= p.chapter[3])) {
-        if (index < pages.length - 1) { go(index + 1, true); return; }
-        pauseReading('You have reached the end of the invitation. Use the return arrow to begin again.');
+      // Scene pause/replay controls affect the artwork, not the page's timer.
+      if (readElapsed >= readTime + 2) {
+        if (index < pages.length - 1) { go(index + 1); return; }
+        finished = true; sync();
+        status.textContent = 'You have reached the end of the invitation. Choose Read again or use the return arrow to begin again.';
       }
     }
-    if (reading || (p.scene && !reduced.matches && !pausedEffects && elapsed < p.chapter[3])) kick();
+    if ((reading && !finished) || (p.scene && !reduced.matches && !pausedEffects && elapsed < p.chapter[3])) kick();
     else last = null;
   }
-  function kick() { if (!frame && !busy && !doc.hidden) frame = window.requestAnimationFrame(tick); }
+  function kick() { if (!frame && !busy && !presence.isAway()) frame = window.requestAnimationFrame(tick); }
   prev.addEventListener('click', function () { go(index - 1); });
   next.addEventListener('click', function () { go(index === pages.length - 1 ? 0 : index + 1); });
   select.addEventListener('change', function () { go(Number(select.value)); });
   play.addEventListener('click', function () {
-    if (reading) pauseReading('Auto-read paused.');
+    if (reading && !finished) pauseReading('Auto-read paused.');
     else startReading();
   });
   speed.setAttribute('aria-label', 'Reading and scene speed');
   controls.setAttribute('aria-label', 'Automatic page turning'); controls.hidden = false;
   speed.addEventListener('change', function () { last = null; });
-  main.addEventListener('wheel', function () { pauseReading(); }, { passive: true });
   main.addEventListener('click', function (e) {
     var anchor = e.target.closest('a[href^="#"]');
     if (!anchor || anchor.hasAttribute('aria-disabled')) return;
@@ -265,7 +271,7 @@
   });
   var gesture = null;
   main.addEventListener('touchstart', function (e) {
-    // A tap can unlock music. Pause only when a completed swipe changes pages.
+    // A swipe changes the page without changing the auto-read setting.
     if (e.touches.length === 1 && !interactive(e.target)) gesture = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     else gesture = null;
   }, { passive: true });
@@ -276,25 +282,29 @@
     gesture = null;
   }, { passive: true });
   doc.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { pauseReading('Auto-read paused.'); pausedEffects = true; updateSceneButton(); return; }
     if (interactive(e.target) || e.altKey || e.ctrlKey || e.metaKey) return;
     if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); go(index + (e.key === 'ArrowRight' ? 1 : -1)); }
     else if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); go(e.key === 'Home' ? 0 : pages.length - 1); }
-    else if (/^(ArrowUp|ArrowDown|PageUp|PageDown| )$/.test(e.key)) pauseReading();
   });
-  function hidden() {
-    if (doc.hidden) {
-      if (reading) pauseReading();
-      pausedEffects = true; last = null; updateSceneButton();
-    } else autoStart();
-  }
-  doc.addEventListener('visibilitychange', hidden);
-  window.addEventListener('pagehide', function () { pauseReading(); pausedEffects = true; });
+  presence.subscribe(function (away) {
+    last = null;
+    if (away) {
+      window.cancelAnimationFrame(frame); frame = 0;
+      if (turnAnimation) turnAnimation.pause();
+    } else {
+      if (turnAnimation) turnAnimation.play();
+      autoStart(); kick();
+    }
+  });
   window.addEventListener('hashchange', function () {
     var id = location.hash.slice(1), target = findPage(id);
-    if (target >= 0) go(target, false, false);
+    if (target >= 0) go(target, false);
   });
-  function motionChanged() { pauseReading(); pausedEffects = true; if (renderer) renderer(pages[index].chapter[0], 1); updateSceneButton(); }
+  function motionChanged() {
+    if (turnAnimation && reduced.matches) turnAnimation.finish();
+    if (renderer) renderer(pages[index].chapter[0], reduced.matches ? 1 : Math.min(1, elapsed / pages[index].chapter[3]));
+    updateSceneButton(); scheduleReflow(); kick();
+  }
   if (reduced.addEventListener) reduced.addEventListener('change', motionChanged);
   else reduced.addListener(motionChanged);
   window.Book = {
@@ -308,7 +318,7 @@
     go: function (id) { var target = findPage(id); if (target >= 0) go(target); },
     isReading: function () { return reading; }
   };
-  window.AutoScroll = { isOn: function () { return reading; }, pause: pauseReading };
+  window.AutoScroll = { isOn: function () { return reading; } };
   var initial = findPage(location.hash.slice(1));
   index = initial >= 0 ? initial : 0;
   pages[index].leaf.classList.add('is-current'); pages[index].leaf.removeAttribute('inert'); pages[index].leaf.setAttribute('aria-hidden', 'false');

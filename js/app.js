@@ -9,6 +9,7 @@
   'use strict';
   var D = window.INVITE || {};
   var BOOK = window.Book || null;
+  var presence = window.InvitationPresence;
   var doc = document, root = doc.documentElement;
   function $(s, r) { return (r || doc).querySelector(s); }
   function $$(s, r) { return Array.prototype.slice.call((r || doc).querySelectorAll(s)); }
@@ -261,7 +262,7 @@
   }
   function drawPage(id, progress, force) {
     scenes.forEach(function (s) {
-      var active = s.el.id === id && !doc.hidden;
+      var active = s.el.id === id && !presence.isAway();
       if (active !== s.on) { s.on = active; if (s.h.active) safe(function () { s.h.active(active); }); }
       if (active && MOTION && (force || progress !== s.p)) {
         s.p = progress; safe(function () { s.fn(progress); });
@@ -602,12 +603,14 @@
       if (!endSeen) { endSeen = true; writeSig(sigs[1], 2400, 300); }
     }
     if (BOOK) {
-      doc.addEventListener('bookpagechange', function () {
-        var vis = BOOK.currentId() === 'end' && !doc.hidden;
+      function endVisibility() {
+        var vis = BOOK.currentId() === 'end' && !presence.isAway();
         if (vis) seen();
         if (vis && !on && MOTION && !LOW) { on = true; raf(loop); }
         if (!vis) on = false;
-      });
+      }
+      doc.addEventListener('bookpagechange', endVisibility);
+      presence.subscribe(endVisibility);
       return;
     }
     if (!IO) { seen(); return; }
@@ -638,7 +641,7 @@
   if (MOTION) root.className += ' motion';
   layout();
   if (BOOK) {
-    doc.addEventListener('visibilitychange', function () { drawPage(BOOK.currentId(), BOOK.progress(), true); });
+    presence.subscribe(function () { drawPage(BOOK.currentId(), BOOK.progress(), true); });
     BOOK.connect(drawPage, layout); return;
   }
   var target = location.hash && doc.getElementById(location.hash.slice(1));

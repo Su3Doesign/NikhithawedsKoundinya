@@ -37,15 +37,24 @@ scenes retain their effects and have pause/replay controls.
 scene, and turns the page after time to read it. The speed menu controls reading
 and scene playback. The new **1×** is the previous **1.5×** pace, and the new
 **0.5×** is the previous **1×** pace; the fastest **1.5×** option uses a 2×
-multiplier of the original pace. Tapping the page, starting music and focusing
-controls keep auto-read running. The Pause control, changing chapters, swiping
-to another page, pressing Escape, or hiding the tab pauses automatic page turning.
+multiplier of the original pace. **Only the auto-read Pause button turns off
+automatic page turning.** Next/Previous, chapter selection, swipes, keyboard
+navigation, language choices, music and scene controls all keep it running.
+Each newly selected page gets its full reading time; other interactions do not
+reset or delay its timer. Scene pause/replay changes only that scene's effects.
+
+Opening another tab or app temporarily holds the page, its reading timer and
+any page turn in progress. Returning resumes from the same point at the selected
+speed, without counting time away or skipping pages. A deliberate Pause stays
+paused after navigation and after returning. At the last page, the tour finishes
+and offers **Read again**; navigating back also continues if auto-read is enabled.
 Music remains independent. Reduced-motion mode skips the 3D turn and presents
 still content; the invitation also remains readable without JavaScript.
 
 The **Scroll version** link opens `scroll.html`, which shares the corrected
 photos, Telugu invitation and star-to-names sequence in a linear layout.
 `js/app.js` contains shared effects; `js/book.js` manages fitting and turns;
+`js/presence.js` shares temporary away/return handling with both views and music;
 `book.css` styles the book and surroundings.
 
 ## Current event and RSVP details
@@ -86,7 +95,8 @@ key press anywhere on the invitation starts music while auto-read continues.
 An initially hidden tab attempts music and auto-read on its first visibility.
 The music button also starts
 it and lets guests pause or resume. A deliberate pause stays paused during
-navigation. Music loops and pauses when the tab is hidden. Loading failures
+navigation. Music loops, waits while the invitation is in the background and
+resumes on return if it was playing. Loading failures
 allow retry without stopping the invitation. These controls apply to both the
 book and scroll views. See `audio/README.md` to replace the recording.
 
@@ -96,9 +106,11 @@ Auto-scroll starts when the page opens. Use pause/resume and **0.5×**, **1×**
 or **1.5×** speed. `autoScroll.pixelsPerSecond` in `details.js` is the original
 base pace (80); the new speed options apply 1×, 1.5× and 2× multipliers, so the
 default pace is 120 pixels per second. Set `autoScroll.startAutomatically` to
-`false` to disable automatic start in both views. Taps, music controls and focus
-changes keep scrolling. Manual scrolling, navigation, the Pause control or hiding
-the tab pauses the tour. It stops at the end, where **Replay** starts again.
+`false` to disable automatic start in both views. Only **Pause scroll** turns
+auto-scroll off. Taps, controls, keyboard navigation and manual scrolling keep
+it enabled; it continues from the newly selected position at the same pace.
+Switching away holds the position until the guest returns. It finishes at the
+end, where **Replay** starts again; scrolling back up also continues if enabled.
 An initially hidden tab starts on first visibility; a guest pause stays paused.
 Music attempts playback on opening and uses the first interaction when the browser requires it.
 
@@ -106,6 +118,11 @@ Music attempts playback on opening and uses the first interaction when the brows
 
 Run `python3 -m http.server 8000` in this repository and open
 `http://localhost:8000/`. No build step or package installation is needed.
+
+With Python Playwright and Chromium installed, run the interaction regressions
+against that server with `python tests/tour_browser.py --url http://localhost:8000`.
+They check page controls, scene interactions, reading pace, away/return lifecycle,
+music, explicit Pause, replay and the linear scroll view.
 
 The separate Sites checkout packages these same files under `dist/`. Keep
 asset paths relative to `index.html`; do not add `dist/` to `music.src`.

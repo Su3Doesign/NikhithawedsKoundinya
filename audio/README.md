@@ -7,9 +7,10 @@ The previous generated instrumental has been removed; no substitute tune plays.
 The site attempts audible playback on opening. If the browser blocks autoplay,
 the first tap or key press anywhere on the invitation starts the recording
 without pausing auto-read or auto-scroll.
-The music button also plays, pauses, and resumes it. Music loops and pauses
-when the tab is hidden. Browser autoplay restrictions cannot be overridden by
-the website.
+The music button also plays, pauses, and resumes it. Music loops, waits while
+another tab or app is open, and resumes on return if it was playing. A deliberate
+music pause stays paused. Browser autoplay restrictions cannot be overridden
+by the website.
 
 To replace the music, upload a real MP3 here and update `music.src` in
 `details.js` if its filename changes. Keep paths relative to the site's root;

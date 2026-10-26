@@ -8,6 +8,7 @@
   var requested = false, playing = false, requestId = 0;
   var message = '', listener = null, retryOnInteraction = false;
   var autoStartPending = true;
+  var presence = window.InvitationPresence;
   var track = source ? new Audio(source) : null;
 
   function notify() { if (listener) listener(); }
@@ -27,6 +28,7 @@
     requested = !!track && want; message = '';
     if (!track) { notify(); return; }
     if (!want) { track.pause(); playing = false; notify(); return; }
+    if (presence.isAway()) { notify(); return; }
     notify();
     try {
       if (track.error) track.load();
@@ -41,7 +43,7 @@
     pause: function () { setTrack(false, false); },
     toggle: function () { setTrack(!requested, false); },
     isOn: function () { return playing; },
-    isPending: function () { return requested && !playing; },
+    isPending: function () { return requested && !playing && !presence.isAway(); },
     error: function () { return message; },
     subscribe: function (fn) { listener = fn; notify(); },
     chime: function () {} // Never mix synthesized sounds into the recording.
@@ -51,7 +53,7 @@
   track.preload = 'auto'; track.loop = true; track.volume = volume;
   track.setAttribute('playsinline', '');
   track.addEventListener('playing', function () {
-    if (!requested) { track.pause(); return; }
+    if (!requested || presence.isAway()) { track.pause(); return; }
     playing = true; retryOnInteraction = false; message = ''; notify();
   });
   track.addEventListener('waiting', function () { playing = false; notify(); });
@@ -61,7 +63,7 @@
   track.addEventListener('error', function () { failed(requestId, track.error, false); });
 
   function firstInteraction(event) {
-    if (!retryOnInteraction || document.hidden) return;
+    if (!retryOnInteraction || presence.isAway()) return;
     // The music button has its own toggle; avoid playing and then pausing it.
     if (event.target.closest && event.target.closest('#music')) return;
     if (event.type === 'keydown' && (event.altKey || event.ctrlKey || event.metaKey || event.key === 'Escape')) return;
@@ -73,13 +75,14 @@
   document.addEventListener('click', firstInteraction, true);
   document.addEventListener('keydown', firstInteraction, true);
   function startOnOpening() {
-    if (autoStartPending && !document.hidden) setTrack(true, true);
+    if (autoStartPending && !presence.isAway()) setTrack(true, true);
   }
-  // Stop in background tabs; only an explicit play resumes after a pause.
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) { if (!autoStartPending) setTrack(false, false); }
+  // Preserve the guest's music choice while away, just like the reading timer.
+  presence.subscribe(function (away) {
+    if (away) {
+      ++requestId; track.pause(); playing = false; notify();
+    } else if (requested) setTrack(true, true);
     else startOnOpening();
   });
-  window.addEventListener('pagehide', function () { setTrack(false, false); });
   startOnOpening();
 })();
