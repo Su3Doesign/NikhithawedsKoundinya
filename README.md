@@ -88,7 +88,7 @@ photos, Telugu invitation and star-to-names sequence in a linear layout.
 - Mehndi: Friday, **11 December 2026**.
 - Haldi and Pelli Kuthuru: Saturday, **12 December 2026**.
 - Wedding: Sunday, **13 December 2026, 8:22 pm IST**.
-- Calls and WhatsApp: **+91 80082 92935**. Both links use `rsvp.whatsapp`.
+- Calls and WhatsApp: **+91 98663 12936**. Both links use `rsvp.whatsapp`.
 
 The calendar, countdown, Telugu invitation and wedding event row all use
 `muhurtham` in `details.js`. The venue is **Kothapali Sri Ramulu Kanakamma

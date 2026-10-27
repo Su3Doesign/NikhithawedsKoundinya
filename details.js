@@ -81,9 +81,9 @@ window.INVITE = {
 
   rsvp: {
     /* Country code and number, digits only, e.g. "919876543210" */
-    whatsapp: "918008292935",
+    whatsapp: "919866312936",
     /* How the number should read on the page, e.g. "+91 98765 43210" */
-    display: "+91 80082 92935",
+    display: "+91 98663 12936",
     message: "Namaskaram! We will be there to bless Nikhitha and Sai Koundinya.",
   },
 };
