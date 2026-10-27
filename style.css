@@ -338,13 +338,20 @@ a{ color:inherit; }
 .portrait-slide img { display:block; width:100%; max-height:72vh; object-fit:contain; object-position:center; border-radius:0; }
 .portrait-slide figcaption { flex:none; padding:12px 6px 0; font-size:21px; line-height:1.5; color:#72512f; }
 .portrait-slide figcaption span { color:var(--gold); padding:0 .2em; }
-.portrait-role { position:absolute; z-index:2; left:6%; top:7%; padding:8px 15px; max-width:86%; color:#823950; font:400 clamp(32px,7vw,52px)/1.5 var(--te-display); transform:rotate(-5deg); pointer-events:none; text-shadow:.5px .5px 0 #b5866e25; }
-[data-portrait="groom"] .portrait-role { color:#29536b; }
-[data-portrait="bride"] img,[data-portrait="groom"] img { mix-blend-mode:multiply; }
+.portrait-slide .portrait-caption { display:flex; flex-direction:column; align-items:center; padding:0; gap:0; }
+.portrait-role { display:block; position:relative; flex:none; width:clamp(138px,38vw,195px); max-width:100%; pointer-events:none; }
+.portrait-ink { display:block; width:100%; height:auto; overflow:visible; }
+.portrait-slide .portrait-name { display:block; padding:0; color:#714956; font:400 clamp(17px,4vw,22px)/1.65 var(--te-display); }
+[data-portrait="groom"] .portrait-name { color:#34545e; }
+.motion .ink-stroke { stroke-dasharray:1; stroke-dashoffset:1; }
+.motion .ink-finish { opacity:0; }
+[data-portrait="bride"] img,[data-portrait="groom"] img { mix-blend-mode:normal; }
 .motion .portrait-sequence { position:relative; height:calc(var(--vh) * 100 - 150px); }
 .motion .portrait-slide { position:absolute; inset:0; height:100%; margin:0; opacity:0; }
 .motion .portrait-slide.is-first { opacity:1; }
 .motion .portrait-slide img { flex:1; min-height:0; height:calc(100% - 44px); max-height:none; }
+.motion .portrait-slide:not(.is-first) { display:grid; grid-template-rows:minmax(0,1fr) auto; justify-items:center; gap:8px; }
+.motion .portrait-slide:not(.is-first)>img { width:100%; height:100%; min-width:0; min-height:0; object-position:center bottom; }
 .patrika { color:#69402c; }
 .patrika .wrap { max-width:600px; }
 .patrika-masthead { padding-bottom:18px; border-bottom:1px solid #b58b4b88; margin-bottom:17px; }
@@ -401,11 +408,32 @@ a{ color:inherit; }
 .patrika-masthead h2 { line-height:1.25; margin-bottom:10px; }
 
 /* Keep the family name at its surrounding size; give it a clear printed weight. */
-.cover-family,.cover-family>strong,
-.patrika .patrika-masthead h2,.patrika .patrika-masthead h2>span,
 .patrika .patrika-person h3,.patrika .patrika-flow,
 .patrika .patrika-muhurtham strong,.patrika .patrika-signoff strong { font-weight:400; }
 .family-name { font-size:inherit; line-height:inherit; font-weight:700; }
+/* The full family heading is bold on the cover and the lagna patrika.
+   Suranna has one font weight; the small ink stroke makes the same emphasis
+   visible in Safari without changing the typeface, size or spacing. */
+.cover-family,.cover-family>span,.cover-family>strong,
+.patrika .patrika-masthead h2,.patrika .patrika-masthead h2>span {
+  font-weight:700;
+  -webkit-text-stroke:.008em currentColor;
+  paint-order:stroke fill;
+  font-synthesis:weight;
+}
+.cover-family>span { font-size:42px; line-height:1.25; }
+.cover-family>strong { font-size:38px; line-height:1.25; }
+.patrika-masthead h2 { font-size:34px; line-height:1.25; }
+.patrika-masthead h2>span { font-size:38px; line-height:1.25; }
+/* A quieter semibold for the couple's names, below the bold family heading.
+   Keep Suranna's open counters instead of using its heavier synthetic bold. */
+.cover-names,.patrika .patrika-person h3 {
+  font-weight:600;
+  font-synthesis:none;
+  -webkit-text-stroke:.01em currentColor;
+  paint-order:stroke fill;
+}
+.cover-union,.patrika .patrika-person h3 small { font-weight:400; -webkit-text-stroke:0; }
 
 /* The supplied map is a complete portrait print, never a cropped thumbnail. */
 .venue-map { max-width:310px; }

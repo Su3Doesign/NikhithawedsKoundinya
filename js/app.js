@@ -274,6 +274,11 @@
   safe(function () {
     var portraits = $$('#portraitSequence .portrait-slide');
     var roles = portraits.map(function (portrait) { return $('.portrait-role', portrait); });
+    var brushes = roles.map(function (role) {
+      return role ? $$('.ink-stroke', role).map(function (path) {
+        return { path:path, start:Number(path.dataset.start), end:Number(path.dataset.end) };
+      }) : [];
+    });
     var portraitHeading = $('.portrait-heading');
     if (!portraits.length) return;
     scene('couple', function (p) {
@@ -288,11 +293,16 @@
         portrait.style.opacity = opacity[i].toFixed(3);
         portrait.setAttribute('aria-hidden', opacity[i] < 0.5 ? 'true' : 'false');
         if (roles[i]) {
-          var ink = smooth(i === 1 ? span(p, 0.28, 0.43) : span(p, 0.68, 0.83));
-          roles[i].style.opacity = ink.toFixed(3);
-          roles[i].style.clipPath = 'inset(0 ' + ((1 - ink) * 100).toFixed(1) + '% 0 0)';
-          roles[i].style.filter = 'blur(' + ((1 - ink) * 4).toFixed(2) + 'px)';
-          roles[i].style.transform = 'translateY(' + ((1 - ink) * 7).toFixed(1) + 'px) rotate(-5deg)';
+          // Write each Telugu curve and vowel mark in place. The ink stays on
+          // the paper; no translated text or rectangular clipping reveal.
+          var ink = (i === 1 ? span(p, 0.24, 0.51) : span(p, 0.64, 0.91)) * 1.08;
+          brushes[i].forEach(function (brush) {
+            var written = smooth(span(ink, brush.start, brush.end));
+            brush.path.style.strokeDashoffset = (1 - written).toFixed(4);
+            brush.path.style.visibility = written > 0 ? 'visible' : 'hidden';
+          });
+          $('.ink-finish', roles[i]).style.opacity = (smooth(span(ink, 0.91, 1.08)) * 0.65).toFixed(3);
+          $('.portrait-name', portrait).style.opacity = smooth(span(ink, 0.74, 1.08)).toFixed(3);
         }
       });
     });

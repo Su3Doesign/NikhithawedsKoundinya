@@ -32,15 +32,27 @@ The entire family invitation, muhurtham and signoff remain on the same page.
 The surname follows the existing family spelling, Challapalli / చల్లపల్లి.
 Existing family names and wedding details are preserved; unprovided panchangam
 details are not invented.
-Every occurrence of **చల్లపల్లి** uses a bold weight at the surrounding font size.
+The full heading **చల్లపల్లి వారి పెళ్లి పిలుపు** is bold on pages 1 and 3.
+The first line, **చల్లపల్లి వారి**, is larger than **పెళ్లి పిలుపు** beneath it;
+their combined height keeps room for the rest of the card on a phone.
+Elsewhere, only the surname **చల్లపల్లి** is bold. The couple's names on
+pages 1 and 3 are semibold, with the same typeface and size; the surrounding
+invitation wording stays regular.
 
 The portrait scene crossfades from the original couple photograph to the two
 supplied portraits in `img/portraits/`. Every image uses `object-fit: contain`
 without a rounded mask, so heads and full figures remain visible. The bride's
 current image is the supplied purple-saree watercolor at
 `img/portraits/nikhitha-watercolor.jpg`. The individual portraits introduce
-**వధువు** and **వరుడు** with a soft ink reveal; the first couple photograph
-has no role watermark. The Arundhati
+**వధువు** and **వరుడు** with a brush reveal that follows each Telugu letter
+and vowel mark. The plum/indigo ink has a paper texture and a small finishing
+flourish. These captions occupy their own row beneath the complete portrait;
+on very short landscape screens they occupy a separate column. They cannot
+overlap either face. The portrait's outer paper edges softly blend into the
+leaf, and the original photos remain unchanged. The outlined SVG lettering
+in `img/lettering/` is embedded in both HTML files, so it does not depend on a
+font download. Reduced-motion users see completed lettering without animation.
+The first couple photograph has no role watermark. The Arundhati
 star sequence ends in the couple's Telugu names. The knots and seven-step
 scenes retain their effects and have pause/replay controls.
 The Shubham page closes on warm ivory paper with a small muggu, lamps and a

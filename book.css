@@ -29,6 +29,9 @@
 .leaf-front::after { content:""; position:absolute; inset:12px; border:1px solid #b99a6440; border-left:0; pointer-events:none; }
 .leaf-back { transform:rotateY(180deg); background-color:#e8d8b5; background-image:linear-gradient(90deg,#906b3533,transparent 15%,#fff5d935 60%,#77502d30); }
 .leaf-back::after { content:none; }
+/* Some WebKit compositors flatten resting 3D faces. Show the blank reverse
+   only during a turn, so it can never cover the printed front at rest. */
+.book-leaf:not(.is-turning) .leaf-back { visibility:hidden; }
 .page-heading { position:absolute; left:36px; right:29px; top:18px; display:flex; justify-content:space-between; color:#907547; font:400 8px/1.4 var(--sans); letter-spacing:.18em; text-transform:uppercase; }
 .page-heading span:last-child { font-size:10px; letter-spacing:0; }
 .page-content { position:absolute; top:44px; bottom:39px; left:24px; right:24px; overflow:hidden; overflow:clip; container-type:size; }
@@ -363,7 +366,6 @@
 .pasupu-corners i:nth-child(2) { right:0; top:0; transform:rotate(90deg); }
 .pasupu-corners i:nth-child(3) { right:0; bottom:0; transform:rotate(180deg); }
 .pasupu-corners i:nth-child(4) { left:0; bottom:0; transform:rotate(270deg); }
-.book-mode .portrait-role { font-size:clamp(29px,9cqw,49px); }
 
 /* Keep the complete portrait map with compact, readable venue details. */
 .book-mode .when .wrap { display:flex; flex-direction:column; align-items:center; gap:4px; padding-inline:8px; max-width:none; }
@@ -414,7 +416,6 @@
   .book-mode .when .btn { font-size:8px; padding:6px 10px; }
   .book-mode .when .w-date { font-size:22px; }
   .book-mode .when .w-time { font-size:17px; }
-  .book-mode .portrait-role { font-size:22px; top:3%; padding:4px 8px; }
   .book-mode .subham { padding:12px 18px; }
   .book-mode .subham-in { display:grid; grid-template-columns:1fr 1fr; gap:5px 18px; align-items:center; }
   .book-mode .subham-ornament { display:none; }
@@ -426,25 +427,33 @@
 }
 @media (prefers-reduced-motion:reduce) {
   .book-mode .portrait-slide { position:relative; }
-  .book-mode .portrait-role { font-size:18px; left:2%; top:14%; padding:3px; }
 }
 
-/* Let the watercolor paper dissolve into the leaf, preserving every face and figure. */
+/* A watercolor portrait print: artwork and lettering occupy separate areas.
+   The caption can never move over a face, including on landscape iPads. */
 .book-mode .sc-couple .stage { position:relative; padding:0; }
 .book-mode .portrait-heading { position:absolute; z-index:3; left:0; right:0; top:14px; margin:0; pointer-events:none; }
 .book-mode .portrait-sequence { height:100%; }
-.book-mode .portrait-slide { justify-content:center; gap:12px; }
+.book-mode .portrait-slide { justify-content:center; gap:10px; }
 .book-mode .portrait-slide img { flex:0 1 auto; width:auto; height:auto; max-width:100%; max-height:calc(100cqh - 120px); }
 .book-mode .portrait-slide.is-first { padding-top:70px; }
-.book-mode .portrait-slide:not(.is-first) img {
+.book-mode .portrait-slide:not(.is-first) {
+  display:grid; grid-template-rows:minmax(0,1fr) auto; justify-items:center;
+  gap:0; padding:0 0 clamp(8px,3cqh,28px);
+}
+.book-mode .portrait-slide:not(.is-first)>img {
+  width:auto; height:100%; min-width:0; min-height:0;
+  max-height:min(100%,133.333cqw); align-self:end;
+  object-fit:contain; object-position:center bottom; transform:none; mix-blend-mode:normal;
   -webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 95%,transparent);
   -webkit-mask-composite:source-in;
   mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 95%,transparent);
   mask-composite:intersect;
 }
-.book-mode [data-portrait="bride"] img { transform:translateY(-4%) scale(1.12); }
+.book-mode .portrait-slide[data-portrait="groom"]>img { max-height:min(100%,141.814cqw); }
 .book-mode .portrait-slide figcaption { padding:0; }
-.book-mode .portrait-role { left:0; right:0; top:6%; max-width:none; text-align:center; font-size:clamp(36px,10cqw,52px); }
+.book-mode .portrait-role { width:clamp(132px,44cqw,205px); }
+.book-mode .portrait-name { font-size:clamp(17px,4.7cqw,24px); }
 .book-mode .venue-map-link { background:transparent; border:0; box-shadow:none; }
 .book-mode .venue-map img { mix-blend-mode:normal; }
 .book-mode .when .venue.has-map .v-name { font-weight:400; }
@@ -454,7 +463,8 @@
   .book-mode .portrait-slide { gap:8px; }
   .book-mode .portrait-slide img { max-height:calc(100cqh - 75px); }
   .book-mode .portrait-slide.is-first { padding-top:50px; }
-  .book-mode .portrait-role { top:0; font-size:30px; }
+  .book-mode .portrait-role { width:122px; }
+  .book-mode .portrait-name { font-size:16px; }
 }
 @media (max-height:500px) and (orientation:landscape) {
   .book-mode .portrait-heading { top:0; }
@@ -463,17 +473,42 @@
   .book-mode .portrait-slide { gap:2px; }
   .book-mode .portrait-slide img { max-height:calc(100cqh - 43px); }
   .book-mode .portrait-slide.is-first { padding-top:32px; }
-  .book-mode .portrait-role { left:4%; right:auto; top:20%; font-size:25px; }
-  .book-mode [data-portrait="bride"] img { transform:none; }
+  .book-mode .portrait-slide:not(.is-first) {
+    grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
+    grid-template-rows:minmax(0,1fr); align-items:center; gap:12px; padding:0;
+  }
+  .book-mode .portrait-slide:not(.is-first)>img { object-position:center; }
+  .book-mode .portrait-role { width:min(100%,145px); }
+  .book-mode .portrait-name { font-size:16px; }
 }
 @media (prefers-reduced-motion:reduce) {
   .book-mode .portrait-heading { position:relative; top:auto; }
   .book-mode .portrait-slide { gap:8px; }
   .book-mode .portrait-slide.is-first { padding-top:0; }
   .book-mode .portrait-slide img { max-height:calc(100cqh - 120px); }
-  .book-mode [data-portrait="bride"] img { transform:none; }
-  .book-mode .portrait-role { top:2%; font-size:18px; }
+  .book-mode .portrait-slide:not(.is-first) { padding:0; grid-template-columns:1fr; grid-template-rows:minmax(0,1fr) auto; }
+  .book-mode .portrait-role { width:100%; max-width:150px; }
+  .book-mode .portrait-name { font-size:clamp(10px,3cqw,16px); }
 }
 
 /* Match the supplied map paper exactly; its original print needs no vignette. */
 .book-leaf[data-chapter="when"] .leaf-front { background-color:var(--map-paper); background-image:none; }
+
+/* Phone-first hierarchy: the family line leads; the invitation line supports it.
+   Redistribute the same two-line heading area to preserve the card's spacing. */
+.book-mode .cover-family>span { font-size:clamp(30px,6.4cqh,44px); line-height:1.25; }
+.book-mode .cover-family>strong { font-size:clamp(28px,5.8cqh,40px); line-height:1.25; }
+.book-mode .patrika-masthead h2 { font-size:clamp(27px,4.8cqh,36px); line-height:1.25; }
+.book-mode .patrika-masthead h2>span { font-size:clamp(29px,5.3cqh,40px); line-height:1.25; }
+@media (max-height:660px) and (orientation:portrait) {
+  .book-mode .cover-family>span { font-size:30px; }
+  .book-mode .cover-family>strong { font-size:28px; }
+  .book-mode .patrika-masthead h2 { font-size:25px; }
+  .book-mode .patrika-masthead h2>span { font-size:27px; }
+}
+@media (max-height:500px) and (orientation:landscape) {
+  .book-mode .cover-family>span { font-size:22px; }
+  .book-mode .cover-family>strong { font-size:20px; }
+  .book-mode .patrika-masthead h2 { font-size:18px; }
+  .book-mode .patrika-masthead h2>span { font-size:20px; }
+}
