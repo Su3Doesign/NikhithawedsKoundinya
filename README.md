@@ -33,8 +33,9 @@ The surname follows the existing family spelling, Challapalli / చల్లప�
 Existing family names and wedding details are preserved; unprovided panchangam
 details are not invented.
 The full heading **చల్లపల్లి వారి పెళ్లి పిలుపు** is bold on pages 1 and 3.
-The first line, **చల్లపల్లి వారి**, is larger than **పెళ్లి పిలుపు** beneath it;
-their combined height keeps room for the rest of the card on a phone.
+On page 1, both heading lines are equal in size. Page 3 retains its earlier
+hierarchy: **చల్లపల్లి వారి** above a larger **పెళ్లి పిలుపు**. Their combined
+height keeps room for the rest of the card on a phone.
 Elsewhere, only the surname **చల్లపల్లి** is bold. The couple's names on
 pages 1 and 3 are semibold, with the same typeface and size; the surrounding
 invitation wording stays regular.

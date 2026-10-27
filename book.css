@@ -494,21 +494,18 @@
 /* Match the supplied map paper exactly; its original print needs no vignette. */
 .book-leaf[data-chapter="when"] .leaf-front { background-color:var(--map-paper); background-image:none; }
 
-/* Phone-first hierarchy: the family line leads; the invitation line supports it.
-   Redistribute the same two-line heading area to preserve the card's spacing. */
-.book-mode .cover-family>span { font-size:clamp(30px,6.4cqh,44px); line-height:1.25; }
-.book-mode .cover-family>strong { font-size:clamp(28px,5.8cqh,40px); line-height:1.25; }
-.book-mode .patrika-masthead h2 { font-size:clamp(27px,4.8cqh,36px); line-height:1.25; }
-.book-mode .patrika-masthead h2>span { font-size:clamp(29px,5.3cqh,40px); line-height:1.25; }
+/* Equal heading lines on the cover; retain the original lagna patrika hierarchy.
+   Keep the same overall heading area so the phone layout stays spacious. */
+.book-mode .cover-family>span,.book-mode .cover-family>strong { font-size:clamp(29px,6.1cqh,42px); line-height:1.25; }
+.book-mode .patrika-masthead h2 { font-size:clamp(32px,6cqh,47px); line-height:1.25; }
+.book-mode .patrika-masthead h2>span { font-size:clamp(23px,4cqh,32px); line-height:1.2; }
 @media (max-height:660px) and (orientation:portrait) {
-  .book-mode .cover-family>span { font-size:30px; }
-  .book-mode .cover-family>strong { font-size:28px; }
-  .book-mode .patrika-masthead h2 { font-size:25px; }
-  .book-mode .patrika-masthead h2>span { font-size:27px; }
+  .book-mode .cover-family>span,.book-mode .cover-family>strong { font-size:29px; }
+  .book-mode .patrika-masthead h2 { font-size:30px; line-height:1.2; }
+  .book-mode .patrika-masthead h2>span { font-size:22px; line-height:1.15; }
 }
 @media (max-height:500px) and (orientation:landscape) {
-  .book-mode .cover-family>span { font-size:22px; }
-  .book-mode .cover-family>strong { font-size:20px; }
-  .book-mode .patrika-masthead h2 { font-size:18px; }
-  .book-mode .patrika-masthead h2>span { font-size:20px; }
+  .book-mode .cover-family>span,.book-mode .cover-family>strong { font-size:21px; }
+  .book-mode .patrika-masthead h2 { font-size:24px; line-height:1.15; }
+  .book-mode .patrika-masthead h2>span { font-size:18px; }
 }

@@ -421,10 +421,9 @@ a{ color:inherit; }
   paint-order:stroke fill;
   font-synthesis:weight;
 }
-.cover-family>span { font-size:42px; line-height:1.25; }
-.cover-family>strong { font-size:38px; line-height:1.25; }
-.patrika-masthead h2 { font-size:34px; line-height:1.25; }
-.patrika-masthead h2>span { font-size:38px; line-height:1.25; }
+.cover-family>span,.cover-family>strong { font-size:40px; line-height:1.25; }
+.patrika-masthead h2 { font-size:47px; line-height:1.25; }
+.patrika-masthead h2>span { font-size:31px; line-height:1.15; }
 /* A quieter semibold for the couple's names, below the bold family heading.
    Keep Suranna's open counters instead of using its heavier synthetic bold. */
 .cover-names,.patrika .patrika-person h3 {
