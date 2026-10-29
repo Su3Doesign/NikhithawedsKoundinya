@@ -303,6 +303,8 @@ a{ color:inherit; }
 .sign-end{ width:72vw; max-width:420px; margin:22px auto 16px; color:#f4cd78; }
 .subham .lab{ color:#efcf98; }
 .subham .end-names>span{ color:#f8e0b4; }
+/* The couple's names in a bold, classic Telugu print face. */
+.subham .end-names{ font-family:var(--te); font-weight:700; line-height:1.35; }
 .back{ display:inline-block; margin-top:22px; text-decoration:none; border-bottom:1px solid #a485555c; padding-bottom:4px; }
 .subham .back{ color:#fbe7c4; border:1px solid #f1c46d80; border-radius:999px; padding:9px 18px; }
 /* Motion runs only while the card is in view: the ornament draws itself, the
