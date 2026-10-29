@@ -7,7 +7,7 @@
    Then a long zoom into Vasishtha (Mizar) until faint Arundhati (Alcor)
    separates beside him, a little to his right and below, the way the
    bride stands beside the groom in the photograph that follows. The two
-   stars draw together into one light, and the moon opens from it.
+   stars draw together into one light, whose stardust writes their names.
 
    Canvas 2D; draw(progress) is called from the scroll timeline.
    ------------------------------------------------------------------ */
@@ -204,5 +204,139 @@
     return api;
   }
 
-  window.Sky = { create: create };
+  /* Stardust: once the two stars are one light, that light rises to sit
+     above the names as their ornament, and its stardust streams out to
+     write నిఖిత, then సాయి కౌండిన్య, letter by letter. The printed names
+     glow in beneath it, a sheen of starlight crosses them, and a few stars
+     stay on the letters, glinting. Each frame depends on progress alone,
+     so the scene plays backwards as faithfully as forwards. */
+  function dust(canvas, opts) {
+    opts = opts || {};
+    var ctx = canvas.getContext('2d');
+    var W = 1, H = 1, dpr = 1, parts = [], from = { x: 0, y: 0 }, to = { x: 0, y: 0 }, lo = 0, hi = 1;
+    var dot = (function () {
+      var s = 32, c = document.createElement('canvas'); c.width = c.height = s;
+      var x = c.getContext('2d'), g = x.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+      g.addColorStop(0, 'rgba(255,250,240,1)'); g.addColorStop(0.22, 'rgba(255,234,194,.9)');
+      g.addColorStop(0.5, 'rgba(255,214,150,.2)'); g.addColorStop(1, 'rgba(255,214,150,0)');
+      x.fillStyle = g; x.fillRect(0, 0, s, s);
+      return c;
+    })();
+    var halo = sprite('255,214,150', 64);
+    // a four-pointed glint: two long soft rays over a bright heart
+    var glint = (function () {
+      var s = 64, h = s / 2, c = document.createElement('canvas'); c.width = c.height = s;
+      var x = c.getContext('2d');
+      [[1, 0.07], [0.07, 1]].forEach(function (k) {
+        x.save(); x.translate(h, h); x.scale(k[0], k[1]);
+        var g = x.createRadialGradient(0, 0, 0, 0, 0, h);
+        g.addColorStop(0, 'rgba(255,248,230,1)'); g.addColorStop(0.35, 'rgba(255,228,176,.45)'); g.addColorStop(1, 'rgba(255,214,150,0)');
+        x.fillStyle = g; x.beginPath(); x.arc(0, 0, h, 0, Math.PI * 2); x.fill(); x.restore();
+      });
+      x.drawImage(sprite('255,244,222', s), s * 0.25, s * 0.25, s * 0.5, s * 0.5);
+      return c;
+    })();
+    var api = {};
+
+    api.resize = function () {
+      W = canvas.offsetWidth; H = canvas.offsetHeight;
+      dpr = opts.dpr || Math.min(window.devicePixelRatio || 1, 1.5);
+      if (!W || !H) return;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    };
+
+    // lines: [{ text, font, size, x: centre, top, height }] in the canvas's own pixels;
+    // start: the merged light; end: the ornament above the names
+    api.write = function (lines, start, end) {
+      from = start; to = end; parts = []; lo = Infinity; hi = -Infinity;
+      var rnd = rng(11), maps = [], ink = 0;
+      lines.forEach(function (ln) {
+        var c = document.createElement('canvas'), x = c.getContext('2d');
+        x.font = ln.font;
+        var m = x.measureText(ln.text);
+        var fa = m.fontBoundingBoxAscent, fd = m.fontBoundingBoxDescent;
+        if (!(fa > 0)) { fa = ln.size * 1.05; fd = ln.size * 0.5; }
+        var l = Math.ceil(m.actualBoundingBoxLeft || m.width / 2) + 3, r = Math.ceil(m.actualBoundingBoxRight || m.width / 2) + 3;
+        var a = Math.ceil(m.actualBoundingBoxAscent || fa) + 3, d = Math.ceil(m.actualBoundingBoxDescent || fd) + 3;
+        c.width = l + r; c.height = a + d;
+        x.font = ln.font; x.textAlign = 'center'; x.textBaseline = 'alphabetic'; x.fillStyle = '#fff';
+        x.fillText(ln.text, l, a);
+        var px = x.getImageData(0, 0, c.width, c.height).data;
+        for (var i = 3; i < px.length; i += 4) if (px[i] > 140) ink++;
+        // the page centres the font's ascent and descent in the line box
+        var base = ln.top + (ln.height - (fa + fd)) / 2 + fa;
+        maps.push({ px: px, w: c.width, h: c.height, ox: ln.x - l, oy: base - a });
+      });
+      // about one mote per seven pixels of ink, fewer on modest phones
+      var step = Math.max(1.6, Math.sqrt(ink / (opts.low ? 360 : Math.min(1000, Math.max(600, ink / 7)))));
+      maps.forEach(function (mp, li) {
+        for (var gy = 0; gy < mp.h; gy += step) for (var gx = 0; gx < mp.w; gx += step) {
+          var sx = gx + rnd() * step, sy = gy + rnd() * step;
+          if (sx >= mp.w || sy >= mp.h || mp.px[((sy | 0) * mp.w + (sx | 0)) * 4 + 3] <= 140) continue;
+          var tx = mp.ox + sx;
+          lo = Math.min(lo, tx); hi = Math.max(hi, tx);
+          // the bride's name first, then the groom's, each written from left to right
+          var o = (sx / mp.w) * 0.85 + rnd() * 0.15;
+          parts.push({ tx: tx, ty: mp.oy + sy, li: li, e: li ? 0.16 + o * 0.24 : 0.02 + o * 0.18, d: 0.14 + rnd() * 0.08,
+            jx: (rnd() - 0.5) * 12, jy: (rnd() - 0.5) * 12, bend: (rnd() - 0.5) * 1.3, lift: 0.1 + rnd() * 0.3,
+            r: 0.9 + rnd() * 0.7, g: rnd() < 0.1, ph: rnd() * 6.283, w: 0.9 + rnd() * 1.6 });
+        }
+      });
+    };
+
+    function core(p) { var k = smooth(p / 0.35); return { x: from.x + (to.x - from.x) * k, y: from.y + (to.y - from.y) * k }; }
+    // leaves the light quickly and settles softly into its letter
+    function ease(u) { return 1 - Math.pow(1 - u, 3); }
+    function at(x0, y0, cx, cy, x1, y1, k, r, a) {
+      if (a <= 0.01) return;
+      var m = 1 - k, x = m * m * x0 + 2 * m * k * cx + k * k * x1, y = m * m * y0 + 2 * m * k * cy + k * k * y1;
+      ctx.globalAlpha = a; ctx.drawImage(dot, x - r * 2, y - r * 2, r * 4, r * 4);
+    }
+
+    api.draw = function (p, t) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      if (p <= 0) return;
+      t = t || 0;
+      // each name's dust gives way to the printed name once it is written
+      var settle = [smooth((p - 0.42) / 0.14), smooth((p - 0.62) / 0.14)];
+      var sw = (p - 0.8) / 0.14, sheenX = lo - 40 + (hi - lo + 80) * sw, sheen = sw > 0 && sw < 1;
+      for (var i = 0; i < parts.length; i++) {
+        var q = parts[i];
+        if (p < q.e) continue;
+        var u = (p - q.e) / q.d;
+        if (u < 1) {
+          // in flight, on a gentle arc from where the light was when it left
+          var s = core(q.e), x0 = s.x + q.jx, y0 = s.y + q.jy, dx = q.tx - x0, dy = q.ty - y0;
+          var len = Math.sqrt(dx * dx + dy * dy), cx = (x0 + q.tx) / 2 - dy * q.bend, cy = (y0 + q.ty) / 2 + dx * q.bend - len * q.lift;
+          var a = Math.min(1, u / 0.1);
+          at(x0, y0, cx, cy, q.tx, q.ty, ease(Math.max(0, u - 0.07)), q.r * 0.75, 0.35 * a);
+          at(x0, y0, cx, cy, q.tx, q.ty, ease(u), q.r * 1.15, 0.9 * a);
+          continue;
+        }
+        var flash = Math.exp(-(p - q.e - q.d) / 0.02);
+        var al = 0.92 * (1 - settle[q.li]), on = 0;
+        if (q.g) { on = Math.pow(0.5 + 0.5 * Math.sin(t * q.w + q.ph), 10) * settle[q.li]; al = Math.max(al, 0.95 * on); }
+        var gl = sheen ? Math.exp(-Math.pow((q.tx - sheenX) / 22, 2)) : 0;
+        al = Math.min(1, al + flash * 0.5 + gl * 0.9);
+        if (al < 0.02) continue;
+        ctx.globalAlpha = al;
+        if (on > 0.25) { var gs = 4 + 9 * on; ctx.drawImage(glint, q.tx - gs, q.ty - gs, gs * 2, gs * 2); }
+        else { var rr = q.r * (1.05 + flash * 1.4 + gl * 1.1); ctx.drawImage(dot, q.tx - rr * 2, q.ty - rr * 2, rr * 4, rr * 4); }
+      }
+      // the one light, rising to become the names' ornament
+      var cA = 1 - smooth((p - 0.3) / 0.14);
+      if (cA > 0) {
+        var c = core(p), k = smooth(p / 0.35), beat = 1 + 0.08 * Math.sin(t * 2.4), R = (30 - 18 * k) * beat, G = (17 - 6 * k) * beat;
+        ctx.globalAlpha = cA * 0.9; ctx.drawImage(halo, c.x - R, c.y - R, R * 2, R * 2);
+        ctx.globalAlpha = cA; ctx.drawImage(glint, c.x - G, c.y - G, G * 2, G * 2);
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    api.resize();
+    return api;
+  }
+
+  window.Sky = { create: create, dust: dust };
 })();
