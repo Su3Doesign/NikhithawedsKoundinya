@@ -29,7 +29,11 @@ in the four outer corners of each leaf, clear of the text.
 
 The main invitation opens in Telugu, with a traditional family, bride, groom,
 muhurtham and invitation hierarchy headed **చల్లపల్లి వారి పెళ్లి పిలుపు**.
-Suranna headings and names, Noto Serif Telugu body text, a slim temple border,
+Ramabhadra sets the Telugu headings, names and invitation wording. Gurajada sets
+the short lines (శ్రీరస్తు శుభమస్తు అవిఘ్నమస్తు, శ్రీ గణేశాయ నమః, captions, event
+names, the weekday) and the Shubham card's blessing and names, while its large
+**శుభం** stays in Ramabhadra. Both faces have one weight, so emphasis comes from
+size and colour and no bold is synthesized. A slim temple border,
 mango toranam and muggu ornament follow the supplied print references. The
 border occupies reserved edge bands; side foliage stays outside the book. The
 cover and invitation use the full reading-page width, with narrow paper margins.
@@ -47,8 +51,16 @@ Elsewhere, only the surname **చల్లపల్లి** is bold. The couple'
 pages 1 and 3 are semibold, with the same typeface and size; the surrounding
 invitation wording stays regular.
 
+Page 4 repeats the invitation in English, in the same frame, order and
+hierarchy: the auspicious line, the Challapalli family's wedding invitation,
+the bride's and groom's parents, the muhurtham, the invitation and the signoff.
+It uses the families' own English spellings from the engagement invitation
+(Sri Challapalli Sreedhar, Smt. Venkata Krishna Veni, Sri K. V. V. Hari Mohan,
+Smt. Sailaja, of Kovvur), and the date and time come from `details.js`.
+
 The portrait scene crossfades from the original couple photograph to the two
-supplied portraits in `img/portraits/`. Every image uses `object-fit: contain`
+supplied portraits in `img/portraits/`, one picture at a time: the outgoing
+picture dissolves first and the next watercolour blooms outward from the face. Every image uses `object-fit: contain`
 without a rounded mask, so heads and full figures remain visible. The bride's
 current image is the supplied purple-saree watercolor at
 `img/portraits/nikhitha-watercolor.jpg`. The individual portraits introduce
@@ -119,7 +131,7 @@ kumkuma to a shubhalekha; see the [Telugu reference](https://telugu.hashtagu.in/
 
 ## Bring back Talambralu
 
-Talambralu is disabled in both the book and scroll views, leaving ten book
+Talambralu is disabled in both the book and scroll views, leaving eleven book
 pages. Its full markup, four verses, rice animation, assets, styling and
 original chapter position are retained. To restore it, set
 **`sections.talambralu: true` in `details.js`** and redeploy.

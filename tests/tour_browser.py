@@ -182,7 +182,8 @@ with sync_playwright() as p:
         now = page.evaluate('document.querySelector(".is-turning").getAnimations()[0].currentTime')
         check(abs(now - animation_time) < 2, 'paper-turn animation itself is frozen')
         hidden(page, False); turn_done(page)
-        check(page.evaluate('Book.currentId() === "when" && AutoScroll.isOn()'), 'paper turn resumes when returning')
+        check(page.evaluate('Book.currentId() === "letter-en" && AutoScroll.isOn()'), 'paper turn resumes when returning')
+        page.locator('#nextPage').tap(); turn_done(page)
 
         page.context.route('https://maps.app.goo.gl/**', lambda route: route.fulfill(
             status=200, content_type='text/html', body='<title>Directions test</title>'))
@@ -212,7 +213,7 @@ with sync_playwright() as p:
         session.detach()
         page.locator('#autoScrollSpeed').select_option('2')
         page.clock.run_for(10300); turn_done(page)
-        check(page.evaluate('Book.currentId() === "when"'), 'speed selection still governs the following page turn')
+        check(page.evaluate('Book.currentId() === "letter-en"'), 'speed selection still governs the following page turn')
 
     with opened(browser, '/', reduced=True) as page:
         chapter(page, 'A beautiful beginning'); page.clock.run_for(9000)

@@ -9,6 +9,7 @@
     ['top', 'The invitation', 'శుభలేఖ', 9],
     ['couple', 'Nikhitha & Sai Koundinya', 'వధూవరులు', 12],
     ['letter', 'With love, our families', 'ఆహ్వానం', 18],
+    ['letter-en', 'The invitation in English', 'English', 14],
     ['when', 'When & where', 'సుముహూర్తం', 15],
     ['events', 'The celebrations', 'వేడుకలు', 15],
     ['knots', 'Three sacred knots', 'మూడు ముళ్ళు', 16],
@@ -134,7 +135,7 @@
         scale = low;
       }
       var fittedHeight = measuredHeight(scale);
-      if (p.chapter[0] === 'letter') {
+      if (p.chapter[0] === 'letter' || p.chapter[0] === 'letter-en') {
         fittedHeight = available;
         p.section.style.height = (available / scale) + 'px';
       }

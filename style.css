@@ -1,7 +1,7 @@
 /* ==================================================================
    Nikhitha · Sai Koundinya
    One quiet modern face for English (Jost), traditional Telugu
-   print faces (Noto Serif Telugu and Suranna), and a script for English names.
+   print faces (Ramabhadra, with Gurajada for short lines), and a script for English names.
    Built to work on old phones: no libraries, no WebGL, sticky scenes.
    ================================================================== */
 :root{
@@ -9,8 +9,9 @@
   --kum:#B3261E; --kum-d:#A4201B; --tur:#E0A526; --leaf:#3E5B2E; --gold:#B8945A;
   --night:#0E0D14; --cream:#F4ECDD;
   --sans:'Jost',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-  --te:'Noto Serif Telugu','Gautami','Telugu Sangam MN',serif;
-  --te-display:'Suranna','Noto Serif Telugu','Gautami',serif;
+  --te:'Ramabhadra','Gautami','Telugu Sangam MN',serif;
+  --te-display:'Ramabhadra','Gautami','Telugu Sangam MN',serif;
+  --te-short:'Gurajada','Ramabhadra','Gautami','Telugu Sangam MN',serif;
   --script:'Pinyon Script','Snell Roundhand','Apple Chancery',cursive;
   --vh:1vh;
 }
@@ -483,3 +484,25 @@ a{ color:inherit; }
 .when { background:var(--map-paper); }
 .venue-map-link { background:transparent; border:0; border-radius:0; box-shadow:none; }
 .venue-map img { object-fit:contain; }
+
+/* Telugu type: Ramabhadra throughout, Gurajada for short lines and the closing
+   card. Both have a single weight, so weight changes never synthesize a bold. */
+.te,.cover-family,.cover-names,.head .te,.patrika-masthead h2,.patrika-person h3,
+.star-name-bride,.star-name-groom,.end-names { font-synthesis:none; }
+.auspicious,.om,.hero-sub,.hero-date,.patrika-auspicious,.patrika-subtitle,.patrika-opening,
+.portrait-slide figcaption.te,.portrait-slide .portrait-name,.w-day .te,.v-te,.panch,.ev h3 .te,
+.sakha .te,.sky-cap .te,.star-names-blessing,.verse .te,#akBtn .te,.ak-n .te,.page-heading [lang="te"],
+.subham .te,.subham-blessing,.subham .end-names { font-family:var(--te-short); }
+
+/* The English invitation: the same card and hierarchy, set in the site's English face. */
+.patrika-en .wrap { font-family:var(--sans); }
+.patrika-en .patrika-auspicious { font-family:var(--sans); font-size:10px; letter-spacing:.18em; text-transform:uppercase; }
+.patrika-en .patrika-masthead h2 { font-family:var(--sans); font-weight:500; font-size:30px; line-height:1.2; letter-spacing:.12em; text-transform:uppercase; -webkit-text-stroke:0; }
+.patrika-en .patrika-masthead h2>span { font-family:var(--sans); font-weight:400; font-size:19px; letter-spacing:.03em; text-transform:none; margin-bottom:4px; -webkit-text-stroke:0; }
+.patrika-en .patrika-subtitle,.patrika-en .patrika-opening { font-family:var(--sans); letter-spacing:.04em; }
+.patrika-en .patrika-opening { text-transform:uppercase; letter-spacing:.16em; font-size:.72em; }
+.patrika-en .patrika-flow { font-weight:400; }
+.patrika-en .patrika-person h3 { font-family:var(--sans); font-weight:500; font-size:32px; letter-spacing:.02em; -webkit-text-stroke:0; }
+.patrika-en .patrika-person h3 small { font-weight:400; letter-spacing:.08em; }
+.patrika-en .patrika-muhurtham strong,.patrika-en .patrika-signoff strong { font-weight:500; }
+.patrika-en .family-name { font-weight:500; }
