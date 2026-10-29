@@ -456,28 +456,15 @@ a{ color:inherit; }
 .patrika .patrika-person h3,.patrika .patrika-flow,
 .patrika .patrika-muhurtham strong,.patrika .patrika-signoff strong { font-weight:400; }
 .family-name { font-size:inherit; line-height:inherit; font-weight:700; }
-/* The full family heading is bold on the cover and the lagna patrika.
-   Suranna has one font weight; the small ink stroke makes the same emphasis
-   visible in Safari without changing the typeface, size or spacing. */
+/* The family heading on the cover and the lagna patrika, and the couple's names
+   beneath it, are semibold; the Telugu type rules below draw that weight. */
 .cover-family,.cover-family>span,.cover-family>strong,
-.patrika .patrika-masthead h2,.patrika .patrika-masthead h2>span {
-  font-weight:700;
-  -webkit-text-stroke:.008em currentColor;
-  paint-order:stroke fill;
-  font-synthesis:weight;
-}
+.patrika .patrika-masthead h2,.patrika .patrika-masthead h2>span,
+.cover-names,.patrika .patrika-person h3 { font-weight:600; }
 .cover-family>span,.cover-family>strong { font-size:40px; line-height:1.25; }
 .patrika-masthead h2 { font-size:47px; line-height:1.25; }
 .patrika-masthead h2>span { font-size:31px; line-height:1.15; }
-/* A quieter semibold for the couple's names, below the bold family heading.
-   Keep Suranna's open counters instead of using its heavier synthetic bold. */
-.cover-names,.patrika .patrika-person h3 {
-  font-weight:600;
-  font-synthesis:none;
-  -webkit-text-stroke:.01em currentColor;
-  paint-order:stroke fill;
-}
-.cover-union,.patrika .patrika-person h3 small { font-weight:400; -webkit-text-stroke:0; }
+.cover-union,.patrika .patrika-person h3 small { font-weight:400; }
 
 /* The supplied map is a complete portrait print, never a cropped thumbnail. */
 .venue-map { max-width:310px; }
@@ -488,21 +475,36 @@ a{ color:inherit; }
 /* Telugu type: Ramabhadra throughout, Gurajada for short lines and the closing
    card. Both have a single weight, so weight changes never synthesize a bold. */
 .te,.cover-family,.cover-names,.head .te,.patrika-masthead h2,.patrika-person h3,
-.star-name-bride,.star-name-groom,.end-names { font-synthesis:none; }
+.star-name-bride,.star-name-groom,.end-names,.kn-n b,.ft b { font-synthesis:none; }
+/* Ramabhadra's one weight reads as a heavy bold. A hairline in the colour of the
+   paper beneath pares it to a clear semibold, a little more on the large lines.
+   Telugu text set on any other colour needs that colour as its --te-under. */
+:root { --te-under:var(--paper); --te-thin:.01em; --te-thin-head:.015em; }
+.book-mode .page-content,.book-mode .patrika { --te-under:#f8f0dd; }
+.when,.book-leaf[data-chapter="when"] .page-content { --te-under:var(--map-paper); }
+.patrika { --te-under:#f6e8c8; }
+.sc-knots { --te-under:var(--kum-d); }
+.sc-sky { --te-under:var(--night); }
+.te,.star-names,.patrika .patrika-person h3 small,.kn-n b,.ft b { -webkit-text-stroke:var(--te-thin) var(--te-under); }
+.cover-family,.cover-family>span,.cover-family>strong,.patrika .patrika-masthead h2,.patrika .patrika-masthead h2>span,
+.cover-names,.patrika .patrika-person h3,.head .te,.star-name-bride,.star-name-groom { -webkit-text-stroke:var(--te-thin-head) var(--te-under); }
+/* Gurajada, the gold శుభం, the English page and the ornaments are drawn as they are. */
+.subham,.patrika-en { --te-thin:0; --te-thin-head:0; }
+.cover-union,.star-names-union { -webkit-text-stroke:0; }
 .auspicious,.om,.hero-sub,.hero-date,.patrika-auspicious,.patrika-subtitle,.patrika-opening,
 .portrait-slide figcaption.te,.portrait-slide .portrait-name,.w-day .te,.v-te,.panch,.ev h3 .te,
 .sakha .te,.sky-cap .te,.star-names-blessing,.verse .te,#akBtn .te,.ak-n .te,.page-heading [lang="te"],
-.subham .te,.subham-blessing,.subham .end-names { font-family:var(--te-short); }
+.subham .te,.subham-blessing,.subham .end-names { font-family:var(--te-short); --te-thin:0; --te-thin-head:0; -webkit-text-stroke:0; }
 
 /* The English invitation: the same card and hierarchy, set in the site's English face. */
 .patrika-en .wrap { font-family:var(--sans); }
 .patrika-en .patrika-auspicious { font-family:var(--sans); font-size:10px; letter-spacing:.18em; text-transform:uppercase; }
-.patrika-en .patrika-masthead h2 { font-family:var(--sans); font-weight:500; font-size:30px; line-height:1.2; letter-spacing:.12em; text-transform:uppercase; -webkit-text-stroke:0; }
-.patrika-en .patrika-masthead h2>span { font-family:var(--sans); font-weight:400; font-size:19px; letter-spacing:.03em; text-transform:none; margin-bottom:4px; -webkit-text-stroke:0; }
+.patrika-en .patrika-masthead h2 { font-family:var(--sans); font-weight:500; font-size:30px; line-height:1.2; letter-spacing:.12em; text-transform:uppercase; }
+.patrika-en .patrika-masthead h2>span { font-family:var(--sans); font-weight:400; font-size:19px; letter-spacing:.03em; text-transform:none; margin-bottom:4px; }
 .patrika-en .patrika-subtitle,.patrika-en .patrika-opening { font-family:var(--sans); letter-spacing:.04em; }
 .patrika-en .patrika-opening { text-transform:uppercase; letter-spacing:.16em; font-size:.72em; }
 .patrika-en .patrika-flow { font-weight:400; }
-.patrika-en .patrika-person h3 { font-family:var(--sans); font-weight:500; font-size:32px; letter-spacing:.02em; -webkit-text-stroke:0; }
+.patrika-en .patrika-person h3 { font-family:var(--sans); font-weight:500; font-size:32px; letter-spacing:.02em; }
 .patrika-en .patrika-person h3 small { font-weight:400; letter-spacing:.08em; }
 .patrika-en .patrika-muhurtham strong,.patrika-en .patrika-signoff strong { font-weight:500; }
 .patrika-en .family-name { font-weight:500; }
