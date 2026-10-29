@@ -268,11 +268,14 @@
 .page-fit { position:relative; flex:none; overflow:hidden; overflow:clip; }
 .page-fit>section { display:flow-root; min-height:0; left:0; top:0; transform-origin:top left; }
 .book-leaf[data-chapter="top"] .page-content,
-.book-leaf[data-chapter="letter"] .page-content { inset:8px 8px 25px; }
+.book-leaf[data-chapter="letter"] .page-content,
+.book-leaf[data-chapter="letter-en"] .page-content { inset:8px 8px 25px; }
 .book-leaf[data-chapter="top"] .page-heading,
-.book-leaf[data-chapter="letter"] .page-heading { display:none; }
+.book-leaf[data-chapter="letter"] .page-heading,
+.book-leaf[data-chapter="letter-en"] .page-heading { display:none; }
 .book-leaf[data-chapter="top"] .leaf-front::after,
-.book-leaf[data-chapter="letter"] .leaf-front::after { content:none; }
+.book-leaf[data-chapter="letter"] .leaf-front::after,
+.book-leaf[data-chapter="letter-en"] .leaf-front::after { content:none; }
 .book-mode .hero,.book-mode .patrika { --frame-top:42px; --frame-side:16px; --frame-bottom:12px; }
 .book-mode .hero::before { content:""; position:absolute; inset:0; pointer-events:none; border:0 solid transparent; border-image-source:url("img/patrika-frame-clear.png"); border-image-source:image-set(url("img/patrika-frame-clear.webp") type("image/webp"),url("img/patrika-frame-clear.png") type("image/png")); border-image-slice:230 85 65 85; border-image-width:var(--frame-top) var(--frame-side) var(--frame-bottom); border-image-repeat:stretch; }
 .book-mode .hero-in { position:relative; height:100%; padding:54px 26px 24px; }
@@ -562,3 +565,9 @@
   .book-mode #autoScrollLabel { display:none; }
   .book-nav { left:max(0px,calc(100px - 15vw)); right:max(0px,calc(100px - 15vw)); }
 }
+
+/* The English invitation keeps the patrika's proportions in its own face. */
+.book-mode .patrika-en .patrika-masthead h2 { font-size:clamp(20px,4cqh,30px); line-height:1.25; margin:10px 0 6px; }
+.book-mode .patrika-en .patrika-masthead h2>span { font-size:clamp(14px,2.6cqh,20px); }
+.book-mode .patrika-en .patrika-person h3 { font-size:clamp(24px,4.4cqh,33px); }
+.book-mode .patrika-en .patrika-flow { font-size:clamp(12px,2cqh,15px); }

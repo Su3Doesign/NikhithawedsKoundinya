@@ -193,7 +193,7 @@
       else { ty = y - 31; ey = y - 16; }
       ctx.textAlign = al;
       ctx.fillStyle = '#E8C98A';
-      ctx.font = te + ' "Anek Telugu", "Noto Sans Telugu", sans-serif';
+      ctx.font = te + ' Gurajada, "Noto Sans Telugu", sans-serif';
       ctx.fillText(s.te, tx, ty);
       ctx.fillStyle = 'rgba(243,235,221,.7)';
       ctx.font = en + ' Jost, system-ui, sans-serif';
