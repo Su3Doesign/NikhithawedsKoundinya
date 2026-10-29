@@ -32,13 +32,8 @@ muhurtham and invitation hierarchy headed **చల్లపల్లి వా�
 Ramabhadra sets the Telugu headings, names and invitation wording. Gurajada sets
 the short lines (శ్రీరస్తు శుభమస్తు అవిఘ్నమస్తు, శ్రీ గణేశాయ నమః, captions, event
 names, the weekday) and the Shubham card's blessing and names, while its large
-**శుభం** stays in Ramabhadra. Both faces have one weight, and no bold is ever
-synthesized. Ramabhadra's one weight reads as a heavy bold, so a hairline in the
-colour of the paper beneath (`--te-under` in `style.css`) pares it to a clear
-semibold, a little more on headings and names than on the invitation wording.
-Telugu text placed on a new background colour needs that colour as its
-`--te-under`, or the hairline shows as an outline. Gurajada, the large **శుభం**
-and the English page are drawn as they are. A slim temple border,
+**శుభం** stays in Ramabhadra. Both faces have one weight, so emphasis comes from
+size and colour and no bold is synthesized. A slim temple border,
 mango toranam and muggu ornament follow the supplied print references. The
 border occupies reserved edge bands; side foliage stays outside the book. The
 cover and invitation use the full reading-page width, with narrow paper margins.
@@ -48,13 +43,13 @@ The entire family invitation, muhurtham and signoff remain on the same page.
 The surname follows the existing family spelling, Challapalli / చల్లపల్లి.
 Existing family names and wedding details are preserved; unprovided panchangam
 details are not invented.
-The full heading **చల్లపల్లి వారి పెళ్లి పిలుపు** is semibold on pages 1 and 3,
-never bold: in bold, the Telugu letters fill in and blur.
+The full heading **చల్లపల్లి వారి పెళ్లి పిలుపు** on pages 1 and 3 and the
+couple's names beneath it share one semibold: Ramabhadra's own weight with a
+fine ink stroke. A bold would fill in the Telugu letters, so none is used.
 On page 1, both heading lines are equal in size. Page 3 retains its earlier
 hierarchy: **చల్లపల్లి వారి** above a larger **పెళ్లి పిలుపు**. Their combined
 height keeps room for the rest of the card on a phone.
-The couple's names on pages 1 and 3 are semibold too, with the same typeface and
-size; the surrounding invitation wording is a touch lighter.
+The surrounding invitation wording stays regular.
 
 Page 4 repeats the invitation in English, in the same frame, order and
 hierarchy: the auspicious line, the Challapalli family's wedding invitation,
