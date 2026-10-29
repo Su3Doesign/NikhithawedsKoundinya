@@ -417,11 +417,17 @@ a{ color:inherit; }
 .patrika-signoff strong { color:#a12e27; font-weight:500; }
 .star-names { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:36px 16px; color:#f4dcab; font-family:var(--te); }
 .star-names-ornament { font-size:24px; color:#c7a368; margin-bottom:24px; }
+.star-names-ornament svg { display:block; width:1em; height:1em; }
 .star-name-bride,.star-name-groom { font-size:clamp(32px,8vw,62px); line-height:1.5; font-weight:500; }
 .star-names-union { font:italic 28px/1.6 Georgia,serif; color:#bc9b60; }
 .star-names-rule { width:58px; height:1px; background:#bda37077; margin:25px 0; }
 .star-names-blessing { font-size:18px; line-height:1.8; color:#d0c0a5; }
 .motion .star-names { position:absolute; z-index:3; inset:0; opacity:0; }
+/* The names are written in stardust (js/sky.js) and glow like starlight. */
+.star-name-bride,.star-name-groom { white-space:nowrap; color:#fbe7c2; text-shadow:0 0 20px rgba(255,198,118,.34),0 0 2px rgba(255,236,204,.4); }
+.motion .star-names>* { will-change:opacity; }
+.stardust { display:none; }
+.motion .stardust { display:block; position:absolute; z-index:4; left:0; top:0; width:100%; height:100%; pointer-events:none; }
 .end-names { font-size:32px; line-height:1.4; }
 .end-names>span { display:block; color:var(--gold); font:italic 22px/1.6 Georgia,serif; }
 

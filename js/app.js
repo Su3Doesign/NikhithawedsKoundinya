@@ -455,14 +455,18 @@
     } });
   });
 
-  /* 05 · Arundhati and Vasishtha become a dedication in their names */
+  /* 05 · Arundhati and Vasishtha become one light, and its stardust writes their names */
   safe(function () {
     if (!window.Sky) return;
     var stage = $('#arundhati .stage'), cv = $('#sky'), head = $('#arundhati .head');
-    var cap = $('#skyCap'), names = $('#starNames');
+    var cap = $('#skyCap'), names = $('#starNames'), dustCv = $('#stardust');
+    var orn = $('.star-names-ornament', names), bride = $('.star-name-bride', names), groom = $('.star-name-groom', names);
+    var union = $('.star-names-union', names), rule = $('.star-names-rule', names), bless = $('.star-names-blessing', names);
     var sky = Sky.create(cv, { dpr: DPR, low: LOW });
-    var q = MOTION ? 0 : 1, live = false, looping = false, rang = false;
-    var MAP = [[0, 0], [0.12, 0.27], [0.36, 0.56], [0.46, 0.6], [0.56, 0.74], [0.68, 0.8], [1, 0.8]];
+    // soft motes need no more than one canvas pixel per CSS pixel
+    var dust = MOTION && dustCv && Sky.dust ? Sky.dust(dustCv, { dpr: 1, low: LOW }) : null;
+    var q = MOTION ? 0 : 1, live = false, looping = false, rang = false, drawn = -1;
+    var MAP = [[0, 0], [0.12, 0.27], [0.36, 0.56], [0.46, 0.6], [0.56, 0.74], [0.62, 0.8], [1, 0.8]];
     function skyP(x) {
       for (var i = 0; i < MAP.length - 1; i++) {
         var a = MAP[i], b = MAP[i + 1];
@@ -470,29 +474,59 @@
       }
       return 0.8;
     }
+    function show(el, a) { if (el) el.style.opacity = a.toFixed(3); }
     function paint(t) {
-      sky.draw(skyP(q), t / 1000);
-      var reveal = smooth(span(q, 0.62, 0.86));
+      // once the sky holds still behind the names, leave its last frame in place
+      var sp = skyP(q);
+      if (sp !== drawn || q < 0.62) { sky.draw(sp, t / 1000); drawn = sp; }
+      // the stardust's own progress: from the merged light to the last glint
+      var w = span(q, 0.55, 0.97);
+      if (dust) dust.draw(w, t / 1000);
       head.style.opacity = (1 - smooth(span(q, 0.16, 0.25))).toFixed(3);
       cap.style.opacity = (smooth(span(q, 0.28, 0.35)) * (1 - smooth(span(q, 0.5, 0.6)))).toFixed(3);
-      cv.style.opacity = (1 - reveal * 0.76).toFixed(3);
-      names.style.opacity = reveal.toFixed(3);
-      names.style.transform = 'translateY(' + ((1 - reveal) * 12).toFixed(1) + 'px)';
-      names.setAttribute('aria-hidden', reveal < 0.5 ? 'true' : 'false');
-      if (q > 0.65 && !rang) { rang = true; if (window.Music) Music.chime(0.5); }
+      cv.style.opacity = (1 - 0.72 * smooth(span(q, 0.58, 0.8))).toFixed(3);
+      names.style.opacity = w > 0 ? '1' : '0';
+      // each line appears once the dust has written it
+      show(orn, smooth(span(w, 0.3, 0.42)));
+      show(bride, smooth(span(w, 0.34, 0.5)));
+      show(union, smooth(span(w, 0.44, 0.56)));
+      show(groom, smooth(span(w, 0.54, 0.7)));
+      var r = smooth(span(w, 0.7, 0.8));
+      show(rule, r); if (rule) rule.style.transform = 'scaleX(' + r.toFixed(3) + ')';
+      show(bless, smooth(span(w, 0.76, 0.9)));
+      names.setAttribute('aria-hidden', w < 0.6 ? 'true' : 'false');
+      if (q > 0.56 && !rang) { rang = true; if (window.Music) Music.chime(0.5); }
       if (q < 0.5) rang = false;
     }
     function loop(t) { paint(t); if (live) raf(loop); else looping = false; }
+    // where the dust must land: the printed names, measured in the stage's own pixels
+    function write() {
+      if (!dust || !stage.clientWidth) return;
+      dust.resize();
+      var sr = stage.getBoundingClientRect(), k = sr.width / stage.clientWidth || 1;
+      function box(el) { var b = el.getBoundingClientRect(); return { x: (b.left - sr.left) / k, y: (b.top - sr.top) / k, w: b.width / k, h: b.height / k }; }
+      var lines = [bride, groom].map(function (el) {
+        var b = box(el), cs = getComputedStyle(el), size = parseFloat(cs.fontSize);
+        return { text: el.textContent.trim(), size: size, font: cs.fontStyle + ' ' + cs.fontWeight + ' ' + size + 'px ' + cs.fontFamily, x: b.x + b.w / 2, top: b.y, height: b.h };
+      });
+      var o = box(orn);
+      dust.write(lines, { x: stage.clientWidth * 0.5, y: stage.clientHeight * 0.38 }, { x: o.x + o.w / 2, y: o.y + o.h / 2 });
+    }
     function place() {
-      sky.resize();
+      sky.resize(); drawn = -1;
       sky.focus(stage.clientWidth * 0.5, stage.clientHeight * 0.38, Math.min(stage.clientWidth, stage.clientHeight) * 0.15);
+      write();
       paint(now());
     }
     scene('arundhati', function (p) { q = p; if (!looping) paint(now()); }, {
       resize: place,
-      active: function (on) { live = on && MOTION && !LOW; if (live && !looping) { looping = true; raf(loop); } }
+      active: function (on) {
+        if (on) write();
+        live = on && MOTION && !LOW; if (live && !looping) { looping = true; raf(loop); }
+      }
     });
     if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(place);
+    if (dust && doc.fonts && doc.fonts.load) doc.fonts.load('500 40px Ramabhadra', bride.textContent + groom.textContent).then(place, function () {});
   });
 
   /* ---------------------------------------------------------------- fixed bits: progress, music, keep scrolling */

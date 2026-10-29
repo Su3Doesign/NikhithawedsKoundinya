@@ -73,7 +73,16 @@ leaf, and the original photos remain unchanged. The outlined SVG lettering
 in `img/lettering/` is embedded in both HTML files, so it does not depend on a
 font download. Reduced-motion users see completed lettering without animation.
 The first couple photograph has no role watermark. The Arundhati
-star sequence ends in the couple's Telugu names. The knots and seven-step
+star sequence ends in the couple's Telugu names, written in stardust: once
+Vasishtha and Arundhati merge into one light, it rises to become the gold star
+above the names. Its stardust streams out and writes **నిఖిత**, then
+**సాయి కౌండిన్య**, letter by letter. The printed names then glow in beneath it,
+a sheen of starlight crosses them, and a few stars stay on the letters, glinting.
+`Sky.dust` in `js/sky.js` samples the printed names in their own font, so the
+dust lands on the letters at every screen size. Each frame depends only on the
+scene's progress, so pausing and replaying stay exact. Modest phones draw
+fewer motes, and the dimmed sky stops redrawing while the names are written.
+Reduced-motion users see the finished names. The knots and seven-step
 scenes retain their effects and have pause/replay controls.
 The Shubham page closes on a kumkum-red silk card set in the ivory leaf, never
 black: a marigold and mango-leaf toranam across the top, a cream lotus muggu
