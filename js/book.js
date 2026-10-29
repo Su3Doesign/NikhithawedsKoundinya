@@ -26,10 +26,10 @@
   var pages = [], index = 0, renderer = null, layout = null, busy = false;
   var reflowTimer = 0, pendingReflow = false;
   var frame = 0, last = null, elapsed = 0, reading = false, readElapsed = 0, pausedEffects = false;
-  var presence = window.InvitationPresence, turnAnimation = null, finished = false;
+  var presence = window.InvitationPresence, turnAnimation = null, turnAnimations = [], finished = false;
   var autoStartPending = ((window.INVITE || {}).autoScroll || {}).startAutomatically !== false;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var prev = doc.getElementById('previousPage'), next = doc.getElementById('nextPage');
+  var prev = doc.getElementById('previousPage'), next = doc.getElementById('nextPage'), first = doc.getElementById('firstPage');
   var select = doc.getElementById('chapterSelect'), count = doc.getElementById('pageCount');
   var play = doc.getElementById('autoScroll'), playLabel = doc.getElementById('autoScrollLabel');
   var controls = doc.getElementById('autoScrollControls'), speed = doc.getElementById('autoScrollSpeed');
@@ -57,6 +57,15 @@
     front.appendChild(heading); front.appendChild(content); front.appendChild(footer);
     var corners = doc.createElement('span'); corners.className = 'pasupu-corners'; corners.setAttribute('aria-hidden', 'true');
     corners.innerHTML = '<i></i><i></i><i></i><i></i>'; front.appendChild(corners);
+    // Light and shadow for a turn. Only their opacity and position animate, so
+    // the browser can move the paper without repainting the printed page.
+    function layer(parent, name) {
+      var el = doc.createElement('span'); el.className = name; el.setAttribute('aria-hidden', 'true');
+      parent.appendChild(el); return el;
+    }
+    var drop = layer(leaf, 'leaf-drop'), sheen = layer(front, 'leaf-sheen'), shade = layer(front, 'leaf-shade');
+    var cast = layer(front, 'leaf-cast'), backShade = layer(back, 'leaf-shade');
+    front.insertBefore(sheen, heading); // the sheen lights the paper, beneath the print
     var meter = null, replay = null;
     if (isScene && !reduced.matches) {
       var line = doc.createElement('div'); line.className = 'leaf-progress'; line.setAttribute('aria-hidden', 'true');
@@ -71,7 +80,8 @@
     }
     leaf.appendChild(front); leaf.appendChild(back); main.appendChild(leaf);
     return { leaf: leaf, section: section, content: content, footer: footer, chapter: chapter, fit: fit,
-      scene: isScene, meter: meter, replay: replay };
+      scene: isScene, meter: meter, replay: replay,
+      back: back, drop: drop, sheen: sheen, shade: shade, cast: cast, backShade: backShade };
   }
   chapters.forEach(function (chapter) {
     var page = makePage(doc.getElementById(chapter[0]), chapter);
@@ -154,6 +164,8 @@
   }
   function sync() {
     prev.disabled = busy || index === 0; next.disabled = busy;
+    // On the last page the next arrow itself returns to the start.
+    if (first) { first.disabled = busy || index === 0; first.classList[index === pages.length - 1 ? 'add' : 'remove']('is-spare'); }
     next.setAttribute('aria-label', index === pages.length - 1 ? 'Back to the first page' : 'Next page');
     next.firstElementChild.textContent = index === pages.length - 1 ? '↺' : '→';
     select.value = String(index); select.disabled = busy;
@@ -178,9 +190,32 @@
   function autoStart() {
     if (autoStartPending && renderer && !presence.isAway()) startReading();
   }
+  // Hidden leaves still sit inside the viewport, so a browser would fetch every
+  // lazy picture at once and slow the cover on a weak connection. Pictures
+  // beyond the next page wait until their page is next in line.
+  function hold(p) {
+    p.section.setAttribute('data-held', '');
+    Array.prototype.forEach.call(p.section.querySelectorAll('img[loading="lazy"],source'), function (el) {
+      ['src', 'srcset'].forEach(function (name) {
+        var value = el.getAttribute(name);
+        if (value) { el.setAttribute('data-held-' + name, value); el.removeAttribute(name); }
+      });
+    });
+  }
   function preload(i) {
     var p = pages[i]; if (!p) return;
-    Array.prototype.forEach.call(p.section.querySelectorAll('img'), function (img) { img.loading = 'eager'; });
+    if (p.section.hasAttribute('data-held')) {
+      p.section.removeAttribute('data-held');
+      Array.prototype.forEach.call(p.section.querySelectorAll('[data-held-src],[data-held-srcset]'), function (el) {
+        ['srcset', 'src'].forEach(function (name) {
+          var value = el.getAttribute('data-held-' + name);
+          if (value !== null) { el.setAttribute(name, value); el.removeAttribute('data-held-' + name); }
+        });
+      });
+    }
+    Array.prototype.forEach.call(p.section.querySelectorAll('img'), function (img) {
+      if (!img.closest('[hidden]')) img.loading = 'eager';
+    });
   }
   function activate(i, announce) {
     index = i; elapsed = 0; readElapsed = 0; last = null; pausedEffects = false; finished = false;
@@ -191,7 +226,7 @@
     window.requestAnimationFrame(function () { window.requestAnimationFrame(function () {
       Array.prototype.forEach.call(p.section.querySelectorAll('.rv'), function (el) { el.classList.add('in'); });
     }); });
-    preload(index); preload(index + 1);
+    preload(index - 1); preload(index); preload(index + 1);
     if (announce) status.textContent = 'Page ' + (index + 1) + ' of ' + pages.length + '. ' + p.chapter[1] + '.';
     doc.title = 'Nikhitha & Sai Koundinya · ' + p.chapter[1];
     progress.style.transform = 'scaleX(' + ((index + 1) / pages.length) + ')';
@@ -207,29 +242,58 @@
     if (old.leaf.contains(doc.activeElement)) play.focus({ preventScroll: true });
     old.leaf.setAttribute('aria-hidden', 'true'); old.leaf.setAttribute('inert', ''); old.leaf.classList.remove('is-current');
     incoming.leaf.removeAttribute('inert'); incoming.leaf.setAttribute('aria-hidden', 'false'); incoming.leaf.classList.add('is-current');
-    var turning = forward ? old.leaf : incoming.leaf;
+    var sheet = forward ? old : incoming, under = forward ? incoming : old, turning = sheet.leaf;
     turning.classList.add('is-turning');
+    // Turning back, the page being left stays in view until the sheet covers it.
+    if (!forward) old.leaf.classList.add('is-under');
     if (updateHash !== false) history.replaceState(null, '', '#' + incoming.chapter[0]);
     activate(to, true);
     function done() {
-      turnAnimation = null;
-      turning.classList.remove('is-turning'); turning.style.transform = ''; turning.style.transition = '';
+      var running = turnAnimations; turnAnimation = null; turnAnimations = [];
+      running.forEach(function (a) { a.onfinish = a.oncancel = null; a.cancel(); });
+      turning.classList.remove('is-turning'); old.leaf.classList.remove('is-under');
+      turning.style.transform = ''; turning.style.transition = '';
       busy = false; last = null; sync(); kick();
       if (pendingReflow) scheduleReflow();
     }
     if (reduced.matches || !turning.animate) { done(); return; }
     // Lift the outer edge and let its shadow travel across the paper. Keep one
     // intact sheet and an empty reverse, so text is never cloned or mirrored.
-    var animation = turning.animate([
-      { transform: forward ? 'rotateY(0deg) rotateX(0deg)' : 'rotateY(-170deg) rotateX(0deg)', boxShadow: '0 2px 3px #492b1210' },
-      { transform: forward ? 'translateZ(18px) rotateY(-38deg) rotateX(1.8deg)' : 'translateZ(26px) rotateY(-85deg) rotateX(2.5deg)', boxShadow: '18px 14px 28px #492b122c', offset: forward ? 0.25 : 0.48 },
-      { transform: forward ? 'translateZ(26px) rotateY(-85deg) rotateX(2.5deg)' : 'translateZ(18px) rotateY(-38deg) rotateX(1.8deg)', boxShadow: '10px 18px 36px #492b123b', offset: forward ? 0.52 : 0.75 },
-      { transform: forward ? 'rotateY(-170deg) rotateX(0deg)' : 'rotateY(0deg) rotateX(0deg)', boxShadow: '0 2px 3px #492b1210' }
-    ], { duration: 1050, easing: 'cubic-bezier(.3,.05,.2,1)', fill: 'forwards' });
-    animation.onfinish = function () { animation.oncancel = null; animation.cancel(); done(); };
+    // Written for a forward turn; a backward turn plays the same frames in reverse.
+    var timing = { duration: 1050, easing: 'cubic-bezier(.3,.05,.2,1)', fill: 'forwards' };
+    function frames(list) {
+      return forward ? list : list.slice().reverse().map(function (k) {
+        var copy = {}; for (var key in k) copy[key] = k[key];
+        copy.offset = 1 - k.offset; return copy;
+      });
+    }
+    function animate(el, list) { var a = el.animate(frames(list), timing); turnAnimations.push(a); return a; }
+    var animation = animate(turning, [
+      { transform: 'rotateY(0deg) rotateX(0deg)', offset: 0 },
+      { transform: 'translateZ(18px) rotateY(-38deg) rotateX(1.8deg)', offset: 0.25 },
+      { transform: 'translateZ(26px) rotateY(-85deg) rotateX(2.5deg)', offset: 0.52 },
+      { transform: 'rotateY(-170deg) rotateX(0deg)', offset: 1 }
+    ]);
+    // The lifted sheet's own shadow grows and settles again.
+    animate(sheet.drop, [{ opacity: 0, offset: 0 }, { opacity: 1, offset: 0.25 }, { opacity: 1, offset: 0.52 }, { opacity: 0, offset: 1 }]);
+    // Its face catches the light as it rises and dims as it stands on edge.
+    animate(sheet.sheen, [{ opacity: 0, offset: 0 }, { opacity: 1, offset: 0.25 }, { opacity: 1, offset: 0.52 }, { opacity: 1, offset: 1 }]);
+    animate(sheet.shade, [{ opacity: 0, offset: 0 }, { opacity: 0.15, offset: 0.25 }, { opacity: 1, offset: 0.52 }, { opacity: 1, offset: 1 }]);
+    // The blank reverse brightens as it settles, and rests into the left page.
+    animate(sheet.backShade, [{ opacity: 1, offset: 0 }, { opacity: 1, offset: 0.52 }, { opacity: 0, offset: 1 }]);
+    animate(sheet.back, [{ opacity: 1, offset: 0 }, { opacity: 1, offset: 0.86 }, { opacity: 0, offset: 1 }]);
+    // A soft shadow follows the lifted edge across the page beneath.
+    animate(under.cast, [
+      { transform: 'translateX(100%)', opacity: 0, offset: 0 },
+      { transform: 'translateX(79%)', opacity: 1, offset: 0.25 },
+      { transform: 'translateX(9%)', opacity: 0.75, offset: 0.52 },
+      { transform: 'translateX(0%)', opacity: 0, offset: 0.7 },
+      { transform: 'translateX(0%)', opacity: 0, offset: 1 }
+    ]);
+    animation.onfinish = function () { done(); };
     animation.oncancel = function () { if (busy) done(); };
     turnAnimation = animation;
-    if (presence.isAway()) animation.pause();
+    if (presence.isAway()) turnAnimations.forEach(function (a) { a.pause(); });
   }
   function tick(time) {
     frame = 0;
@@ -259,6 +323,7 @@
   }
   function kick() { if (!frame && !busy && !presence.isAway()) frame = window.requestAnimationFrame(tick); }
   prev.addEventListener('click', function () { go(index - 1); });
+  if (first) first.addEventListener('click', function () { go(0); });
   next.addEventListener('click', function () { go(index === pages.length - 1 ? 0 : index + 1); });
   select.addEventListener('change', function () { go(Number(select.value)); });
   play.addEventListener('click', function () {
@@ -295,9 +360,9 @@
     last = null;
     if (away) {
       window.cancelAnimationFrame(frame); frame = 0;
-      if (turnAnimation) turnAnimation.pause();
+      turnAnimations.forEach(function (a) { a.pause(); });
     } else {
-      if (turnAnimation) turnAnimation.play();
+      turnAnimations.forEach(function (a) { a.play(); });
       autoStart(); kick();
     }
   });
@@ -327,5 +392,6 @@
   var initial = findPage(location.hash.slice(1));
   index = initial >= 0 ? initial : 0;
   pages[index].leaf.classList.add('is-current'); pages[index].leaf.removeAttribute('inert'); pages[index].leaf.setAttribute('aria-hidden', 'false');
-  preload(index); preload(index + 1); sync();
+  pages.forEach(function (p, i) { if (i < index - 1 || i > index + 1) hold(p); });
+  preload(index - 1); preload(index); preload(index + 1); sync();
 })();

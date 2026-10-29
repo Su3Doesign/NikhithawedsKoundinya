@@ -271,17 +271,59 @@ a{ color:inherit; }
 .ak-n .te{ color:var(--kum); font-weight:600; }
 
 /* ---------------------------------------------------------------- శుభం */
+/* The closing card is kumkum silk with gold: festive, and never black. */
 .subham{ position:relative; min-height:100vh; min-height:calc(var(--vh) * 100); display:flex; align-items:center; justify-content:center;
-  overflow:hidden; background:radial-gradient(ellipse at 0 100%,#e8bd4c26,transparent 52%),radial-gradient(ellipse at 100% 0,#cb786c16,transparent 48%),#f8efd9; color:#723c2b; text-align:center; padding:60px 22px; }
-.film{ position:absolute; left:0; top:0; width:100%; height:100%; opacity:.12; mix-blend-mode:multiply; pointer-events:none; }
-.subham::before{ content:""; position:absolute; inset:22px; border:1px solid #b28b4e50; border-radius:48% 48% 3px 3px / 18% 18% 3px 3px; pointer-events:none; }
+  overflow:hidden; color:#fbe7c4; text-align:center; padding:60px 22px;
+  background:radial-gradient(ellipse 72% 42% at 50% 40%,#e65f3c4d,transparent 72%),
+    linear-gradient(118deg,transparent 22%,#ffe2b112 38%,transparent 52%,#ffe2b10d 70%,transparent 84%),
+    radial-gradient(ellipse 125% 95% at 50% 42%,#bd2d1f,#a3211a 55%,#861910); }
+.film{ position:absolute; left:0; top:0; width:100%; height:100%; opacity:.16; mix-blend-mode:soft-light; pointer-events:none; }
+.subham::before{ content:""; position:absolute; inset:22px; border:1px solid #f1c46d99; outline:1px solid #f1c46d3d; outline-offset:5px;
+  border-radius:48% 48% 3px 3px / 18% 18% 3px 3px; pointer-events:none; }
+/* a row of gold beads, like a zari border, along the foot of the card */
+.subham::after{ content:""; position:absolute; left:40px; right:40px; bottom:38px; height:8px; pointer-events:none; opacity:.85;
+  background:radial-gradient(circle,#f3c66c 1.4px,transparent 2px) 50% 50%/13px 8px repeat-x; }
+.subham-lotus{ position:absolute; left:50%; top:41%; width:130%; max-width:640px; height:auto; opacity:.15; pointer-events:none;
+  -webkit-transform:translate(-50%,-50%); transform:translate(-50%,-50%); }
+.subham-toranam{ position:absolute; z-index:1; left:22px; right:22px; top:16px; height:72px; }
 .subham-in{ position:relative; display:flex; flex-direction:column; align-items:center; width:min(100%,460px); }
-.subham-ornament{ display:block; width:min(78%,310px); height:auto; margin-bottom:14px; }
-.subham-w{ font:400 96px/1 'Ramabhadra',var(--te); font-size:clamp(84px,26vw,190px); letter-spacing:.02em; }
-.subham-blessing{ margin:19px 0 0; color:#6e7347; font-size:15px; line-height:1.8; }
-.sign-end{ width:72vw; max-width:420px; margin:22px auto 16px; color:#723c2b; }
-.subham .lab{ color:#806747; }
+.subham-ornament{ display:block; width:min(78%,310px); height:auto; margin-bottom:14px; overflow:visible; }
+.orn-line path{ fill:none; stroke:#f3c66c; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.orn-line .orn-leaf{ fill:#d4d98f26; stroke:#d9da98; }
+.orn-dots{ fill:#f3c66c; opacity:.8; }
+.orn-flame{ fill:#ffd96e; -webkit-transform-origin:50% 100%; transform-origin:50% 100%; transform-box:fill-box; }
+/* The real letters are a kumkum relief; the gold face sits just above them. */
+.subham-w{ position:relative; font:400 96px/1 'Ramabhadra',var(--te); font-size:clamp(84px,26vw,190px); letter-spacing:.02em; color:#5c0f0bb3; }
+.subham-w::after{ content:attr(data-text); content:attr(data-text) / ""; position:absolute; left:0; right:0; top:-.045em; color:#f4c96c; }
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .subham-w::after{ background:linear-gradient(100deg,#e7ae4b,#f9dc95 18%,#e6b04f 34%,#f6d385 50%,#fff2cc 58%,#e8b14d 68%,#f5d080) 0 0/250% 100%;
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+}
+.subham-blessing{ margin:19px 0 0; color:#f8e0b4; font-size:15px; line-height:1.8; }
+.sign-end{ width:72vw; max-width:420px; margin:22px auto 16px; color:#f4cd78; }
+.subham .lab{ color:#efcf98; }
+.subham .end-names>span{ color:#f8e0b4; }
 .back{ display:inline-block; margin-top:22px; text-decoration:none; border-bottom:1px solid #a485555c; padding-bottom:4px; }
+.subham .back{ color:#fbe7c4; border:1px solid #f1c46d80; border-radius:999px; padding:9px 18px; }
+/* Motion runs only while the card is in view: the ornament draws itself, the
+   lamps flicker, a gleam crosses the letters and the muggu turns very slowly. */
+.motion .subham .orn-line path{ stroke-dasharray:1 1; stroke-dashoffset:0; }
+.motion .subham.arrive .orn-line path{ -webkit-animation:orn-draw 2.6s cubic-bezier(.45,.05,.3,1) both; animation:orn-draw 2.6s cubic-bezier(.45,.05,.3,1) both; }
+.motion .subham.arrive .subham-w::after{ -webkit-animation:gleam 3.2s ease-in-out .7s both; animation:gleam 3.2s ease-in-out .7s both; }
+.motion .subham .orn-flame{ -webkit-animation:flame 1.7s ease-in-out infinite alternate; animation:flame 1.7s ease-in-out infinite alternate; }
+.motion .subham .orn-glow{ -webkit-animation:lamp-glow 2.4s ease-in-out infinite alternate; animation:lamp-glow 2.4s ease-in-out infinite alternate; }
+.motion .subham .subham-lotus{ -webkit-animation:lotus-turn 150s linear infinite; animation:lotus-turn 150s linear infinite; }
+.motion .subham:not(.is-live) *{ -webkit-animation-play-state:paused!important; animation-play-state:paused!important; }
+@-webkit-keyframes orn-draw{ from{ stroke-dashoffset:1; } to{ stroke-dashoffset:0; } }
+@keyframes orn-draw{ from{ stroke-dashoffset:1; } to{ stroke-dashoffset:0; } }
+@-webkit-keyframes gleam{ from{ background-position:100% 0; } to{ background-position:0 0; } }
+@keyframes gleam{ from{ background-position:100% 0; } to{ background-position:0 0; } }
+@-webkit-keyframes flame{ 0%{ -webkit-transform:none; } 40%{ -webkit-transform:scale(.93,1.07) skewX(2deg); } 75%{ -webkit-transform:scale(1.05,.95) skewX(-2deg); } 100%{ -webkit-transform:scale(.97,1.04) skewX(1deg); } }
+@keyframes flame{ 0%{ transform:none; } 40%{ transform:scale(.93,1.07) skewX(2deg); } 75%{ transform:scale(1.05,.95) skewX(-2deg); } 100%{ transform:scale(.97,1.04) skewX(1deg); } }
+@-webkit-keyframes lamp-glow{ from{ opacity:.55; } to{ opacity:1; } }
+@keyframes lamp-glow{ from{ opacity:.55; } to{ opacity:1; } }
+@-webkit-keyframes lotus-turn{ from{ -webkit-transform:translate(-50%,-50%) rotate(0); } to{ -webkit-transform:translate(-50%,-50%) rotate(360deg); } }
+@keyframes lotus-turn{ from{ transform:translate(-50%,-50%) rotate(0); } to{ transform:translate(-50%,-50%) rotate(360deg); } }
 
 .burst{ position:fixed; z-index:40; left:0; top:0; width:100%; height:100%; pointer-events:none; display:none; }
 .burst.on{ display:block; }
@@ -384,7 +426,7 @@ a{ color:inherit; }
 .cover-family,.cover-names,.head .te,.patrika-masthead h2,.patrika-person h3,
 .star-name-bride,.star-name-groom,.end-names { font-family:var(--te-display); font-weight:400; }
 .patrika { --frame-top:42px; --frame-side:16px; --frame-bottom:12px; position:relative; color:#49502c; background:#f6e8c8; padding:54px 0 26px; }
-.patrika::before { content:""; position:absolute; z-index:0; inset:0; pointer-events:none; border:0 solid transparent; border-image-source:url("img/patrika-frame-clear.png"); border-image-slice:230 85 65 85; border-image-width:var(--frame-top) var(--frame-side) var(--frame-bottom); border-image-repeat:stretch; }
+.patrika::before { content:""; position:absolute; z-index:0; inset:0; pointer-events:none; border:0 solid transparent; border-image-source:url("img/patrika-frame-clear.png"); border-image-source:image-set(url("img/patrika-frame-clear.webp") type("image/webp"),url("img/patrika-frame-clear.png") type("image/png")); border-image-slice:230 85 65 85; border-image-width:var(--frame-top) var(--frame-side) var(--frame-bottom); border-image-repeat:stretch; }
 .patrika .wrap { position:relative; z-index:1; padding:0 28px; max-width:720px; }
 .patrika-masthead { border:0; padding-bottom:4px; margin-bottom:9px; }
 .patrika-auspicious { display:flex; justify-content:space-between; gap:8px; font-size:11px; color:#876c3e; }

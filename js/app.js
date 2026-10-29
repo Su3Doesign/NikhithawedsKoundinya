@@ -99,7 +99,9 @@
   if (V.previewImage && V.mapUrl) {
     var mapPreview = $('#venueMap'), mapImage = $('#venueMapImage');
     if (mapPreview && mapImage) {
-      mapImage.src = V.previewImage;
+      // in the book, a page waiting its turn receives the picture when it is next
+      if (mapImage.closest('[data-held]')) mapImage.setAttribute('data-held-src', V.previewImage);
+      else mapImage.src = V.previewImage;
       mapPreview.hidden = false;
       mapPreview.parentElement.classList.add('has-map');
       setLink($('#mapPreviewLink'), V.mapUrl);
@@ -179,6 +181,8 @@
     }); });
   }
   safe(function () {
+    // both signatures are printed lettering now; fetch the pen strokes only if one needs them
+    if ($('#sigOpen').hasAttribute('data-static-signature') && $('#sigEnd').hasAttribute('data-static-signature')) return;
     var x = new XMLHttpRequest();
     x.open('GET', 'img/art/signature.svg');
     x.onload = function () {
@@ -198,11 +202,11 @@
 
   /* ---------------------------------------------------------------- the toranam: mango leaves and marigolds */
   safe(function () {
-    var host = $('#toranam');
-    function build() {
+    var hosts = $$('.toranam');
+    function build(host) {
       var W = host.clientWidth, H = host.clientHeight;
       if (!W) return;
-      var n = clamp(Math.round(W / 32), 9, 44), sag = Math.min(16, H * 0.18), y0 = 5;
+      var n = clamp(Math.round(W / (Number(host.getAttribute('data-step')) || 32)), 9, 44), sag = Math.min(16, H * 0.18), y0 = 5;
       function y(x) { return y0 + sag * (1 - Math.pow((x - W / 2) / (W / 2), 2)); }
       var big = W > 700 ? 1.15 : 1, maxL = H - sag - y0 - 4;
       var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">';
@@ -219,9 +223,11 @@
       }
       host.innerHTML = s.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ') + '</svg>';
     }
-    build();
+    // the cover's garland, and the one over the closing card
+    function buildAll() { hosts.forEach(function (host) { safe(function () { build(host); }); }); }
+    buildAll();
     var lw = innerWidth;
-    window.addEventListener('resize', function () { if (innerWidth !== lw) { lw = innerWidth; build(); } });
+    window.addEventListener('resize', function () { if (innerWidth !== lw) { lw = innerWidth; buildAll(); } });
   });
 
   /* ---------------------------------------------------------------- scenes */
@@ -613,37 +619,43 @@
   /* ---------------------------------------------------------------- శుభం */
   var endSeen = false;
   safe(function () {
-    var sec = $('#end'), cv = $('#film'), x = cv.getContext('2d'), on = false, last = 0, W = 0, H = 0;
-    function size() { W = Math.ceil(innerWidth / 3); H = Math.ceil(innerHeight / 3); cv.width = W; cv.height = H; }
+    var sec = $('#end'), cv = $('#film'), x = cv.getContext('2d'), here = false;
+    // a still silk grain; the card itself carries the motion
     function grain() {
+      var W = Math.ceil(innerWidth / 3), H = Math.ceil(innerHeight / 3);
+      cv.width = W; cv.height = H;
       var img = x.createImageData(W, H), d = img.data;
       for (var i = 0; i < d.length; i += 4) { var v = Math.random() * 255 | 0; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 26; }
       x.putImageData(img, 0, 0);
     }
-    function loop(t) { if (!on) return; if (t - last > 80) { last = t; grain(); } raf(loop); }
-    size(); grain();
+    grain();
+    window.addEventListener('resize', grain);
     function seen() {
       if (!endSeen) { endSeen = true; writeSig(sigs[1], 2400, 300); }
     }
+    // Each arrival draws the ornament and passes a gleam over the letters again;
+    // the lamps, garland and muggu move only while the card is in view.
+    function show(arriving, live) {
+      if (arriving && MOTION) { sec.classList.remove('arrive'); void sec.offsetWidth; sec.classList.add('arrive'); }
+      if (live) seen();
+      sec.classList[live ? 'add' : 'remove']('is-live');
+    }
     if (BOOK) {
-      function endVisibility() {
-        var vis = BOOK.currentId() === 'end' && !presence.isAway();
-        if (vis) seen();
-        if (vis && !on && MOTION && !LOW) { on = true; raf(loop); }
-        if (!vis) on = false;
-      }
-      doc.addEventListener('bookpagechange', endVisibility);
-      presence.subscribe(endVisibility);
+      var update = function () {
+        var now = BOOK.currentId() === 'end';
+        show(now && !here, now && !presence.isAway());
+        here = now;
+      };
+      doc.addEventListener('bookpagechange', update);
+      presence.subscribe(update);
       return;
     }
-    if (!IO) { seen(); return; }
+    if (!IO) { show(true, true); return; }
     new IntersectionObserver(function (es) {
       var vis = es[0].isIntersecting;
-      if (vis) seen();
-      if (vis && !on && MOTION && !LOW) { on = true; raf(loop); }
-      if (!vis) on = false;
+      show(vis && !here, vis);
+      here = vis;
     }, { threshold: 0.3 }).observe(sec);
-    window.addEventListener('resize', function () { size(); grain(); });
   });
 
   /* ---------------------------------------------------------------- start */
