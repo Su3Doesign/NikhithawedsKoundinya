@@ -11,12 +11,19 @@ and part of the left page outside the frame. The surroundings are an overhead
 pooja arrangement with bananas, a coconut, turmeric, kumkum, rice and a diya.
 
 Use the arrows, left/right keys, chapter menu, or a horizontal swipe to turn
-pages. Every section stays on exactly one leaf. The complete composition fits the
+pages. The circular button beside the next arrow returns to the first page in
+one tap; on the last page the next arrow itself does this, so the button steps
+aside there. The page arrows always sit clear of the music and auto-read
+controls, including on upright tablets and phones held sideways. Every section stays on exactly one leaf. The complete composition fits the
 available paper area, including on small screens. There are no continuation
 pages and no internal scrolling.
 The reverse of every turning leaf is blank paper.
 The turn gently lifts the outside edge with a travelling shadow; the content
-remains one intact sheet. Reduced-motion users get an immediate page change.
+remains one intact sheet. The lifting page catches the light, dims as it stands
+on edge, and casts a soft shadow that follows its edge across the page beneath.
+Only opacity and position animate, so the browser runs the turn off the main
+thread and it stays smooth on modest phones. Turning back keeps the page being
+left in view until the sheet covers it. Reduced-motion users get an immediate page change.
 The bookmark has been removed. Small textured pasupu and kumkuma touches sit
 in the four outer corners of each leaf, clear of the text.
 
@@ -56,8 +63,13 @@ font download. Reduced-motion users see completed lettering without animation.
 The first couple photograph has no role watermark. The Arundhati
 star sequence ends in the couple's Telugu names. The knots and seven-step
 scenes retain their effects and have pause/replay controls.
-The Shubham page closes on warm ivory paper with a small muggu, lamps and a
-Telugu blessing. It has no black background.
+The Shubham page closes on a kumkum-red silk card set in the ivory leaf, never
+black: a marigold and mango-leaf toranam across the top, a cream lotus muggu
+turning slowly behind gold **శుభం**, and a gold lotus-and-lamps ornament with
+flickering flames. On each arrival the ornament draws itself and a gleam
+crosses the letters. The Telugu blessing, the couple's names, the date and
+**Back to the beginning** follow. Motion runs only while the card is shown;
+reduced-motion users see it complete and still. The scroll version ends on the same card.
 
 **Auto-read starts automatically when the invitation opens**, plays each
 scene, and turns the page after time to read it. The speed menu controls reading
@@ -144,6 +156,15 @@ Switching away holds the position until the guest returns. It finishes at the
 end, where **Replay** starts again; scrolling back up also continues if enabled.
 An initially hidden tab starts on first visibility; a guest pause stays paused.
 Music attempts playback on opening and uses the first interaction when the browser requires it.
+
+## Images and loading
+
+The desk photograph and the patrika frame are served as WebP, with JPEG and PNG
+fallbacks for browsers without `image-set()` type support:
+`img/pooja-overhead.webp`/`.jpg` and `img/patrika-frame-clear.webp`/`.png`.
+`img/pooja-overhead.png` is the untouched original and is no longer requested.
+The book asks for pictures one page ahead of the reader, so a slow connection
+spends its bandwidth on the cover first.
 
 ## Local preview
 

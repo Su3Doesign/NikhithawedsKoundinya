@@ -99,7 +99,9 @@
   if (V.previewImage && V.mapUrl) {
     var mapPreview = $('#venueMap'), mapImage = $('#venueMapImage');
     if (mapPreview && mapImage) {
-      mapImage.src = V.previewImage;
+      // in the book, a page waiting its turn receives the picture when it is next
+      if (mapImage.closest('[data-held]')) mapImage.setAttribute('data-held-src', V.previewImage);
+      else mapImage.src = V.previewImage;
       mapPreview.hidden = false;
       mapPreview.parentElement.classList.add('has-map');
       setLink($('#mapPreviewLink'), V.mapUrl);
@@ -179,6 +181,8 @@
     }); });
   }
   safe(function () {
+    // both signatures are printed lettering now; fetch the pen strokes only if one needs them
+    if ($('#sigOpen').hasAttribute('data-static-signature') && $('#sigEnd').hasAttribute('data-static-signature')) return;
     var x = new XMLHttpRequest();
     x.open('GET', 'img/art/signature.svg');
     x.onload = function () {
@@ -198,11 +202,11 @@
 
   /* ---------------------------------------------------------------- the toranam: mango leaves and marigolds */
   safe(function () {
-    var host = $('#toranam');
-    function build() {
+    var hosts = $$('.toranam');
+    function build(host) {
       var W = host.clientWidth, H = host.clientHeight;
       if (!W) return;
-      var n = clamp(Math.round(W / 32), 9, 44), sag = Math.min(16, H * 0.18), y0 = 5;
+      var n = clamp(Math.round(W / (Number(host.getAttribute('data-step')) || 32)), 9, 44), sag = Math.min(16, H * 0.18), y0 = 5;
       function y(x) { return y0 + sag * (1 - Math.pow((x - W / 2) / (W / 2), 2)); }
       var big = W > 700 ? 1.15 : 1, maxL = H - sag - y0 - 4;
       var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">';
@@ -219,9 +223,11 @@
       }
       host.innerHTML = s.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ') + '</svg>';
     }
-    build();
+    // the cover's garland, and the one over the closing card
+    function buildAll() { hosts.forEach(function (host) { safe(function () { build(host); }); }); }
+    buildAll();
     var lw = innerWidth;
-    window.addEventListener('resize', function () { if (innerWidth !== lw) { lw = innerWidth; build(); } });
+    window.addEventListener('resize', function () { if (innerWidth !== lw) { lw = innerWidth; buildAll(); } });
   });
 
   /* ---------------------------------------------------------------- scenes */
@@ -272,7 +278,9 @@
 
   /* 01 · the couple and the two supplied portraits, always uncropped */
   safe(function () {
-    var portraits = $$('#portraitSequence .portrait-slide');
+    var portraits = $$('#portraitSequence .portrait-slide'), sequence = $('#portraitSequence');
+    var pictures = portraits.map(function (portrait) { return $('img', portrait); });
+    var captions = portraits.map(function (portrait) { return $('figcaption', portrait); });
     var roles = portraits.map(function (portrait) { return $('.portrait-role', portrait); });
     var brushes = roles.map(function (role) {
       return role ? $$('.ink-stroke', role).map(function (path) {
@@ -281,17 +289,50 @@
     });
     var portraitHeading = $('.portrait-heading');
     if (!portraits.length) return;
-    scene('couple', function (p) {
-      var bride = smooth(span(p, 0.18, 0.32));
-      var groom = smooth(span(p, 0.58, 0.72));
-      var opacity = [1 - bride, bride * (1 - groom), groom];
-      if (BOOK && portraitHeading) {
-        portraitHeading.style.opacity = (1 - bride).toFixed(3);
-        portraitHeading.setAttribute('aria-hidden', bride > 0.5 ? 'true' : 'false');
+    // One portrait at a time. At each change the picture on the paper fades as
+    // it drifts gently forward, its caption leaving first, while the next
+    // watercolour blooms outward from the face like paint spreading on wet
+    // paper, so two faces never sit on top of each other.
+    var CHANGE = [[0.18, 0.32], [0.58, 0.72]], diagonal = 1;
+    var LOBES = [[50, 36, 1], [36, 50, 0.86], [64, 47, 0.9], [44, 68, 0.82], [58, 22, 0.8], [52, 86, 0.76]];
+    function bloom(slide, t) {
+      var mask = '';
+      if (t < 1) {
+        var feather = diagonal * (0.12 - 0.05 * t), layers = [];
+        LOBES.forEach(function (lobe) {
+          // spreads at a steady pace and reaches the far corners as the change ends
+          var r = diagonal * 0.64 * t * lobe[2];
+          layers.push('radial-gradient(circle at ' + lobe[0] + '% ' + lobe[1] + '%,#000 ' + Math.max(0, r - feather).toFixed(1) + 'px,transparent ' + Math.max(0.5, r).toFixed(1) + 'px)');
+        });
+        mask = layers.join(',');
       }
+      if (slide.style.webkitMaskImage !== mask) { slide.style.webkitMaskImage = mask; slide.style.maskImage = mask; }
+    }
+    scene('couple', function (p) {
+      var heading = 1;
       portraits.forEach(function (portrait, i) {
-        portrait.style.opacity = opacity[i].toFixed(3);
-        portrait.setAttribute('aria-hidden', opacity[i] < 0.5 ? 'true' : 'false');
+        var arrive = i ? CHANGE[i - 1] : null, leave = CHANGE[i] || null;
+        var shown = 1, picture = 1, caption = 1, scale = 1, painted = 1;
+        if (arrive) {
+          var a = arrive[0], w = arrive[1] - arrive[0];
+          painted = span(p, a + 0.22 * w, arrive[1]);
+          shown = smooth(span(p, a + 0.22 * w, a + 0.42 * w));
+          scale = 1.04 - 0.04 * smooth(span(p, a, arrive[1] + 0.06));
+        }
+        if (leave) {
+          var b = leave[0], lw = leave[1] - leave[0];
+          picture = 1 - smooth(span(p, b, b + 0.5 * lw));
+          caption = 1 - smooth(span(p, b, b + 0.3 * lw));
+          scale *= 1 + 0.035 * smooth(span(p, b, leave[1]));
+          if (p >= leave[1]) shown = 0;
+          if (!i) heading = 1 - smooth(span(p, b, b + 0.4 * lw));
+        }
+        portrait.style.opacity = shown.toFixed(3);
+        pictures[i].style.opacity = picture.toFixed(3);
+        pictures[i].style.transform = scale === 1 ? '' : 'scale(' + scale.toFixed(4) + ')';
+        captions[i].style.opacity = caption.toFixed(3);
+        bloom(portrait, painted);
+        portrait.setAttribute('aria-hidden', shown * picture < 0.5 ? 'true' : 'false');
         if (roles[i]) {
           // Write each Telugu curve and vowel mark in place. The ink stays on
           // the paper; no translated text or rectangular clipping reveal.
@@ -305,7 +346,13 @@
           $('.portrait-name', portrait).style.opacity = smooth(span(ink, 0.74, 1.08)).toFixed(3);
         }
       });
-    });
+      if (BOOK && portraitHeading) {
+        portraitHeading.style.opacity = heading.toFixed(3);
+        portraitHeading.setAttribute('aria-hidden', heading < 0.5 ? 'true' : 'false');
+      }
+    }, { resize: function () {
+      if (sequence) diagonal = Math.sqrt(Math.pow(sequence.clientWidth, 2) + Math.pow(sequence.clientHeight, 2)) || 1;
+    } });
   });
 
   /* 02 · three knots: the camera stops at each knot, then steps back */
@@ -613,37 +660,43 @@
   /* ---------------------------------------------------------------- శుభం */
   var endSeen = false;
   safe(function () {
-    var sec = $('#end'), cv = $('#film'), x = cv.getContext('2d'), on = false, last = 0, W = 0, H = 0;
-    function size() { W = Math.ceil(innerWidth / 3); H = Math.ceil(innerHeight / 3); cv.width = W; cv.height = H; }
+    var sec = $('#end'), cv = $('#film'), x = cv.getContext('2d'), here = false;
+    // a still silk grain; the card itself carries the motion
     function grain() {
+      var W = Math.ceil(innerWidth / 3), H = Math.ceil(innerHeight / 3);
+      cv.width = W; cv.height = H;
       var img = x.createImageData(W, H), d = img.data;
       for (var i = 0; i < d.length; i += 4) { var v = Math.random() * 255 | 0; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 26; }
       x.putImageData(img, 0, 0);
     }
-    function loop(t) { if (!on) return; if (t - last > 80) { last = t; grain(); } raf(loop); }
-    size(); grain();
+    grain();
+    window.addEventListener('resize', grain);
     function seen() {
       if (!endSeen) { endSeen = true; writeSig(sigs[1], 2400, 300); }
     }
+    // Each arrival draws the ornament and passes a gleam over the letters again;
+    // the lamps, garland and muggu move only while the card is in view.
+    function show(arriving, live) {
+      if (arriving && MOTION) { sec.classList.remove('arrive'); void sec.offsetWidth; sec.classList.add('arrive'); }
+      if (live) seen();
+      sec.classList[live ? 'add' : 'remove']('is-live');
+    }
     if (BOOK) {
-      function endVisibility() {
-        var vis = BOOK.currentId() === 'end' && !presence.isAway();
-        if (vis) seen();
-        if (vis && !on && MOTION && !LOW) { on = true; raf(loop); }
-        if (!vis) on = false;
-      }
-      doc.addEventListener('bookpagechange', endVisibility);
-      presence.subscribe(endVisibility);
+      var update = function () {
+        var now = BOOK.currentId() === 'end';
+        show(now && !here, now && !presence.isAway());
+        here = now;
+      };
+      doc.addEventListener('bookpagechange', update);
+      presence.subscribe(update);
       return;
     }
-    if (!IO) { seen(); return; }
+    if (!IO) { show(true, true); return; }
     new IntersectionObserver(function (es) {
       var vis = es[0].isIntersecting;
-      if (vis) seen();
-      if (vis && !on && MOTION && !LOW) { on = true; raf(loop); }
-      if (!vis) on = false;
+      show(vis && !here, vis);
+      here = vis;
     }, { threshold: 0.3 }).observe(sec);
-    window.addEventListener('resize', function () { size(); grain(); });
   });
 
   /* ---------------------------------------------------------------- start */
