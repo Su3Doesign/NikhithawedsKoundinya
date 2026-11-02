@@ -12,7 +12,7 @@
     ['letter-en', 'The invitation in English', 'English', 14],
     ['when', 'When & where', 'సుముహూర్తం', 15],
     ['events', 'The celebrations', 'వేడుకలు', 15],
-    ['knots', 'Three sacred knots', 'మూడు ముళ్ళు', 16],
+    ['home', 'An auspicious beginning', 'శుభారంభం', 16],
     ['talambralu', 'A shower of blessings', 'తలంబ్రాలు', 22],
     ['saptapadi', 'Seven steps together', 'సప్తపది', 14],
     ['arundhati', 'Written in the stars', 'అరుంధతి', 24],

@@ -192,23 +192,21 @@ a{ color:inherit; }
 .ev p{ font-size:15px; line-height:1.5; }
 .ev .where{ color:var(--ink-2); }
 
-/* ---------------------------------------------------------------- three knots */
-.sc-knots{ background:var(--kum-d); color:var(--cream); }
-.sc-knots .head .te{ color:var(--tur); }
-.sc-knots .head .lab{ color:rgba(244,236,221,.75); }
-.kn-view{ position:relative; width:64vw; max-width:340px; margin:0 auto; }
-.kn-world{ position:relative; }
-.kn-base{ display:block; width:100%; }
-.kn-hi,.kn-n{ display:none; }
-.motion .sc-knots .stage{ display:flex; flex-direction:column; }
-.motion .sc-knots .head{ flex:none; padding-top:64px; margin-bottom:0; }
-.motion .kn-view{ flex:1; width:100%; max-width:none; min-height:0; overflow:hidden;
-  -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 10%, #000 92%, transparent 100%); mask-image:linear-gradient(to bottom, transparent 0, #000 10%, #000 92%, transparent 100%); }
-.motion .kn-world{ position:absolute; left:0; top:0; -webkit-transform-origin:0 0; transform-origin:0 0; }
-.motion .kn-base{ position:absolute; left:0; top:0; width:100%; height:100%; max-width:none; }
-.motion .kn-hi{ display:block; position:absolute; left:36.667%; top:5.3087%; width:26.667%; height:35.168%; max-width:none; }
-.motion .kn-n{ display:block; position:absolute; left:0; top:0; opacity:0; transition:opacity .4s ease; }
-.kn-n b{ display:block; font:600 46px/1 var(--te); color:var(--tur); }
+/* ---------------------------------------------------------------- an auspicious beginning */
+.sc-home{ background:var(--paper); text-align:center; }
+.sc-home .stage{ display:flex; flex-direction:column; align-items:center; }
+.sc-home .head{ flex:none; width:100%; margin:0; }
+.home-illustration{ width:100%; max-width:620px; margin:0 auto; }
+.home-art{ display:block; width:100%; height:auto; }
+.home-caption{ flex:none; padding:0 18px; }
+.home-caption .te{ color:var(--kum); font-size:27px; line-height:1.45; }
+.home-caption .en{ color:var(--ink-2); font-size:14px; line-height:1.6; }
+.motion .sc-home .stage{ padding:52px 0 56px; }
+.motion .home-illustration{ flex:1; min-height:0; position:relative; }
+.motion .home-art{ position:absolute; inset:0; height:100%; }
+/* The SVG's authored state is the complete scene for no-JS and reduced motion.
+   Only progress-driven attributes animate; pause, replay and reverse are exact. */
+.home-door{ will-change:transform; }
 
 /* ---------------------------------------------------------------- talambralu */
 .sc-tal{ background:var(--night); color:var(--cream); text-align:center; }
@@ -337,7 +335,6 @@ a{ color:inherit; }
   .toranam{ height:110px; }
   .ganesha{ width:60px; }
   .sc-couple .stage{ flex-direction:row; }
-  .kn-view{ width:34vw; }
   .walk{ max-width:620px; }
 }
 @media (max-width:380px){
@@ -490,7 +487,7 @@ a{ color:inherit; }
 .star-name-bride,.star-name-groom,.end-names { font-synthesis:none; }
 .auspicious,.om,.hero-sub,.hero-date,.patrika-auspicious,.patrika-subtitle,.patrika-opening,
 .portrait-slide figcaption.te,.portrait-slide .portrait-name,.w-day .te,.v-te,.panch,.ev h3 .te,
-.sakha .te,.sky-cap .te,.star-names-blessing,.verse .te,#akBtn .te,.ak-n .te,.page-heading [lang="te"],
+.sakha .te,.sky-cap .te,.home-caption .te,.star-names-blessing,.verse .te,#akBtn .te,.ak-n .te,.page-heading [lang="te"],
 .subham .te,.subham-blessing,.subham .end-names { font-family:var(--te-short); }
 
 /* The English invitation: the same card and hierarchy, set in the site's English face. */

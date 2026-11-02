@@ -355,44 +355,24 @@
     } });
   });
 
-  /* 02 · three knots: the camera stops at each knot, then steps back */
+  /* 02 · an auspicious beginning: open a flower-decorated entrance and draw the muggu */
   safe(function () {
-    var view = $('#knView'), world = $('#knWorld'), nums = $$('.kn-n');
-    var IW = 1200, IH = 2100, AXIS = 600, KN = [688, 511, 333], KTALL = 143, AT = [0.12, 0.32, 0.52];
-    var f = 1, SW = 1, SH = 1, zk = 3, said = [false, false, false], nw = [0, 0, 0], nh = [0, 0, 0];
-    function keys() {
-      return [[0, KN[0] + 30, zk * 1.1], [0.07, KN[0], zk], [0.14, KN[0], zk], [0.27, KN[1], zk], [0.34, KN[1], zk],
-        [0.47, KN[2], zk], [0.54, KN[2], zk], [0.86, IH * 0.5, 1], [1, IH * 0.5, 1]];
-    }
-    function cam(q) {
-      var K = keys(), i = 0;
-      while (i < K.length - 2 && q > K[i + 1][0]) i++;
-      var a = K[i], b = K[i + 1], t = smooth((q - a[0]) / (b[0] - a[0]));
-      return [a[1] + (b[1] - a[1]) * t, Math.exp(Math.log(a[2]) + (Math.log(b[2]) - Math.log(a[2])) * t)];
-    }
-    scene('knots', function (p) {
-      var c = cam(p), y = c[0], z = c[1], k = f * z;
-      var tx = SW / 2 - AXIS * k, ty = SH / 2 - y * k;
-      var tr = 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) scale(' + z.toFixed(4) + ')';
-      world.style.webkitTransform = tr; world.style.transform = tr;
-      var near = smooth((z - 1.6) / 1.2);
-      nums.forEach(function (n, i) {
-        var side = i === 1 ? -1 : 1;
-        var nx = SW / 2 + side * 80 * k + (side < 0 ? -nw[i] : 0), ny = ty + KN[i] * k - nh[i] / 2;
-        var t2 = 'translate(' + nx.toFixed(1) + 'px,' + ny.toFixed(1) + 'px)';
-        n.style.webkitTransform = t2; n.style.transform = t2;
-        n.style.opacity = p > AT[i] ? near.toFixed(3) : '0';
-        if (p > AT[i] && !said[i]) { said[i] = true; if (window.Music) Music.chime(0.35); }
-        if (p < AT[i] - 0.03) said[i] = false;
+    var home = $('#home');
+    if (!home) return;
+    var doors = $$('.home-door', home), lines = $$('.home-muggu-line', home);
+    scene('home', function (p) {
+      var opening = smooth(span(p, 0.04, 0.48));
+      var angle = opening * 1.39, width = Math.cos(angle), depth = Math.sin(angle) * 0.1;
+      doors.forEach(function (door) {
+        var side = door.getAttribute('data-home-door') === 'left' ? -1 : 1;
+        door.setAttribute('transform', 'matrix(' + width.toFixed(4) + ' ' + (side * depth).toFixed(4) + ' 0 1 0 0)');
       });
-    }, { resize: function () {
-      if (!MOTION) return;
-      SW = view.clientWidth; SH = view.clientHeight;
-      nums.forEach(function (n, i) { nw[i] = n.offsetWidth; nh[i] = n.offsetHeight; });
-      f = Math.min(SW / IW, SH / IH) * 0.94;
-      world.style.width = (IW * f).toFixed(1) + 'px'; world.style.height = (IH * f).toFixed(1) + 'px';
-      zk = clamp(SH * 0.27 / (KTALL * f), 1.6, 5.5);
-    } });
+      lines.forEach(function (line, i) {
+        var drawn = smooth(span(p, 0.28 + i * 0.025, 0.57 + i * 0.025));
+        line.style.strokeDasharray = '1';
+        line.style.strokeDashoffset = (1 - drawn).toFixed(4);
+      });
+    });
   });
 
   /* 03 · talambralu: a handful of rice with each line of the verse */
@@ -531,7 +511,7 @@
 
   /* ---------------------------------------------------------------- fixed bits: progress, music, keep scrolling */
   var bar = $('#progress'), musicBtn = $('#music'), scrollControls = $('#autoScrollControls'), cue = $('#cue');
-  var darkIds = ['knots', 'talambralu', 'arundhati'];
+  var darkIds = ['talambralu', 'arundhati'];
   var probeY = function () { return vh - 34; };
   var idle = 0;
   function chrome(y) {

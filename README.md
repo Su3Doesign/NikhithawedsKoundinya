@@ -82,8 +82,22 @@ a sheen of starlight crosses them, and a few stars stay on the letters, glinting
 dust lands on the letters at every screen size. Each frame depends only on the
 scene's progress, so pausing and replaying stay exact. Modest phones draw
 fewer motes, and the dimmed sky stops redrawing while the names are written.
-Reduced-motion users see the finished names. The knots and seven-step
-scenes retain their effects and have pause/replay controls.
+Reduced-motion users see the finished names. The courtyard and seven-step
+scenes have pause/replay controls.
+
+**శుభారంభం · An auspicious beginning** replaces the three-knots chapter in
+both views with a ceremonial welcome, using the invitation’s existing fonts
+and font-loading setup. Its original SVG illustration depicts a
+tiled eave, carved teak doors, jasmine and a marigold-and-mango-leaf toranam.
+The open courtyard is bright and decorated with hanging flowers; loose petals
+rest on the verandah. This scene contains no lamps, flames or offering plate.
+A smaller rice-flour muggu is foreshortened onto the terracotta verandah,
+inset from every edge and clipped to the floor surface. The caption reads
+**శ్రీరస్తు శుభమస్తు** / “May joy and blessings fill this celebration.”
+The doors open to reveal the floral decorations and the muggu draws. Every animated attribute
+derives from scene progress, so Pause, Replay and scrolling backwards remain
+deterministic. The complete illustration is visible without JavaScript or with
+reduced motion. The chapter stays on one leaf with its 16-second scene duration.
 The Shubham page closes on a kumkum-red silk card set in the ivory leaf, never
 black: a marigold and mango-leaf toranam across the top, a cream lotus muggu
 turning slowly behind gold **శుభం**, and a gold lotus-and-lamps ornament with
