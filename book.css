@@ -157,6 +157,16 @@
   .book-mode .home-caption{ grid-column:1; grid-row:2; align-self:start; padding:0 2px; }
   .book-mode .home-caption .te{ font-size:20px; }
 }
+.book-mode .sc-journey,.book-mode .sc-album{ background:transparent; }
+.book-mode .sc-journey .stage,.book-mode .sc-album .stage{ padding:clamp(6px,2cqh,16px) 0 clamp(8px,3cqh,20px); }
+.book-mode .jr-art{ flex:1; min-height:0; max-width:none; margin-top:clamp(4px,1.5cqh,14px); }
+.book-mode .jr-te{ font-size:clamp(20px,4cqh,28px); }
+.book-mode .jr-date{ font-size:clamp(10px,1.9cqh,13px); }
+.book-mode .jr-where{ font-size:clamp(8px,1.5cqh,10px); }
+.book-mode .jr-days b{ font-size:clamp(20px,4cqh,28px); }
+.book-mode .al-page{ margin-top:clamp(2px,1cqh,10px); }
+.book-mode .al-tag .te{ font-size:clamp(14px,2.7cqh,17px); }
+.book-mode .al-tag .al-date{ font-size:clamp(12px,2.4cqh,16px); }
 .book-mode.motion .verse { bottom:clamp(42px,10cqh,72px); height:8em; padding:0 12px; }
 .book-mode .verse .te { font-size:clamp(18px,3.6cqh,25px); }
 .book-mode .verse .en { font-size:clamp(11px,2cqh,14px); }

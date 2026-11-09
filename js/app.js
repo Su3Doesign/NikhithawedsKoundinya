@@ -53,6 +53,15 @@
     F.weekdayTe = TE_DAYS[when.wd];
     F.time = (when.h % 12 || 12) + ':' + pad(when.mi) + (when.h < 12 ? ' am' : ' pm');
   }
+  // the engagement, and the days between it and the wedding
+  var EG = D.engagement || {}, em = String(EG.date || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (em) {
+    var ey = +em[1], emo = +em[2] - 1, ed = +em[3];
+    F.engDateShort = pad(ed) + ' · ' + pad(emo + 1) + ' · ' + ey;
+    F.engDateLongTe = ed + ' ' + TE_MON[emo] + ' ' + ey;
+    if (when) F.daysApart = String(Math.round((Date.UTC(when.y, when.mo, when.d) - Date.UTC(ey, emo, ed)) / 86400000));
+  }
+  if (EG.place) F.engPlace = EG.place;
   var V = D.venue || {};
   if (V.name) F.venueName = V.name;
   if (V.nameTe) F.venueNameTe = V.nameTe;
@@ -374,6 +383,53 @@
         line.style.strokeDasharray = '1';
         line.style.strokeDashoffset = (1 - drawn).toFixed(4);
       });
+    });
+  });
+
+  /* preview A · our journey: the painting settles, a gold thread runs from the
+     engagement to the wedding while the days between them are counted */
+  safe(function () {
+    var sec = $('#journey');
+    if (!sec || sec.hidden) return;
+    var art = $('.jr-art', sec), from = $('.jr-from', sec), to = $('.jr-to', sec), rule = $('.jr-rule', sec), days = $('.jr-days', sec), count = $('.jr-days b', sec);
+    var total = null;
+    scene('journey', function (p) {
+      if (total === null) total = parseInt(count.textContent, 10) || 0;
+      var a = smooth(span(p, 0.02, 0.24));
+      art.style.opacity = a.toFixed(3); art.style.transform = 'scale(' + (1.035 - 0.035 * a).toFixed(4) + ')';
+      var f = smooth(span(p, 0.2, 0.32)), r = span(p, 0.32, 0.66), e = r * r * (3 - 2 * r), t = smooth(span(p, 0.62, 0.74));
+      from.style.opacity = f.toFixed(3); from.style.transform = 'translateY(' + ((1 - f) * 8).toFixed(2) + 'px)';
+      rule.style.transform = 'scaleX(' + e.toFixed(4) + ')';
+      days.style.opacity = smooth(span(p, 0.32, 0.4)).toFixed(3);
+      count.textContent = String(Math.round(total * e));
+      to.style.opacity = t.toFixed(3); to.style.transform = 'translateY(' + ((1 - t) * 8).toFixed(2) + 'px)';
+    });
+  });
+
+  /* preview B · the family album: the photograph is set into the page and its
+     corners pressed down, then a dotted muggu path walks from one day to the other */
+  safe(function () {
+    var sec = $('#album');
+    if (!sec || sec.hidden) return;
+    var photo = $('.al-photo', sec), corners = $$('.al-corner', sec), then = $('.al-then', sec), now = $('.al-now', sec), path = $('.al-path', sec);
+    var apart = $('.al-apart', sec), leaves = $$('.al-garland img', sec), count = $('.al-apart b', sec), total = null;
+    scene('album', function (p) {
+      if (total === null) total = parseInt(count.textContent, 10) || 0;
+      var g = smooth(span(p, 0, 0.18));
+      leaves.forEach(function (leaf, i) {
+        var swing = Math.exp(-p * 9) * Math.sin(p * 30 + i * 0.7) * 9 * g;
+        leaf.style.transform = 'translateY(' + ((1 - g) * -40).toFixed(1) + 'px) rotate(' + swing.toFixed(2) + 'deg)';
+      });
+      var d = smooth(span(p, 0.08, 0.3));
+      photo.style.opacity = d.toFixed(3);
+      photo.style.transform = 'translateY(' + ((1 - d) * -26).toFixed(1) + 'px) rotate(' + (-6 + 3.8 * d).toFixed(2) + 'deg) scale(' + (1.04 - 0.04 * d).toFixed(4) + ')';
+      corners.forEach(function (c, i) { var k = smooth(span(p, 0.26 + i * 0.03, 0.34 + i * 0.03)); c.style.opacity = k.toFixed(3); c.style.transform = 'scale(' + (1.6 - 0.6 * k).toFixed(3) + ')'; });
+      var a = smooth(span(p, 0.38, 0.5)), w = span(p, 0.48, 0.74), b = smooth(span(p, 0.7, 0.82));
+      then.style.opacity = a.toFixed(3); then.style.transform = 'translateY(' + ((1 - a) * 10).toFixed(1) + 'px) rotate(-2deg)';
+      path.style.clipPath = 'inset(0 ' + ((1 - w) * 100).toFixed(2) + '% 0 0)';
+      path.style.opacity = smooth(span(p, 0.48, 0.52)).toFixed(3);
+      apart.style.opacity = smooth(span(p, 0.52, 0.6)).toFixed(3); count.textContent = String(Math.round(total * w));
+      now.style.opacity = b.toFixed(3); now.style.transform = 'translateY(' + ((1 - b) * 10).toFixed(1) + 'px) rotate(1.6deg)';
     });
   });
 

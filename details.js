@@ -27,6 +27,8 @@ window.INVITE = {
   sections: {
     talambralu: false,
     courtyard: false,   // the శుభారంభం courtyard page; true brings it back
+    journey: false,     // preview A: engagement to wedding, printed page
+    album: false,       // preview B: engagement in the family album
   },
 
   bride: {
@@ -42,6 +44,12 @@ window.INVITE = {
   /* The muhurtham, in India time.
      Format: "YYYY-MM-DDTHH:MM" (24-hour), e.g. "2026-12-13T20:22" */
   muhurtham: "2026-12-13T20:22",
+
+  /* The engagement (నిశ్చితార్థం), from the engagement invitation. */
+  engagement: {
+    date: "2026-10-17",
+    place: "Aara Crescent Resort, Hyderabad",
+  },
 
   /* How long the calendar entry should run, in hours */
   durationHours: 3,
