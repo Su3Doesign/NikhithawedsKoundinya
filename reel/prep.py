@@ -39,3 +39,16 @@ print('ornament ready')
 inv = np.zeros(l.shape + (3,), np.uint8); inv[:] = (179, 38, 30); inv[ink] = (246, 239, 226)
 Image.fromarray(inv).save(OUT + 'impact-couple-inv.png')
 print('impact inverse ready')
+
+# Watercolour portraits with their white paper made transparent (a soft matte from
+# the distance to paper white), so they sit on any page and can be silhouetted.
+for name, src in (('bride', 'portraits/nikhitha-watercolor.jpg'), ('groom', 'portraits/sai-koundinya.jpg')):
+    im = np.asarray(Image.open(ROOT + src).convert('RGB')).astype(np.float32)
+    paper = np.percentile(im.reshape(-1, 3), 92, axis=0)                    # the paper tone
+    d = np.sqrt(((im - paper) ** 2).sum(-1))
+    d = np.asarray(Image.fromarray(np.clip(d, 0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(2.2))).astype(np.float32)  # the paper's grain drops out
+    a = np.clip((d - 22) / 34, 0, 1)
+    a = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.2))).astype(np.float32) / 255
+    rgb = np.where(a[..., None] > 0.03, (im - paper * (1 - a[..., None])) / np.maximum(a[..., None], 0.03), im)
+    Image.fromarray(np.dstack([np.clip(rgb, 0, 255), a * 255]).astype(np.uint8), 'RGBA').save(OUT + name + '-matte.png')
+print('portrait mattes ready')

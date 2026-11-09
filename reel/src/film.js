@@ -4,10 +4,10 @@
    and dissolve into each other. Materials: silk, brocade, gold foil, filigree, lamplight. */
 (function () {
   const { W, H, E, span, clamp, lerp, rng } = C;
-  const B = { start: 35.34, patrika: 41.10, line1: 42.0, line2: 42.93, names: 44.91, en: 45.8, date: 46.72,
-    bride: 48.69, groom: 54.61, stars: 60.72, merge: 63.4, nik: 64.0, sai: 65.0, lock: 66.9,
-    muhurtham: 68.48, day: 70.31, time: 72.24, venue: 74.0, hush: 80.04, drop: 87.7, toss2: 89.58, toss3: 91.51, coupleNames: 92.5,
-    events: 97.59, shubham: 103.58, invite: 105.0, sign: 106.7, end: 109.51 };
+  const B = { start: 44.91, title: 50.67, patrika: 52.66, line1: 52.9, line2: 53.3, names: 54.1, en: 54.7, date: 55.3,
+    bride: 56.61, groom: 60.72, stars: 64.69, merge: 66.6, nik: 67.0, sai: 67.8, lock: 69.3,
+    muhurtham: 70.31, day: 71.6, time: 72.6, venue: 74.2, hush: 83.8, drop: 87.7, toss2: 89.58, toss3: 91.51, coupleNames: 92.5,
+    events: 97.59, shubham: 103.58, invite: 104.9, sign: 106.6, end: 109.51 };
   C.OFFSET = B.start; C.DURATION = B.end - B.start; C.B = B;
   const SCENES = window.SCENES = [];
   const XF = 0.9; // dissolve length: soft, but never a muddy double exposure
@@ -15,7 +15,7 @@
   const DEEP = () => C._deep || (C._deep = C.brocadeTex('#3d0f0b', '#1c0605', '#060202', 'rgba(255,200,140,.045)', 4));
 
   /* ============================================================ 1 · Ganesha, gathered from gold dust */
-  SCENES.push(() => C.scene(B.start, B.patrika + XF, (root, s) => {
+  SCENES.push(() => C.scene(B.start, B.title + XF, (root, s) => {
     const L = 10.29;   // the scene is authored on a 10.29 s clock and played over its real length
     C.bg(root, DEEP());
     const rays = C.rays(root, 540, 760, 0xffc77a, 2.6);
@@ -36,7 +36,7 @@
     const sh = C.text('శ్రీరస్తు   ·   శుభమస్తు   ·   అవిఘ్నమస్తు', { font: C.TE2, size: 48, fill: 0xF3D9A6 }); sh.position.set(540, 1308); root.addChild(sh);
     const fg = C.foreground(root, [['marigold', 70, 1900, 1.5, 0.3, 14], ['leaf', 1040, 1820, 1.2, -0.6, 10], ['marigold', 1010, 1960, 1.2, 0, 16], ['leaf', 40, -40, 1.4, 2.6, 12]]);
     return (t) => {
-      t = (t - B.start) * (L / (B.patrika - B.start));
+      t = (t - B.start) * (L / (B.title - B.start));
       const form = E.smooth(span(t, 4.6, 6.2));
       motes.forEach(m => { const k = span(t, m.t0, m.t0 + m.dur), e = E.inOut(k);
         // drifting before they are called, then each one curves into its place
@@ -53,6 +53,24 @@
       C.cam.floodAdd = true; C.cam.floodColor = 0xffd9a6; C.cam.flood = 0.5 * E.inOut(span(t, 9.6, L + 0.5)) * (1 - E.smooth(span(t, L + 0.5, L + XF)));
     };
   }));
+
+  /* ============================================================ 2a · the title, filled with the couple */
+  SCENES.push(() => C.scene(B.title, B.patrika + XF, (root, s) => {
+    C.bg(root, RED()); const sheen = C.sheen(root, 0.12);
+    const rays = C.rays(root, 540, 880, 0xffc77a, 2.6);
+    const echo = C.echo(root, 'పెండ్లి', { font: C.TE, size: 360 }, 3, 2.6); root.children[root.children.length - 1].position.set(540, 860);
+    const word = C.photoText(root, 'పెండ్లి', { font: C.TE, size: 360 }, C.A.couple); word.position.set(540, 860);
+    const sub = C.foil(root, 'పిలుపు', { font: C.TE, size: 120 }); sub.position.set(540, 1130);
+    const en = C.label('NIKHITHA  ×  SAI KOUNDINYA', { size: 30, fill: C.GOLD_TEXT, ls: 12 }); en.position.set(540, 1250); root.addChild(en);
+    return (t) => {
+      const u = span(t, B.title, B.patrika + XF);
+      sheen(t, B.title, B.patrika + XF); rays(t, 0.4); echo(t, E.smooth(span(t, B.title + 0.6, B.title + 1.4)));
+      word.drift(u); word.scale.set(1.06 - 0.06 * E.out3(span(t, B.title, B.title + 1.6)));
+      C.rise(sub, t, B.title + 0.5, 0.9, 16); C.rise(en, t, B.title + 0.9, 0.9, 10);
+      s.cam.s = 1 + 0.04 * E.inOut(u);
+      C.cam.dust = 0.5; C.cam.dustTint = 0xffd27a; C.cam.grain = 0.08;
+    };
+  }, XF, 'burn'));
 
   /* ============================================================ 2 · the patrika */
   SCENES.push(() => C.scene(B.patrika, B.bride + XF, (root, s) => {
@@ -88,24 +106,23 @@
       fg(t, -18 * E.inOut(span(t, B.patrika, B.bride)), 0, E.smooth(span(t, B.patrika, B.patrika + 2)));
       C.cam.petals = 0.4 * E.smooth(span(t, B.line2, B.line2 + 2)); C.cam.dust = 0.18; C.cam.dustTint = 0xffe6b0; C.cam.grain = 0.12;
     };
-  }, XF));
+  }, XF, 'burn'));
 
-  /* ============================================================ 4 · the bride, the groom, and their families */
+  /* ============================================================ 4 · the bride and the groom: silhouette, light, colour */
   SCENES.push(() => C.scene(B.bride, B.stars + XF, (root, s) => {
     C.bg(root, C.silkTex());
     const sheen = C.sheen(root, 0.07);
-    const LOBES = [[50, 34, 1], [36, 48, 0.85], [64, 46, 0.88], [44, 70, 0.82], [58, 20, 0.8], [52, 90, 0.78], [22, 80, 0.7], [80, 78, 0.7]];
-    const FX = 160, FY = 190, FW = 760, FH = 840;                       // the frame, shared by both
+    const FX = 150, FY = 180, FW = 780, FH = 860;
     const people = [
-      { tex: C.A.bride, ink: 'bride', zoom: 1.42, dy: 40, t0: B.bride, t1: B.groom, role: 'THE BRIDE',
+      { tex: C.A.brideMatte, ink: 'bride', h: 1380, cy: 640, t0: B.bride, t1: B.groom, role: 'THE BRIDE',
         name: 'చి.ల.సౌ. నిఖిత', lines: ['శ్రీ చల్లపల్లి శ్రీధర్ గారు', 'శ్రీమతి వెంకట కృష్ణవేణి గార్ల కుమార్తె'] },
-      { tex: C.A.groom, ink: 'groom', zoom: 0.98, dy: 0, t0: B.groom, t1: B.stars, role: 'THE GROOM',
+      { tex: C.A.groomMatte, ink: 'groom', h: 1020, cy: 615, t0: B.groom, t1: B.stars, role: 'THE GROOM',
         name: 'చి. సాయి కౌండిన్య', lines: ['కొవ్వూరు వాస్తవ్యులు', 'శ్రీ కొక్కిరాల వి.వి. హరిమోహన్ గారు', 'శ్రీమతి శైలజ గార్ల కుమారుడు'] },
     ].map(p => {
       const g = new PIXI.Container(); root.addChild(g); p.g = g;
-      p.pic = C.bloomPortrait(g, p.tex, { x: 540, y: FY + FH / 2 + p.dy, w: FW - 40, h: FH - 40 }, LOBES, p.zoom);
-      p.pic.s.tint = 0xF7EFDF;                                          // the painting's white paper takes the page's tone
-      const clip = new PIXI.Graphics().rect(FX + 8, FY + 8, FW - 16, FH - 16).fill(0xffffff); g.addChild(clip); p.pic.c.mask = clip;
+      const pic = new PIXI.Container(); g.addChild(pic);
+      p.rev = C.lightReveal(pic, p.tex, 540, p.cy, p.h);
+      const clip = new PIXI.Graphics().rect(FX + 8, FY + 8, FW - 16, FH - 16).fill(0xffffff); g.addChild(clip); pic.mask = clip;
       p.frame = C.filigree(g, FX, FY, FW, FH, { crest: true });
       p.roleT = C.label(p.role, { size: 25, fill: C.GOLD_D, ls: 12 }); p.roleT.position.set(540, 1095); g.addChild(p.roleT);
       p.ink = C.inkLettering(g, p.ink, 540, 1200, 380);
@@ -114,22 +131,22 @@
       p.ls = p.lines.map((l, i) => { const x = C.text(l, { font: C.TE2, size: 44, fill: 0x4a3a2c }); x.position.set(540, 1446 + i * 54); g.addChild(x); return x; });
       return p;
     });
-    s.prep = async (t) => { for (const p of people) if (t >= p.t0 - 0.2 && t < p.t1 + XF) await p.ink.set(span(t, p.t0 + 0.9, p.t0 + 3.0)); };
+    s.prep = async (t) => { for (const p of people) if (t >= p.t0 - 0.2 && t < p.t1 + XF) await p.ink.set(span(t, p.t0 + 1.5, p.t0 + 3.2)); };
     return (t) => {
       sheen(t, B.bride, B.stars);
       people.forEach((p, i) => {
         const on = t >= p.t0 - 0.1 && t < p.t1 + XF; p.g.visible = on; if (!on) return;
-        p.pic.set(E.out3(span(t, p.t0 + 0.1, p.t0 + 1.9))); p.frame.set(span(t, p.t0 + 0.2, p.t0 + 2.0));
-        const inK = i ? E.smooth(span(t, p.t0, p.t0 + XF)) : 1, outK = i ? 0 : E.smooth(span(t, p.t1, p.t1 + XF));
+        p.rev.set(span(t, p.t0, p.t0 + 0.6), span(t, p.t0 + 0.7, p.t0 + 2.3)); p.frame.set(span(t, p.t0 + 0.1, p.t0 + 1.6));
+        const inK = i ? E.smooth(span(t, p.t0 + XF * 0.45, p.t0 + XF)) : 1, outK = i ? 0 : E.smooth(span(t, p.t1, p.t1 + XF * 0.5));
         p.g.alpha = inK * (1 - outK);
-        C.rise(p.roleT, t, p.t0 + 0.6, 1.0, 10); p.rule.alpha = E.smooth(span(t, p.t0 + 2.5, p.t0 + 3.2));
-        C.rise(p.nm, t, p.t0 + 2.7, 1.1, 14);
-        p.ls.forEach((l, j) => C.rise(l, t, p.t0 + 3.2 + j * 0.35, 1.0, 12));
+        C.rise(p.roleT, t, p.t0 + 0.4, 0.9, 10); p.rule.alpha = E.smooth(span(t, p.t0 + 2.4, p.t0 + 3.0));
+        C.rise(p.nm, t, p.t0 + 2.5, 1.0, 14);
+        p.ls.forEach((l, j) => C.rise(l, t, p.t0 + 2.9 + j * 0.3, 0.9, 12));
       });
       s.cam.s = 1 + 0.025 * E.inOut(span(t, B.bride, B.groom)) + 0.025 * E.inOut(span(t, B.groom, B.stars));
       C.cam.dust = 0.18; C.cam.dustTint = 0xffe2b0; C.cam.grain = 0.1;
     };
-  }, XF));
+  }, XF, 'burn'));
 
   /* ============================================================ 5 · written in the stars */
   SCENES.push(() => C.scene(B.stars, B.muhurtham + XF, (root, s) => {
@@ -154,7 +171,7 @@
       const d = x.getImageData(0, 0, W, 400).data, pts = []; for (let py = 0; py < 400; py += step) for (let px = 0; px < W; px += step) if (d[(py * W + px) * 4 + 3] > 140) pts.push([px, y - 200 + py]); return pts;
     }
     const rr = rng(91), parts = [];
-    [['నిఖిత', 230, 860, 7, B.nik, 1.4], ['సాయి కౌండిన్య', 158, 1110, 6, B.sai, 1.8]].forEach(([str, size, y, step, t0, dur]) => {
+    [['నిఖిత', 230, 860, 7, B.nik, 1.0], ['సాయి కౌండిన్య', 158, 1110, 6, B.sai, 1.3]].forEach(([str, size, y, step, t0, dur]) => {
       const pts = targets(str, size, y, step), xs = pts.map(p => p[0]), x0 = Math.min(...xs), x1 = Math.max(...xs);
       pts.forEach(([x, y]) => { const sp = new PIXI.Sprite(C.dotTex()); sp.anchor.set(0.5); sp.blendMode = 'add'; sp.tint = rr() < 0.3 ? 0xffffff : 0xffd98c; root.addChild(sp);
         parts.push({ s: sp, x, y, t0: t0 + (x - x0) / (x1 - x0 || 1) * dur * 0.8 + rr() * 0.15, fly: 0.9 + rr() * 0.5, cx: (rr() - 0.5) * 520, cy: -120 - rr() * 260, sz: 0.045 + rr() * 0.03, ph: rr() * 6 }); });
@@ -170,23 +187,23 @@
       const lt = t - B.stars;
       stars.forEach(p => { p.s.position.set(p.x, p.y); p.s.scale.set(p.sz); p.s.alpha = p.a; });
       // draw the seven sages, then glide in to the second star of the handle
-      cons.clear(); const ck = span(t, B.stars + 0.2, B.stars + 1.5); C.drawPart(cons, DIPPER.concat([DIPPER[3]]), E.inOut(ck)); cons.stroke({ width: 2, color: 0xcfd8ff, alpha: 0.55 });
+      cons.clear(); const ck = span(t, B.stars + 0.1, B.stars + 1.0); C.drawPart(cons, DIPPER.concat([DIPPER[3]]), E.inOut(ck)); cons.stroke({ width: 2, color: 0xcfd8ff, alpha: 0.55 });
       const after = 1 - E.smooth(span(t, B.merge, B.merge + 1.6));
-      big.forEach(b => { const kk = E.out3(span(t, B.stars + 0.15 + b.i * 0.1, B.stars + 0.6 + b.i * 0.1)); b.d.scale.set(0.5 * kk); b.d.alpha = 0.5 * after; b.c.scale.set(0.16 * kk); b.c.alpha = after; });
-      const z = E.inOut(span(t, B.stars + 1.3, B.merge - 0.3)), zs = 1 + 1.9 * z;
+      big.forEach(b => { const kk = E.out3(span(t, B.stars + 0.1 + b.i * 0.08, B.stars + 0.5 + b.i * 0.08)); b.d.scale.set(0.5 * kk); b.d.alpha = 0.5 * after; b.c.scale.set(0.16 * kk); b.c.alpha = after; });
+      const z = E.inOut(span(t, B.stars + 0.8, B.merge - 0.3)), zs = 1 + 1.9 * z;
       sky.scale.set(zs); sky.pivot.set(lerp(540, MIZAR[0], z), lerp(960, MIZAR[1], z)); sky.position.set(540, lerp(960, 700, z));
       cons.alpha = (1 - 0.7 * z) * after;
-      C.rise(sap, t, B.stars + 0.4, 1.0, 12); C.rise(sapEn, t, B.stars + 0.7, 1.0, 10); sap.alpha *= 1 - E.smooth(span(t, B.merge - 0.9, B.merge - 0.2)); sapEn.alpha *= 1 - E.smooth(span(t, B.merge - 0.9, B.merge - 0.2));
+      C.rise(sap, t, B.stars + 0.2, 0.8, 12); C.rise(sapEn, t, B.stars + 0.45, 0.8, 10); sap.alpha *= 1 - E.smooth(span(t, B.merge - 0.7, B.merge - 0.2)); sapEn.alpha *= 1 - E.smooth(span(t, B.merge - 0.7, B.merge - 0.2));
       const pc = [540 + (MIZAR[0] - sky.pivot.x) * zs, sky.position.y + (MIZAR[1] - sky.pivot.y) * zs];
-      const k = span(t, B.stars, B.merge), rad = (14 + 120 * z) * (1 - E.inOut(span(t, B.merge - 1.0, B.merge))), ang = 2.2 + 5 * Math.pow(k, 1.5), merged = t >= B.merge;
+      const k = span(t, B.stars, B.merge), rad = (14 + 120 * z) * (1 - E.inOut(span(t, B.merge - 0.8, B.merge))), ang = 2.2 + 5 * Math.pow(k, 1.5), merged = t >= B.merge;
       [[vas, 1], [aru, -1]].forEach(([st, sg]) => { st.c.visible = !merged && z > 0.05; st.c.alpha = E.smooth(span(z, 0.05, 0.4)); st.c.position.set(pc[0] + sg * Math.cos(ang) * rad, pc[1] + sg * Math.sin(ang) * rad * 0.55);
         st.g.scale.set(1.0 + 0.6 * k); st.g.alpha = 0.55; st.f.scale.set(0.5 + 0.4 * k); st.f.rotation = lt * 0.2; st.d.scale.set(0.22); });
-      const rise = E.inOut(span(t, B.merge + 0.3, B.merge + 1.3)), oy = lerp(700, 470, rise);
+      const rise = E.inOut(span(t, B.merge + 0.2, B.merge + 1.0)), oy = lerp(700, 470, rise);
       one.c.visible = merged; one.c.position.set(540, oy);
       const m = merged ? Math.exp(-(t - B.merge) * 1.2) : 0;
       one.g.scale.set(1.6 + 2.2 * m); one.g.alpha = 0.7; one.f.scale.set(0.9 + 1.0 * m); one.f.rotation = 0.2 + lt * 0.05; one.d.scale.set(0.3 + 0.25 * m);
       bloom.position.set(540, 700); bloom.scale.set(5 + 8 * (1 - m)); bloom.alpha = merged ? 0.8 * m : 0;
-      ring.clear(); const rk = span(t, B.merge, B.merge + 1.8); if (rk > 0 && rk < 1) ring.circle(540, 700, 40 + 620 * E.out3(rk)).stroke({ width: 2, color: 0xffd98c, alpha: 0.45 * (1 - rk) });
+      ring.clear(); const rk = span(t, B.merge, B.merge + 1.5); if (rk > 0 && rk < 1) ring.circle(540, 700, 40 + 620 * E.out3(rk)).stroke({ width: 2, color: 0xffd98c, alpha: 0.45 * (1 - rk) });
       parts.forEach(p => { const q = span(t, p.t0, p.t0 + p.fly); if (q <= 0) { p.s.visible = false; return; } p.s.visible = true;
         const e = E.inOut(q), sx = 540, sy = oy, mx = (sx + p.x) / 2 + p.cx, my = (sy + p.y) / 2 + p.cy;
         p.s.position.set((1 - e) * (1 - e) * sx + 2 * (1 - e) * e * mx + e * e * p.x + (q >= 1 ? 1.2 * Math.sin(t * 2 + p.ph) : 0), (1 - e) * (1 - e) * sy + 2 * (1 - e) * e * my + e * e * p.y);
@@ -194,17 +211,18 @@
       const lock = E.smooth(span(t, B.lock - 0.6, B.lock + 0.6)); n1.alpha = n2.alpha = lock; glowN.alpha = 0.5 * lock;
       n1.sweep(t, B.lock + 0.8, 1.8); n2.sweep(t, B.lock + 1.1, 1.9);
       orn.clear(); const ok = E.out3(span(t, B.lock + 0.4, B.lock + 1.6)); if (ok > 0) { orn.moveTo(540 - 120 * ok, 985).lineTo(522, 985).moveTo(558, 985).lineTo(540 + 120 * ok, 985).stroke({ width: 2, color: C.GOLD }); orn.poly([540, 975, 550, 985, 540, 995, 530, 985]).fill(C.GOLD); }
-      C.rise(wit, t, B.lock + 0.3, 1.0); C.rise(wen, t, B.lock + 0.7, 1.0, 12);
+      C.rise(wit, t, B.lock + 0.2, 0.8); C.rise(wen, t, B.lock + 0.5, 0.8, 12);
       s.cam.s = 1 + 0.04 * E.inOut(span(t, B.stars, B.muhurtham + XF));
       C.cam.grain = 0.07;
     };
-  }, XF));
+  }, XF, 'burn'));
 
   /* ============================================================ 6 · the muhurtham and the venue */
   SCENES.push(() => C.scene(B.muhurtham, B.hush + XF, (root, s) => {
     C.bg(root, RED()); const sheen = C.sheen(root, 0.1);
     const frame = C.filigree(root, 80, 200, 920, 1380, { crest: true });
     const div = (y) => { const g = new PIXI.Graphics().moveTo(400, y).lineTo(526, y).moveTo(554, y).lineTo(680, y).stroke({ width: 1.5, color: C.GOLD_HI, alpha: 0.85 }).poly([540, y - 8, 548, y, 540, y + 8, 532, y]).fill(C.GOLD_HI); root.addChild(g); return g; };
+    const echo = C.echo(root, 'సుముహూర్తం', { font: C.TE, size: 124 }, 3, 3.0); root.children[root.children.length - 1].position.set(540, 345);
     const head = C.foil(root, 'సుముహూర్తం', { font: C.TE, size: 124 }); head.position.set(540, 345);
     const hen = C.label('THE MUHURTHAM', { size: 26, fill: C.GOLD_TEXT, ls: 14 }); hen.position.set(540, 440); root.addChild(hen);
     const d1 = div(505);
@@ -219,7 +237,7 @@
     const v3 = C.label('R.T.C COMPLEX ROAD · NIDADAVOLU 534301', { size: 24, fill: C.GOLD_TEXT, ls: 6 }); v3.position.set(540, 1497); root.addChild(v3);
     const fg = C.foreground(root, [['marigold', -30, 1880, 1.4, 0, 16], ['leaf', 70, 1960, 1.3, 0.4, 12], ['marigold', 1100, 1850, 1.3, 0.4, 18], ['leaf', 1020, 1960, 1.2, -0.5, 12]]);
     return (t) => {
-      sheen(t, B.muhurtham, B.hush + XF); frame.set(span(t, B.muhurtham + 0.3, B.muhurtham + 3.2));
+      sheen(t, B.muhurtham, B.hush + XF); frame.set(span(t, B.muhurtham + 0.3, B.muhurtham + 2.4)); echo(t, E.smooth(span(t, B.muhurtham + 1.2, B.muhurtham + 2.2)));
       C.rise(head, t, B.muhurtham + 0.6, 1.5); C.rise(hen, t, B.muhurtham + 1.3, 1.3, 12); d1.alpha = E.smooth(span(t, B.muhurtham + 1.8, B.muhurtham + 2.8));
       C.rise(dayTe, t, B.day, 1.4); C.rise(dayEn, t, B.day + 0.6, 1.3, 12);
       C.rise(time, t, B.time, 1.8, 30); C.rise(timeTe, t, B.time + 1.4, 1.4, 12); d2.alpha = E.smooth(span(t, B.time + 2.6, B.time + 3.6));
@@ -228,7 +246,7 @@
       fg(t, 0, -20 * E.inOut(span(t, B.muhurtham, B.hush)), 0.95);
       C.cam.dust = 0.35; C.cam.dustTint = 0xffd27a; C.cam.grain = 0.09;
     };
-  }, XF));
+  }, XF, 'burn'));
 
   /* ============================================================ 7–8 · the hush, then the moment */
   SCENES.push(() => C.scene(B.hush, B.events + XF, (root, s) => {
@@ -265,8 +283,8 @@
     return (t) => {
       silk.alpha = E.smooth(span(t, B.drop - 0.2, B.drop + 1.8)); sheen(t, B.drop, B.events + XF);
       rays(t, 0.6 * E.smooth(span(t, B.drop, B.drop + 2.5)));
-      const pre = E.inOut(span(t, B.hush + 1.0, B.drop - 0.4));
-      line.clear(); C.drawPart(line, outer, pre); line.stroke({ width: 7, color: C.GOLD }); C.drawPart(line, inner, E.inOut(span(t, B.hush + 2.0, B.drop - 0.2))); line.stroke({ width: 2, color: C.GOLD_HI });
+      const pre = E.inOut(span(t, B.hush + 0.2, B.drop - 0.4));
+      line.clear(); C.drawPart(line, outer, pre); line.stroke({ width: 7, color: C.GOLD }); C.drawPart(line, inner, E.inOut(span(t, B.hush + 0.7, B.drop - 0.2))); line.stroke({ width: 2, color: C.GOLD_HI });
       const open = E.smooth(span(t, B.drop - 0.15, B.drop + 2.0)); ph.alpha = open; shadow.alpha = 0.5 * open;
       const L = t >= B.drop - 0.3 ? Math.exp(-Math.max(0, t - B.drop) * 1.0) * E.smooth(span(t, B.drop - 0.3, B.drop + 0.1)) : 0;
       lightIn.scale.set(7 + 6 * (1 - L)); lightIn.alpha = 0.95 * L;
@@ -317,7 +335,7 @@
       s.cam.s = 1 + 0.025 * E.inOut(span(t, B.events, B.shubham + XF));
       C.cam.petals = 0.3; C.cam.dust = 0.15; C.cam.dustTint = 0xffe6b0; C.cam.grain = 0.12;
     };
-  }, XF));
+  }, XF, 'burn'));
 
   /* ============================================================ 10 · శుభం, and the family's invitation */
   SCENES.push(() => C.scene(B.shubham, B.end + 0.1, (root, s) => {
@@ -326,6 +344,7 @@
     const garland = C.toranam(root, 60, 13);
     const orn = new PIXI.Sprite(C.A.ornament); orn.anchor.set(0.5); orn.tint = C.GOLD_HI; orn.scale.set(600 / orn.texture.width); orn.position.set(540, 395); root.addChild(orn);
     const glow = C.text('శుభం', { font: C.TE, size: 310, fill: 0xffa53a }); glow.position.set(540, 660); glow.blendMode = 'add'; glow.filters = [new PIXI.BlurFilter({ strength: 26, quality: 3 })]; root.addChild(glow);
+    const echo = C.echo(root, 'శుభం', { font: C.TE, size: 310 }, 3, 2.8); root.children[root.children.length - 1].position.set(540, 660);
     const word = C.foil(root, 'శుభం', { font: C.TE, size: 310 }); word.position.set(540, 660);
     const inv = ['మీరు సకుటుంబ సపరివార సమేతంగా విచ్చేసి,', 'నూతన వధూవరులను ఆశీర్వదించవలసినదిగా', 'సాదరంగా ఆహ్వానిస్తున్నాము.'].map((l, i) => { const x = C.text(l, { font: C.TE2, size: 48, fill: C.CREAM }); x.position.set(540, 935 + i * 66); root.addChild(x); return x; });
     const names = new PIXI.Container(); root.addChild(names);
@@ -339,13 +358,13 @@
       sheen(t, B.shubham, B.end); wmark(t, E.smooth(span(t, B.shubham + 0.8, B.shubham + 3))); rays(t, 0.5 * E.smooth(span(t, B.shubham + 0.5, B.shubham + 3)));
       garland.set(t, B.shubham + 0.6, 1.8); C.rise(orn, t, B.shubham + 0.4, 1.5, 12);
       const wk = E.out3(span(t, B.shubham + 0.6, B.shubham + 2.4)); word.alpha = wk; word.scale.set(1.06 - 0.06 * wk); glow.scale.copyFrom(word.scale); glow.alpha = 0.5 * wk;
-      word.sweep(t, B.shubham + 2.4, 2.2);
+      echo(t, E.smooth(span(t, B.shubham + 1.0, B.shubham + 2.0)));
       inv.forEach((l, i) => C.rise(l, t, B.invite + i * 0.4, 1.1, 12));
-      C.rise(names, t, B.shubham + 2.9, 1.1); nA.sweep(t, 117.0, 1.8); nB.sweep(t, 117.3, 2.0); C.rise(sign, t, B.sign, 1.0, 12); C.rise(date, t, B.sign + 0.5, 1.0, 10);
+      C.rise(names, t, B.shubham + 2.6, 1.0); nA.sweep(t, 117.0, 1.8); nB.sweep(t, 117.3, 2.0); C.rise(sign, t, B.sign, 1.0, 12); C.rise(date, t, B.sign + 0.5, 1.0, 10);
       s.cam.s = 1 + 0.03 * E.inOut(span(t, B.shubham, B.end));
       fg(t, 0, -14 * E.inOut(span(t, B.shubham, B.end)), 0.95);
       C.cam.dust = 0.5; C.cam.dustTint = 0xffd27a; C.cam.petals = 0.4; C.cam.grain = 0.09;
       C.cam.floodColor = 0x000000; C.cam.flood = E.inOut(span(t, B.end - 1.3, B.end));
     };
-  }, XF));
+  }, XF, 'burn'));
 })();

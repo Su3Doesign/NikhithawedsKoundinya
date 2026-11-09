@@ -6,8 +6,8 @@ from scipy.signal import butter, sosfilt
 
 SR = 48000
 out = sys.argv[1] if len(sys.argv) > 1 else 'out/sound.wav'
-DUR = float(sys.argv[2]) if len(sys.argv) > 2 else 74.17
-START = float(sys.argv[3]) if len(sys.argv) > 3 else 35.34
+DUR = float(sys.argv[2]) if len(sys.argv) > 2 else 64.6
+START = float(sys.argv[3]) if len(sys.argv) > 3 else 44.91
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-ss', str(START), '-t', str(DUR), '-i', '../audio/dichotomy-of-fame.mp3', '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'],
                      capture_output=True, check=True).stdout
 song = np.frombuffer(raw, np.float32).reshape(-1, 2).copy()
@@ -29,9 +29,9 @@ def swell(length):  # a warm, low bloom for the moment the arch fills with light
     air = low(rng.standard_normal(m), 900) * np.exp(-tt * 2.5) * 0.4
     return (body + air) * np.clip(tt / 0.08, 0, 1)
 
-for song_t, sig, gain in [(37.6, shimmer(2.6, 1318), 0.035),   # Ganesha gathers from gold
-                          (63.4, shimmer(3.0, 1760), 0.045),   # two stars become one
-                          (66.9, shimmer(2.4, 2093), 0.035),   # the names settle in gold
+for song_t, sig, gain in [(46.6, shimmer(2.6, 1318), 0.035),   # Ganesha gathers from gold
+                          (66.6, shimmer(3.0, 1760), 0.045),   # two stars become one
+                          (69.3, shimmer(2.4, 2093), 0.035),   # the names settle in gold
                           (87.7, swell(3.5), 0.16),            # the arch fills with light
                           (104.4, shimmer(2.6, 1568), 0.03)]:  # శుభం
     place(sig, song_t - START, gain)

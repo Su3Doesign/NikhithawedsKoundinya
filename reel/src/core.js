@@ -130,7 +130,12 @@
       s.update(t, t - s.t0);
       s.root.alpha = s.fade && !s.kind ? E.smooth(span(t, s.t0, s.t0 + s.fade)) : 1;
       // designed transitions: a mandala iris or a silk swipe with a gold edge
-      if (s.kind && s.fade) {
+      if (s.kind === 'burn') {
+        const k = span(t, s.t0, s.t0 + s.fade);
+        if (k < 1) { s.burnF = s.burnF || C.lightBurn(s.t0 % 7 + 1); s.burnF.resources.burn.uniforms.uK = E.inOut(k); s.root.filters = [s.burnF];
+          C.cam.floodAdd = true; C.cam.floodColor = 0xffd9a8; C.cam.flood = Math.max(C.cam.flood, 0.16 * Math.sin(Math.PI * k)); }
+        else s.root.filters = null;
+      } else if (s.kind && s.fade) {
         const k = E.inOut(span(t, s.t0, s.t0 + s.fade)), m = s.maskG || (s.maskG = new PIXI.Graphics());
         if (!m.parent) C.app.stage.addChild(m);
         m.clear();

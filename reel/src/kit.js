@@ -134,10 +134,10 @@
     const dust = new PIXI.Container(), petals = new PIXI.Container();
     C.app.stage.addChildAt(dust, C.app.stage.getChildIndex(C.overlay)); C.app.stage.addChildAt(petals, C.app.stage.getChildIndex(C.overlay));
     const r = rng(404), motes = [], fall = [];
-    for (let i = 0; i < 110; i++) { const s = new PIXI.Sprite(C.dotTex()); s.anchor.set(0.5); s.blendMode = 'add'; dust.addChild(s); const z = r();
+    for (let i = 0; i < 110; i++) { const z0 = r(), s = new PIXI.Sprite(z0 > 0.72 ? C.bokehTex() : C.dotTex()); s.anchor.set(0.5); s.blendMode = 'add'; dust.addChild(s); const z = z0;
       motes.push({ s, x: r() * W, y: r() * H, z, sp: 12 + 40 * z, sz: 0.05 + 0.35 * z * z * z + 0.04, a: 0.18 + 0.5 * (1 - z) + 0.2 * r(), ph: r() * 6 }); }
-    const tex = [C.petalTex('#ffb23a', '#f07a12', 1), C.petalTex('#ffd36a', '#f2a21e', 2), C.petalTex('#e8473a', '#a81e18', 3)];
-    for (let i = 0; i < 46; i++) { const s = new PIXI.Sprite(tex[i % 3]); s.anchor.set(0.5); petals.addChild(s); fall.push({ s, x: r() * W, y0: r() * H, v: 60 + r() * 80, sw: 30 + r() * 60, ph: r() * 6, sp: (r() - 0.5) * 1.6, sz: 0.35 + r() * 0.35 }); }
+    const tex = C.photoPetals();
+    for (let i = 0; i < 46; i++) { const s = new PIXI.Sprite(tex[i % tex.length]); s.anchor.set(0.5); petals.addChild(s); fall.push({ s, x: r() * W, y0: r() * H, v: 60 + r() * 80, sw: 30 + r() * 60, ph: r() * 6, sp: (r() - 0.5) * 1.6, sz: 0.35 + r() * 0.35 }); }
     C.layers = (t) => {
       const d = C.cam.dust; dust.visible = d > 0.01;
       if (dust.visible) motes.forEach(m => { const y = ((m.y - t * m.sp) % (H + 200) + H + 200) % (H + 200) - 100;
