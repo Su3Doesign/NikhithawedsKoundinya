@@ -14,38 +14,40 @@
   const RED = () => C._red || (C._red = C.brocadeTex('#b9271d', '#86170f', '#360604', 'rgba(255,214,150,.07)', 3));
   const DEEP = () => C._deep || (C._deep = C.brocadeTex('#3d0f0b', '#1c0605', '#060202', 'rgba(255,200,140,.045)', 4));
 
-  /* ============================================================ 1 · the lamp and the blessing */
+  /* ============================================================ 1 · Ganesha, gathered from gold dust */
   SCENES.push(() => C.scene(0, B.patrika + XF, (root, s) => {
     C.bg(root, DEEP());
-    const rays = C.rays(root, 540, 1330, 0xffb860, 2.4);
-    const warm = new PIXI.Sprite(C.glowTex()); warm.anchor.set(0.5); warm.tint = 0xff8a2a; warm.blendMode = 'add'; warm.position.set(540, 1300); root.addChild(warm);
-    const diya = C.diya(root, 540, 1740, 380);
-    // Ganesha in gold, written upward by the lamp's light, with a light that crosses it
-    const aura = new PIXI.Graphics(); C.mandalaArt(aura, 330, 0xE9BE5C, 0.5, 4); aura.position.set(540, 610); root.addChild(aura);
-    const orbit = Array.from({ length: 28 }, (_, i) => { const d = new PIXI.Sprite(C.dotTex()); d.anchor.set(0.5); d.blendMode = 'add'; d.tint = 0xffd27a; root.addChild(d); return { d, a: i / 28 * 6.283, r: 360 + (i % 3) * 26 }; });
-    const gc = new PIXI.Container(); root.addChild(gc);
-    const gGlow = new PIXI.Sprite(C.A.ganesha), gan = new PIXI.Sprite(C.A.ganesha), gm = new PIXI.Sprite(C.A.ganesha);
-    gGlow.tint = 0xffb84a; gGlow.blendMode = 'add'; gGlow.filters = [new PIXI.BlurFilter({ strength: 26, quality: 4 })]; gan.tint = 0xF0CF86;
-    const gk = 580 / gan.texture.height; [gGlow, gan, gm].forEach(g => { g.anchor.set(0.5); g.scale.set(gk); g.position.set(540, 610); gc.addChild(g); });
-    const sweep = new PIXI.Sprite(C.linear(200, 8, [[0, 'rgba(255,255,255,0)'], [0.5, 'rgba(255,250,230,.9)'], [1, 'rgba(255,255,255,0)']], false)); sweep.anchor.set(0.5); sweep.width = 220; sweep.height = 1200; sweep.rotation = 0.35; sweep.blendMode = 'add'; sweep.mask = gm; gc.addChild(sweep);
-    const wm = C.wipeMask(root, 160, 290, 760, 660); gc.mask = wm.g;
-    const edge = new PIXI.Sprite(C.glowTex()); edge.anchor.set(0.5); edge.tint = 0xffd27a; edge.blendMode = 'add'; root.addChild(edge);
-    const om = C.foil(root, 'శ్రీ గణేశాయ నమః', { font: C.TE2, size: 92 }); om.position.set(540, 1010);
-    const sh = C.text('శ్రీరస్తు   ·   శుభమస్తు   ·   అవిఘ్నమస్తు', { font: C.TE2, size: 48, fill: 0xF3D9A6 }); sh.position.set(540, 1118); root.addChild(sh);
+    const rays = C.rays(root, 540, 760, 0xffc77a, 2.6);
+    const halo = new PIXI.Sprite(C.glowTex()); halo.anchor.set(0.5); halo.tint = 0xff9a40; halo.blendMode = 'add'; halo.position.set(540, 760); root.addChild(halo);
+    // the form, sampled from the line-art: where each mote will settle
+    const GH = 660, src = C.A.ganesha, GW = Math.round(src.width * GH / src.height), cx = 540, cy = 760;
+    const cv = document.createElement('canvas'); cv.width = GW; cv.height = GH; const cx2 = cv.getContext('2d'); cx2.drawImage(src.source.resource, 0, 0, GW, GH);
+    const data = cx2.getImageData(0, 0, GW, GH).data, r = rng(19), motes = [];
+    for (let y = 0; y < GH; y += 5) for (let x = 0; x < GW; x += 5) if (data[(y * GW + x) * 4 + 3] > 120) {
+      const sp = new PIXI.Sprite(C.dotTex()); sp.anchor.set(0.5); sp.blendMode = 'add'; sp.tint = r() < 0.25 ? 0xfff3d6 : 0xffcf7a; root.addChild(sp);
+      const tx = cx - GW / 2 + x, ty = cy - GH / 2 + y, a = r() * 6.283, d = 380 + r() * 700;
+      motes.push({ sp, tx, ty, sx: cx + Math.cos(a) * d, sy: cy + Math.sin(a) * d * 1.3, t0: 1.3 + (1 - y / GH) * 2.6 + r() * 0.9, dur: 1.6 + r() * 0.8, ph: r() * 6, sw: (r() - 0.5) * 220, sz: 0.035 + r() * 0.03 });
+    }
+    const glow = new PIXI.Sprite(src), gan = new PIXI.Sprite(src);
+    glow.tint = 0xffb84a; glow.blendMode = 'add'; glow.filters = [new PIXI.BlurFilter({ strength: 24, quality: 4 })]; gan.tint = 0xF2D28C;
+    [glow, gan].forEach(g => { g.anchor.set(0.5); g.scale.set(GH / src.height); g.position.set(cx, cy); root.addChild(g); });
+    const om = C.foil(root, 'శ్రీ గణేశాయ నమః', { font: C.TE2, size: 92 }); om.position.set(540, 1200);
+    const sh = C.text('శ్రీరస్తు   ·   శుభమస్తు   ·   అవిఘ్నమస్తు', { font: C.TE2, size: 48, fill: 0xF3D9A6 }); sh.position.set(540, 1308); root.addChild(sh);
     const fg = C.foreground(root, [['marigold', 70, 1900, 1.5, 0.3, 14], ['leaf', 1040, 1820, 1.2, -0.6, 10], ['marigold', 1010, 1960, 1.2, 0, 16], ['leaf', 40, -40, 1.4, 2.6, 12]]);
     return (t) => {
-      const lit = E.out3(span(t, B.light, B.light + 1.6)); diya.set(t, lit, E.in3(span(t, 9.4, B.patrika + 0.6)));
-      rays(t, 0.55 * lit); warm.scale.set(4 + 4 * lit); warm.alpha = 0.25 * lit;
-      const g = E.inOut(span(t, B.ganesha, B.om)); wm.set(g);
-      edge.visible = g > 0 && g < 1; edge.position.set(540, 290 + 660 * (1 - g)); edge.scale.set(3.4, 0.35); edge.alpha = 0.7 * Math.sin(Math.PI * g);
-      gGlow.alpha = 0.3 + 0.3 * Math.sin(Math.PI * span(t, B.om - 0.6, B.om + 2.4));
-      const au = E.smooth(span(t, B.ganesha + 1.2, B.om + 1.2)); aura.alpha = 0.55 * au; aura.rotation = t * 0.035; aura.scale.set(0.88 + 0.12 * au);
-      orbit.forEach((o, i) => { const a = o.a + t * 0.12; o.d.position.set(540 + Math.cos(a) * o.r, 610 + Math.sin(a) * o.r * 0.92); o.d.scale.set(0.05 + 0.03 * (i % 2)); o.d.alpha = 0.7 * au; });
-      const sk = span(t, B.om + 0.3, B.om + 2.3); sweep.visible = sk > 0 && sk < 1; sweep.position.set(lerp(260, 820, E.inOut(sk)), 610);
-      C.rise(om, t, B.om, 1.5); om.sweep(t, B.shloka - 0.6, 1.8); C.rise(sh, t, B.shloka, 1.5);
-      s.cam.s = 1 + 0.07 * E.inOut(span(t, 0, B.patrika + XF)); s.cam.y = 960 + 50 * E.inOut(span(t, 0, B.patrika));
+      const form = E.smooth(span(t, 4.6, 6.2));
+      motes.forEach(m => { const k = span(t, m.t0, m.t0 + m.dur), e = E.inOut(k);
+        // drifting before they are called, then each one curves into its place
+        const dx = 20 * Math.sin(t * 0.5 + m.ph), dy = -12 * t;
+        const x = lerp(m.sx + dx, m.tx, e) + m.sw * Math.sin(Math.PI * e) * 0.5, y = lerp(m.sy + dy, m.ty, e);
+        m.sp.position.set(x, y); m.sp.scale.set(m.sz * (1 + 0.6 * (1 - e)));
+        m.sp.alpha = E.smooth(span(t, 0.2, 1.6)) * (0.55 + 0.45 * e) * (1 - 0.85 * form); });
+      gan.alpha = form; glow.alpha = 0.45 * form + 0.25 * Math.sin(Math.PI * span(t, 5.4, 8.4));
+      const lit = E.smooth(span(t, 1.0, 6.0)); rays(t, 0.45 * lit); halo.scale.set(3 + 4 * lit); halo.alpha = 0.22 * lit;
+      C.rise(om, t, B.om, 1.5); C.rise(sh, t, B.shloka, 1.5);
+      s.cam.s = 1 + 0.06 * E.inOut(span(t, 0, B.patrika + XF)); s.cam.y = 960 - 30 * E.inOut(span(t, 0, B.patrika));
       fg(t, 0, -30 * E.inOut(span(t, 0, B.patrika + XF)), E.smooth(span(t, 0.5, 2.5)));
-      C.cam.dust = 0.85 * E.smooth(span(t, 0, 2.5)); C.cam.dustTint = 0xffcf80; C.cam.grain = 0.07;
+      C.cam.dust = 0.6 * E.smooth(span(t, 0, 2.5)); C.cam.dustTint = 0xffcf80; C.cam.grain = 0.07;
       C.cam.floodAdd = true; C.cam.floodColor = 0xffd9a6; C.cam.flood = 0.5 * E.inOut(span(t, 9.6, B.patrika + 0.5)) * (1 - E.smooth(span(t, B.patrika + 0.5, B.patrika + XF)));
     };
   }));
@@ -118,7 +120,6 @@
     for (let i = 0; i < 16; i++) fills2.poly(petal(250, 342, i * 0.3927 - 1.5708 + 0.196, 0.12, 1).flat()).fill(C.KUM);
     const welcome = C.foil(root, 'మా ఇంటి ముంగిట మీకు స్వాగతం', { font: C.TE2, size: 74 }); welcome.position.set(540, 285);
     const wen = C.label('WELCOME TO OUR HOME', { size: 26, fill: 0xF6D6A6, ls: 12 }); wen.position.set(540, 372); root.addChild(wen);
-    const lamps = [C.diya(root, 150, 1770, 170), C.diya(root, 930, 1770, 170)];
     const pr = rng(66), ptex = [C.petalTex('#ffb23a', '#f07a12', 1), C.petalTex('#e8473a', '#a81e18', 3), C.petalTex('#ffd36a', '#f2a21e', 2)];
     const settle = Array.from({ length: 22 }, (_, i) => { const a = pr() * 6.283, d = 560 + pr() * 200, sp = new PIXI.Sprite(ptex[i % 3]); sp.anchor.set(0.5); root.addChild(sp);
       return { sp, x: 540 + Math.cos(a) * d * 0.9, y: 1010 + Math.sin(a) * d * 0.75, t0: B.muggu + 1 + pr() * 9, rot: pr() * 6, s: 0.4 + pr() * 0.25 }; });
@@ -132,7 +133,6 @@
       const f1 = E.out3(span(t, B.fill1, B.fill1 + 1.6)); fills.alpha = f1; fills.scale.set(0.92 + 0.08 * f1);
       const f2 = E.out3(span(t, B.fill2, B.fill2 + 1.6)); fills2.alpha = f2; fills2.scale.set(0.96 + 0.04 * f2);
       C.rise(welcome, t, B.muggu + 2.2, 1.6); welcome.sweep(t, B.muggu + 4.2, 2.0); C.rise(wen, t, B.muggu + 3.0, 1.4, 14);
-      lamps.forEach((l, i) => l.set(t + i * 2.3, E.out3(span(t, 25.61 + i * 0.5, 27.0 + i * 0.5))));
       settle.forEach(p => { const k = span(t, p.t0, p.t0 + 2.2), e = E.out3(k); p.sp.visible = k > 0; p.sp.position.set(p.x + 40 * (1 - e) * Math.sin(p.rot + t), p.y - 260 * (1 - e)); p.sp.rotation = p.rot + 2 * (1 - e); p.sp.scale.set(p.s, p.s * (0.7 + 0.3 * e)); p.sp.alpha = clamp(k * 3); });
       s.cam.y = 1010; s.cam.s = 1.07 - 0.07 * E.out3(span(t, B.muggu, B.muggu + 3.5)) + 0.05 * E.inOut(span(t, 31.0, B.bride + XF));
       fg(t, 0, 20 * E.inOut(span(t, B.muggu, B.bride)), 0.9);
@@ -304,7 +304,6 @@
     [B.drop, B.toss2, B.toss3].forEach((t0) => { for (let i = 0; i < 150; i++) { const sp = new PIXI.Sprite(C.riceTex()); sp.anchor.set(0.5); rl.addChild(sp);
       const a = -Math.PI / 2 + (r() - 0.5) * 1.9, v = 700 + r() * 900; rice.push({ s: sp, t0: t0 + r() * 0.2, x0: 540 + (r() - 0.5) * 300, y0: 1500, vx: Math.cos(a) * v, vy: Math.sin(a) * v, sp: (r() - 0.5) * 6, ph: r() * 6, sz: 0.55 + r() * 0.7 }); } });
     const hushRice = []; for (let i = 0; i < 80; i++) { const sp = new PIXI.Sprite(C.riceTex()); sp.anchor.set(0.5); rl.addChild(sp); hushRice.push({ s: sp, x: r() * W, y0: H * (0.3 + r()), v: 30 + r() * 60, ph: r() * 6, sz: 0.4 + r() * 0.5 }); }
-    const archLamps = [C.diya(root, 95, 1400, 150), C.diya(root, 985, 1400, 150)];
     const garland = C.toranam(root, 70, 9);
     const tal = C.foil(root, 'తలంబ్రాలు', { font: C.TE2, size: 62 }); tal.position.set(540, 395);
     const names = new PIXI.Container(); root.addChild(names);
@@ -327,7 +326,7 @@
       const SLOW = 0.38, G = 700;
       rice.forEach(g => { const dt = (t - g.t0) * SLOW; g.s.visible = dt > 0; if (dt <= 0) return;
         g.s.position.set(g.x0 + g.vx * dt, g.y0 + g.vy * dt + 0.5 * G * dt * dt + 8 * Math.sin(t * 2 + g.ph)); g.s.rotation = g.ph + g.sp * dt; g.s.scale.set(g.sz); g.s.alpha = g.s.y > H + 40 ? 0 : 1; });
-      garland.set(t, B.toss2 - 0.4, 1.8); archLamps.forEach((l, i) => l.set(t + i * 2.7, E.out3(span(t, B.drop + 0.6 + i * 0.4, B.drop + 2 + i * 0.4))));
+      garland.set(t, B.toss2 - 0.4, 1.8);
       C.rise(tal, t, B.toss2, 1.5, 14); tal.sweep(t, B.toss2 + 1.5, 1.8);
       C.rise(names, t, B.coupleNames, 1.6); nA.sweep(t, B.coupleNames + 1.4, 1.8); nB.sweep(t, B.coupleNames + 1.7, 2.0); C.rise(when, t, B.coupleNames + 1.0, 1.4, 12);
       s.cam.s = 1 + 0.02 * E.inOut(span(t, B.hush, B.drop));
@@ -385,7 +384,6 @@
     const heart = new PIXI.Graphics(); C.heartPath(heart, C.GOLD_HI); heart.scale.set(1.7); heart.position.set(x0 + wA + gap / 2, 6); names.addChild(heart); names.y = 1170;
     const sign = C.text('ఇట్లు, చల్లపల్లి కుటుంబ సభ్యులు', { font: C.TE2, size: 50, fill: 0xF3D9A6 }); sign.position.set(540, 1295); root.addChild(sign);
     const date = C.label('SUNDAY · 13 · 12 · 2026 · 8:22 PM · NIDADAVOLU', { size: 23, fill: C.GOLD_HI, ls: 6 }); date.position.set(540, 1378); root.addChild(date);
-    const lamps = [C.diya(root, 210, 1700, 240), C.diya(root, 870, 1700, 240)];
     const fg = C.foreground(root, [['marigold', -30, 1890, 1.4, 0, 16], ['marigold', 1110, 1900, 1.3, 0.4, 18]]);
     return (t) => {
       sheen(t, B.shubham, B.end); wmark(t, E.smooth(span(t, B.shubham + 0.8, B.shubham + 3))); rays(t, 0.5 * E.smooth(span(t, B.shubham + 0.5, B.shubham + 3)));
@@ -394,7 +392,6 @@
       word.sweep(t, B.shubham + 2.4, 2.2);
       inv.forEach((l, i) => C.rise(l, t, B.invite + i * 0.6, 1.4, 12));
       C.rise(names, t, 115.61, 1.5); nA.sweep(t, 117.0, 1.8); nB.sweep(t, 117.3, 2.0); C.rise(sign, t, B.sign, 1.4, 12); C.rise(date, t, B.sign + 0.8, 1.3, 10);
-      lamps.forEach((l, i) => l.set(t + i * 3.1, E.out3(span(t, B.shubham + 1.2 + i * 0.4, B.shubham + 2.6 + i * 0.4))));
       s.cam.s = 1 + 0.03 * E.inOut(span(t, B.shubham, B.end));
       fg(t, 0, -14 * E.inOut(span(t, B.shubham, B.end)), 0.95);
       C.cam.dust = 0.5; C.cam.dustTint = 0xffd27a; C.cam.petals = 0.4; C.cam.grain = 0.09;
