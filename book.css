@@ -142,6 +142,11 @@
 .book-mode .ev h3 .en { font-size:10px; letter-spacing:.1em; }
 .book-mode .ev p { font-size:14px; }
 .book-mode .sc-tal,.book-mode .sc-sky,.book-mode .subham { border-radius:2px; }
+/* The night sky is painted onto the leaf: its edges bleed out like watercolour
+   instead of ending in a hard rectangle. */
+.book-mode .sc-sky { border-radius:0;
+  -webkit-mask-image:url("img/watercolor-edge.png"); -webkit-mask-size:100% 100%; -webkit-mask-repeat:no-repeat;
+  mask-image:url("img/watercolor-edge.png"); mask-size:100% 100%; mask-repeat:no-repeat; }
 .book-mode.motion .sc-tal .head,.book-mode.motion .sc-sap .head { padding-top:clamp(10px,4cqh,26px); }
 .book-mode .sc-home{ background:transparent; }
 .book-mode .sc-home .stage{ padding:clamp(6px,2cqh,16px) 0 clamp(8px,3cqh,22px); }
