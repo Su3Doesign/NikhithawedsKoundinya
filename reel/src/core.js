@@ -77,9 +77,9 @@
   C.scenes = [];
   // A scene is visible from t0 to t1 and dissolves in over `fade` seconds, on top
   // of the scene before it. It moves its own camera by writing s.cam.
-  C.scene = (t0, t1, build, fade = 0) => {
+  C.scene = (t0, t1, build, fade = 0, kind = null) => {
     const root = new PIXI.Container(); root.visible = false;
-    const s = { t0, t1, fade, root, update: null, prep: null, cam: null };
+    const s = { t0, t1, fade, kind, root, update: null, prep: null, cam: null };
     s.update = build(root, s) || (() => {});
     C.scenes.push(s); C.world.addChild(root);
     return s;
@@ -93,6 +93,7 @@
     // camera > world (scenes) ; overlay (flood, grain) sits above the camera
     C.camera = new PIXI.Container(); app.stage.addChild(C.camera);
     C.world = new PIXI.Container(); C.camera.addChild(C.world);
+    C.trans = new PIXI.Graphics(); app.stage.addChild(C.trans);
     C.overlay = new PIXI.Container(); app.stage.addChild(C.overlay);
     C.flood = new PIXI.Graphics().rect(0, 0, W, H).fill(0xffffff); C.flood.alpha = 0; C.overlay.addChild(C.flood);
     // film grain: one noise tile, offset per frame
@@ -118,6 +119,7 @@
   C.renderAt = async function (t) {
     const cam = C.cam;
     Object.assign(cam, { x: W / 2, y: H / 2, s: 1, r: 0, shake: 0, flood: 0, floodColor: 0xffffff, zoomBlur: 0, zoomCenter: [W / 2, H / 2], shock: null, rgb: 0, grain: 0.16, floodAdd: false, dust: 0, dustTint: 0xffd58a, petals: 0 });
+    if (C.trans) { C.trans.clear(); C.trans.visible = true; }
     for (const s of C.scenes) {
       const on = t >= s.t0 && t < s.t1;
       s.root.visible = on;
@@ -125,7 +127,22 @@
       if (s.prep) await s.prep(t);
       s.cam = { x: W / 2, y: H / 2, s: 1, r: 0 };
       s.update(t, t - s.t0);
-      s.root.alpha = s.fade ? E.smooth(span(t, s.t0, s.t0 + s.fade)) : 1;
+      s.root.alpha = s.fade && !s.kind ? E.smooth(span(t, s.t0, s.t0 + s.fade)) : 1;
+      // designed transitions: a mandala iris or a silk swipe with a gold edge
+      if (s.kind && s.fade) {
+        const k = E.inOut(span(t, s.t0, s.t0 + s.fade)), m = s.maskG || (s.maskG = new PIXI.Graphics());
+        if (!m.parent) C.app.stage.addChild(m);
+        m.clear();
+        if (k >= 1) { s.root.mask = null; m.visible = false; }
+        else {
+          m.visible = true; s.root.mask = m;
+          if (s.kind === 'iris') { const R = 1180 * k; m.circle(W / 2, H * 0.47, Math.max(1, R)).fill(0xffffff);
+            C.trans.circle(W / 2, H * 0.47, R).stroke({ width: 5, color: 0xE9BE5C, alpha: 0.95 }).circle(W / 2, H * 0.47, R + 14).stroke({ width: 1.5, color: 0xF6D58A, alpha: 0.8 });
+            for (let i = 0; i < 36; i++) { const a = i / 36 * 6.283 + k; C.trans.circle(W / 2 + Math.cos(a) * (R + 30), H * 0.47 + Math.sin(a) * (R + 30), 3).fill({ color: 0xF6D58A, alpha: 0.85 }); } }
+          else { const off = -900 + (W + 2000) * k; m.poly([0, H, off, H, off + 700, 0, 0, 0].map((v, i) => i % 2 ? v : Math.max(0, Math.min(W, v)))).fill(0xffffff);
+            C.trans.moveTo(off, H).lineTo(off + 700, 0).stroke({ width: 5, color: 0xE9BE5C, alpha: 0.95 }).moveTo(off - 18, H).lineTo(off + 682, 0).stroke({ width: 1.5, color: 0xF6D58A, alpha: 0.8 }); }
+        }
+      }
       s.root.pivot.set(s.cam.x, s.cam.y); s.root.position.set(W / 2, H / 2); s.root.scale.set(s.cam.s); s.root.rotation = s.cam.r;
     }
     if (C.layers) C.layers(t);

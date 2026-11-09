@@ -105,3 +105,60 @@
     return (t, dx = 0, dy = 0, alpha = 1) => sprites.forEach((o, i) => { o.sp.position.set(o.x + dx + 6 * Math.sin(t * 0.4 + i), o.y + dy + 5 * Math.cos(t * 0.35 + i)); o.sp.alpha = alpha; });
   };
 })();
+
+/* ---------------------------------------------------------------- always-alive layers (busy, yet calm) */
+(function () {
+  const { W, H, E, span, clamp, lerp, rng } = C;
+  // rich mandala line-art: petal rings, beads and circles
+  C.mandalaArt = function (g, R, color, alpha = 1, rings = 4) {
+    for (let k = 0; k < rings; k++) {
+      const r0 = R * (0.25 + k * 0.2), n = 8 * (k + 1), h = R * 0.12;
+      for (let i = 0; i < n; i++) { const a = i / n * 6.283, a1 = (i + 1) / n * 6.283, am = (i + 0.5) / n * 6.283;
+        g.moveTo(Math.cos(a) * r0, Math.sin(a) * r0).quadraticCurveTo(Math.cos(am) * (r0 + h), Math.sin(am) * (r0 + h), Math.cos(a1) * r0, Math.sin(a1) * r0);
+        g.moveTo(Math.cos(am) * (r0 + h * 0.45), Math.sin(am) * (r0 + h * 0.45)).lineTo(Math.cos(am) * (r0 + h * 0.75), Math.sin(am) * (r0 + h * 0.75)); }
+      g.stroke({ width: 1.6, color, alpha });
+      g.circle(0, 0, r0 - 6).stroke({ width: 1, color, alpha: alpha * 0.7 });
+      for (let i = 0; i < n * 2; i++) { const a = i / (n * 2) * 6.283; g.circle(Math.cos(a) * (r0 - 16), Math.sin(a) * (r0 - 16), 2).fill({ color, alpha: alpha * 0.8 }); }
+    }
+    g.circle(0, 0, R * 1.05).stroke({ width: 1.2, color, alpha: alpha * 0.6 });
+  };
+  // a large mandala that turns slowly behind everything
+  C.watermark = function (parent, x, y, R, color, alpha) {
+    const g = new PIXI.Graphics(); C.mandalaArt(g, R, color, 1, 5); g.position.set(x, y); g.alpha = alpha; parent.addChild(g);
+    return (t, a = 1) => { g.rotation = t * 0.012; g.alpha = alpha * a; g.scale.set(1 + 0.01 * Math.sin(t * 0.25)); };
+  };
+  // filigree corners that draw in and then breathe
+  C.corners = function (parent, color, inset = 46) {
+    const items = [[inset, inset, 1, 1], [W - inset, inset, -1, 1], [inset, H - inset, 1, -1], [W - inset, H - inset, -1, -1]].map(([x, y, sx, sy]) => {
+      const g = new PIXI.Graphics(); g.position.set(x, y); g.scale.set(sx, sy); parent.addChild(g);
+      const pts = []; for (let i = 0; i <= 50; i++) { const k = i / 50, a = -Math.PI / 2 + k * 4.4, r = 46 * (1 - k * 0.8); pts.push([70 + Math.cos(a) * r, 70 + Math.sin(a) * r]); }
+      return { g, paths: [[[0, 150], [0, 0], [150, 0]], [[14, 110], [14, 14], [110, 14]], pts] };
+    });
+    return (t, k) => items.forEach((it, i) => { it.g.clear(); it.paths.forEach((p, j) => { C.drawPart(it.g, p, E.inOut(span(k, j * 0.2, 0.6 + j * 0.2))); it.g.stroke({ width: j === 1 ? 1 : 2, color, alpha: 0.85 }); });
+      const b = 1 + 0.015 * Math.sin(t * 0.6 + i); it.g.scale.set(Math.sign(it.g.scale.x) * b, Math.sign(it.g.scale.y) * b); });
+  };
+  // a soft-edged ink wipe that reveals a line of text from left to right
+  const wipeTex = () => C._wipe || (C._wipe = C.linear(512, 8, [[0, 'rgba(255,255,255,1)'], [0.75, 'rgba(255,255,255,1)'], [1, 'rgba(255,255,255,0)']], false));
+  C.inkWipe = function (parent, obj) {
+    const m = new PIXI.Sprite(wipeTex()); parent.addChild(m); obj.mask = m; const b = obj.getBounds();
+    m.height = b.height + 80; m.y = b.y - 40;
+    return (t, t0, dur = 1.6) => { const k = E.inOut(span(t, t0, t0 + dur)), w = (b.width + 300) * k; m.width = Math.max(1, w); m.x = b.x - 150; obj.alpha = k > 0 ? 1 : 0; };
+  };
+  // watercolour washes that bloom and drift behind a picture
+  C.washes = function (parent, specs) {
+    const list = specs.map(([x, y, s, color, seed]) => { const tex = C.canvasTex(512, 512, (c, w) => { const r = rng(seed);
+      for (let i = 0; i < 26; i++) { const a = r() * 6.283, d = r() * 90, rad = 60 + r() * 110, cx = w / 2 + Math.cos(a) * d, cy = w / 2 + Math.sin(a) * d;
+        const g = c.createRadialGradient(cx, cy, 0, cx, cy, rad); g.addColorStop(0, color.replace('A', '.16')); g.addColorStop(0.7, color.replace('A', '.08')); g.addColorStop(1, color.replace('A', '0'));
+        c.fillStyle = g; c.beginPath(); c.arc(cx, cy, rad, 0, 6.283); c.fill(); } });
+      const sp = new PIXI.Sprite(tex); sp.anchor.set(0.5); sp.position.set(x, y); parent.addChild(sp); return { sp, s, seed }; });
+    return (t, k) => list.forEach(o => { o.sp.scale.set(o.s * (0.6 + 0.4 * E.out3(k)) * (1 + 0.03 * Math.sin(t * 0.3 + o.seed))); o.sp.rotation = 0.05 * Math.sin(t * 0.2 + o.seed); o.sp.alpha = E.smooth(k); });
+  };
+  // sprigs of mango leaf and marigold that grow at a frame's corners
+  C.sprigs = function (parent, pts) {
+    const list = pts.map(([x, y, rot, kind, s, delay]) => { const sp = new PIXI.Sprite(C.A[kind]); sp.anchor.set(kind === 'leaf' ? 0.5 : 0.5, kind === 'leaf' ? 0.95 : 0.5); sp.position.set(x, y); sp.rotation = rot; parent.addChild(sp); return { sp, s, rot, delay }; });
+    return (t, t0) => list.forEach((o, i) => { const k = E.back(span(t, t0 + o.delay, t0 + o.delay + 0.9)); o.sp.scale.set(o.s * k); o.sp.rotation = o.rot + 0.04 * Math.sin(t * 0.7 + i); o.sp.alpha = clamp(k * 2); });
+  };
+  // a slow glint of light that travels along a line
+  C.glint = function (parent) { const s = new PIXI.Sprite(C.glowTex()); s.anchor.set(0.5); s.blendMode = 'add'; s.tint = 0xfff0c0; s.scale.set(0.5, 0.18); parent.addChild(s);
+    return (t, x0, x1, y, t0, dur) => { const k = span(t, t0, t0 + dur); s.visible = k > 0 && k < 1; s.position.set(lerp(x0, x1, E.inOut(k)), y); s.alpha = Math.sin(Math.PI * k); }; };
+})();
