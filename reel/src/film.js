@@ -4,18 +4,19 @@
    and dissolve into each other. Materials: silk, brocade, gold foil, filigree, lamplight. */
 (function () {
   const { W, H, E, span, clamp, lerp, rng } = C;
-  const B = { light: 1.53, ganesha: 3.2, om: 6.69, shloka: 8.48, patrika: 10.29, line1: 12.12, line2: 14.07, names: 16.02, en: 17.9, date: 19.85,
-    muggu: 21.83, fill1: 27.61, fill2: 29.58, bride: 33.37, groom: 41.1, stars: 48.69, merge: 52.66, nik: 54.61, sai: 56.61, lock: 60.72,
-    muhurtham: 62.72, day: 64.69, time: 66.5, venue: 72.24, hush: 80.04, drop: 87.7, toss2: 89.58, toss3: 91.51, coupleNames: 93.55,
-    events: 103.58, shubham: 111.43, invite: 113.64, sign: 117.59, end: 121.5 };
-  C.DURATION = B.end; C.B = B;
+  const B = { start: 35.34, patrika: 41.10, line1: 42.0, line2: 42.93, names: 44.91, en: 45.8, date: 46.72,
+    bride: 48.69, groom: 54.61, stars: 60.72, merge: 63.4, nik: 64.0, sai: 65.0, lock: 66.9,
+    muhurtham: 68.48, day: 70.31, time: 72.24, venue: 74.0, hush: 80.04, drop: 87.7, toss2: 89.58, toss3: 91.51, coupleNames: 92.5,
+    events: 97.59, shubham: 103.58, invite: 105.0, sign: 106.7, end: 109.51 };
+  C.OFFSET = B.start; C.DURATION = B.end - B.start; C.B = B;
   const SCENES = window.SCENES = [];
   const XF = 0.9; // dissolve length: soft, but never a muddy double exposure
   const RED = () => C._red || (C._red = C.brocadeTex('#b9271d', '#86170f', '#360604', 'rgba(255,214,150,.07)', 3));
   const DEEP = () => C._deep || (C._deep = C.brocadeTex('#3d0f0b', '#1c0605', '#060202', 'rgba(255,200,140,.045)', 4));
 
   /* ============================================================ 1 · Ganesha, gathered from gold dust */
-  SCENES.push(() => C.scene(0, B.patrika + XF, (root, s) => {
+  SCENES.push(() => C.scene(B.start, B.patrika + XF, (root, s) => {
+    const L = 10.29;   // the scene is authored on a 10.29 s clock and played over its real length
     C.bg(root, DEEP());
     const rays = C.rays(root, 540, 760, 0xffc77a, 2.6);
     const halo = new PIXI.Sprite(C.glowTex()); halo.anchor.set(0.5); halo.tint = 0xff9a40; halo.blendMode = 'add'; halo.position.set(540, 760); root.addChild(halo);
@@ -35,6 +36,7 @@
     const sh = C.text('శ్రీరస్తు   ·   శుభమస్తు   ·   అవిఘ్నమస్తు', { font: C.TE2, size: 48, fill: 0xF3D9A6 }); sh.position.set(540, 1308); root.addChild(sh);
     const fg = C.foreground(root, [['marigold', 70, 1900, 1.5, 0.3, 14], ['leaf', 1040, 1820, 1.2, -0.6, 10], ['marigold', 1010, 1960, 1.2, 0, 16], ['leaf', 40, -40, 1.4, 2.6, 12]]);
     return (t) => {
+      t = (t - B.start) * (L / (B.patrika - B.start));
       const form = E.smooth(span(t, 4.6, 6.2));
       motes.forEach(m => { const k = span(t, m.t0, m.t0 + m.dur), e = E.inOut(k);
         // drifting before they are called, then each one curves into its place
@@ -44,16 +46,16 @@
         m.sp.alpha = E.smooth(span(t, 0.2, 1.6)) * (0.55 + 0.45 * e) * (1 - 0.85 * form); });
       gan.alpha = form; glow.alpha = 0.45 * form + 0.25 * Math.sin(Math.PI * span(t, 5.4, 8.4));
       const lit = E.smooth(span(t, 1.0, 6.0)); rays(t, 0.45 * lit); halo.scale.set(3 + 4 * lit); halo.alpha = 0.22 * lit;
-      C.rise(om, t, B.om, 1.5); C.rise(sh, t, B.shloka, 1.5);
-      s.cam.s = 1 + 0.06 * E.inOut(span(t, 0, B.patrika + XF)); s.cam.y = 960 - 30 * E.inOut(span(t, 0, B.patrika));
-      fg(t, 0, -30 * E.inOut(span(t, 0, B.patrika + XF)), E.smooth(span(t, 0.5, 2.5)));
+      C.rise(om, t, 6.69, 1.5); C.rise(sh, t, 8.48, 1.5);
+      s.cam.s = 1 + 0.06 * E.inOut(span(t, 0, L + XF)); s.cam.y = 960 - 30 * E.inOut(span(t, 0, L));
+      fg(t, 0, -30 * E.inOut(span(t, 0, L + XF)), E.smooth(span(t, 0.5, 2.5)));
       C.cam.dust = 0.6 * E.smooth(span(t, 0, 2.5)); C.cam.dustTint = 0xffcf80; C.cam.grain = 0.07;
-      C.cam.floodAdd = true; C.cam.floodColor = 0xffd9a6; C.cam.flood = 0.5 * E.inOut(span(t, 9.6, B.patrika + 0.5)) * (1 - E.smooth(span(t, B.patrika + 0.5, B.patrika + XF)));
+      C.cam.floodAdd = true; C.cam.floodColor = 0xffd9a6; C.cam.flood = 0.5 * E.inOut(span(t, 9.6, L + 0.5)) * (1 - E.smooth(span(t, L + 0.5, L + XF)));
     };
   }));
 
   /* ============================================================ 2 · the patrika */
-  SCENES.push(() => C.scene(B.patrika, B.muggu + XF, (root, s) => {
+  SCENES.push(() => C.scene(B.patrika, B.bride + XF, (root, s) => {
     C.bg(root, C.silkTex());
     const sheen = C.sheen(root, 0.1);
     const frame = new PIXI.Sprite(C.A.frame); frame.anchor.set(0.5); const fk = C.fit(frame, 1010, 1520); frame.position.set(540, 960); root.addChild(frame);
@@ -72,7 +74,7 @@
       a.position.set(x + (i % 2 ? 22 : -22), y); b.position.set(x + (i % 2 ? -26 : 26), y + 4); return { a, b, i }; });
     const fg = C.foreground(root, [['marigold', -10, 170, 1.4, 0, 16], ['leaf', 90, 60, 1.3, 2.2, 12], ['marigold', 1090, 210, 1.3, 0.5, 18], ['leaf', 1000, 40, 1.2, -2.3, 12]]);
     return (t) => {
-      sheen(t, B.patrika, B.muggu + XF);
+      sheen(t, B.patrika, B.bride + XF);
       const f = E.out3(span(t, B.patrika, B.patrika + 2.6)); frame.scale.set(fk * (1.05 - 0.05 * f));
       C.rise(gan, t, B.patrika + 0.9, 1.3, 12); C.rise(au, t, B.patrika + 1.3, 1.3, 12);
       C.rise(l1, t, B.line1, 1.4); C.rise(l2, t, B.line2, 1.6, 26); l2.sweep(t, B.line2 + 1.6, 2.0);
@@ -82,61 +84,9 @@
       om.set(E.inOut(span(t, B.date - 1.0, B.date + 1.4)), 'center');
       dabs.forEach(d => { const ta = B.names + 0.6 + d.i * 0.3; d.a.alpha = E.smooth(span(t, ta, ta + 0.9)); d.a.scale.set(0.5 + 0.05 * E.out3(span(t, ta, ta + 0.9)));
         d.b.alpha = E.smooth(span(t, ta + 0.4, ta + 1.3)); d.b.scale.set(0.38 + 0.04 * E.out3(span(t, ta + 0.4, ta + 1.3))); });
-      s.cam.s = 1 + 0.04 * E.inOut(span(t, B.patrika, B.muggu + XF)); s.cam.y = 960 - 20 * E.inOut(span(t, B.patrika, B.muggu));
-      fg(t, -18 * E.inOut(span(t, B.patrika, B.muggu)), 0, E.smooth(span(t, B.patrika, B.patrika + 2)));
+      s.cam.s = 1 + 0.04 * E.inOut(span(t, B.patrika, B.bride + XF)); s.cam.y = 960 - 20 * E.inOut(span(t, B.patrika, B.bride));
+      fg(t, -18 * E.inOut(span(t, B.patrika, B.bride)), 0, E.smooth(span(t, B.patrika, B.patrika + 2)));
       C.cam.petals = 0.4 * E.smooth(span(t, B.line2, B.line2 + 2)); C.cam.dust = 0.18; C.cam.dustTint = 0xffe6b0; C.cam.grain = 0.12;
-    };
-  }, XF));
-
-  /* ============================================================ 3 · the muggu at our doorstep */
-  SCENES.push(() => C.scene(B.muggu, B.bride + XF, (root, s) => {
-    C.bg(root, C.canvasTex(1080, 1920, (x, w, h) => {
-      x.fillStyle = '#86391f'; x.fillRect(0, 0, w, h); const r = rng(21);
-      for (let i = 0; i < 900; i++) { x.fillStyle = `rgba(${r() < .5 ? '60,20,8' : '190,110,70'},${0.04 + r() * 0.06})`; x.beginPath(); x.arc(r() * w, r() * h, 20 + r() * 90, 0, 6.283); x.fill(); }
-      for (let i = 0; i < 9000; i++) { x.fillStyle = `rgba(255,220,190,${r() * 0.08})`; x.fillRect(r() * w, r() * h, 1.5, 1.5); }
-      const g = x.createRadialGradient(w * 0.3, h * 0.2, 0, w / 2, h * 0.52, h * 0.75); g.addColorStop(0, 'rgba(255,190,130,.3)'); g.addColorStop(1, 'rgba(20,4,0,.55)'); x.fillStyle = g; x.fillRect(0, 0, w, h);
-    }));
-    const rays = C.rays(root, 120, -80, 0xffd2a0, 3.2);
-    const cx = 540, cy = 1010, art = new PIXI.Container(); art.position.set(cx, cy); root.addChild(art);
-    const fills2 = new PIXI.Graphics(), fills = new PIXI.Graphics(), halo = new PIXI.Graphics(), chalk = new PIXI.Graphics(), dots = new PIXI.Graphics();
-    art.addChild(fills2, fills, halo, chalk, dots);
-    const pol = (r, a) => [Math.cos(a) * r, Math.sin(a) * r];
-    const petal = (r0, r1, a, wA, bulge) => { const pts = [], N = 36;
-      for (let i = 0; i <= N; i++) { const k = i / N, q = Math.sin(k * Math.PI); pts.push(pol(lerp(r0, r1, k), a - wA * q * bulge * (1 - 0.25 * k))); }
-      for (let i = N; i >= 0; i--) { const k = i / N, q = Math.sin(k * Math.PI); pts.push(pol(lerp(r0, r1, k), a + wA * q * bulge * (1 - 0.25 * k))); } return pts; };
-    const circle = (r, n = 96) => Array.from({ length: n + 1 }, (_, i) => pol(r, (i / n) * 6.283 - 1.5708));
-    const T0 = B.muggu + 0.8, strokes = [], add = (pts, a, b, w = 9) => strokes.push({ pts, t0: T0 + a, t1: T0 + b, w });
-    add(circle(34, 40), 0, 0.6, 8);
-    for (let i = 0; i < 8; i++) add(petal(40, 215, i * 0.7854 - 1.5708, 0.36, 1), 0.3 + i * 0.22, 1.8 + i * 0.22);
-    add(circle(236), 1.8, 3.2, 6);
-    for (let i = 0; i < 16; i++) add(petal(244, 350, i * 0.3927 - 1.5708 + 0.196, 0.15, 1), 2.6 + i * 0.1, 3.8 + i * 0.1, 7);
-    for (let i = 0; i < 8; i++) add(petal(360, 452, i * 0.7854 - 1.5708, 0.13, 1.3), 3.8 + i * 0.16, 5.0 + i * 0.16, 7);
-    add(circle(470, 140), 4.4, 6.4, 4);
-    const dotPts = [];
-    for (let i = 0; i < 8; i++) { const a = i * 0.7854 - 1.5708 + 0.3927; dotPts.push([...pol(300, a), T0 + 0.2 + i * 0.08], [...pol(410, a), T0 + 0.6 + i * 0.08]); }
-    for (let i = 0; i < 16; i++) dotPts.push([...pol(505, i * 0.3927 - 1.5708), T0 + 1.0 + i * 0.05]);
-    for (let i = 0; i < 8; i++) fills.poly(petal(48, 205, i * 0.7854 - 1.5708, 0.3, 1).flat()).fill(C.TUR);
-    fills.circle(0, 0, 26).fill(C.KUM);
-    for (let i = 0; i < 16; i++) fills2.poly(petal(250, 342, i * 0.3927 - 1.5708 + 0.196, 0.12, 1).flat()).fill(C.KUM);
-    const welcome = C.foil(root, 'మా ఇంటి ముంగిట మీకు స్వాగతం', { font: C.TE2, size: 74 }); welcome.position.set(540, 285);
-    const wen = C.label('WELCOME TO OUR HOME', { size: 26, fill: 0xF6D6A6, ls: 12 }); wen.position.set(540, 372); root.addChild(wen);
-    const pr = rng(66), ptex = [C.petalTex('#ffb23a', '#f07a12', 1), C.petalTex('#e8473a', '#a81e18', 3), C.petalTex('#ffd36a', '#f2a21e', 2)];
-    const settle = Array.from({ length: 22 }, (_, i) => { const a = pr() * 6.283, d = 560 + pr() * 200, sp = new PIXI.Sprite(ptex[i % 3]); sp.anchor.set(0.5); root.addChild(sp);
-      return { sp, x: 540 + Math.cos(a) * d * 0.9, y: 1010 + Math.sin(a) * d * 0.75, t0: B.muggu + 1 + pr() * 9, rot: pr() * 6, s: 0.4 + pr() * 0.25 }; });
-    const fg = C.foreground(root, [['marigold', 40, 1880, 1.0, 0, 12], ['marigold', 1050, 1900, 1.1, 0.4, 14]]);
-    return (t) => {
-      rays(t, 0.5 * E.smooth(span(t, B.muggu, B.muggu + 3)));
-      art.rotation = 0.07 * E.inOut(span(t, B.muggu, B.bride + XF));
-      chalk.clear(); halo.clear();
-      strokes.forEach(st => { const k = E.inOut(span(t, st.t0, st.t1)); C.drawPart(halo, st.pts, k); halo.stroke({ width: st.w * 2.4, color: 0xfff4e0, alpha: 0.16, cap: 'round', join: 'round' }); C.drawPart(chalk, st.pts, k); chalk.stroke({ width: st.w, color: 0xFBF4E6, alpha: 0.96, cap: 'round', join: 'round' }); });
-      dots.clear(); dotPts.forEach(([x, y, t0]) => { const k = E.out3(span(t, t0, t0 + 0.6)); if (k > 0) dots.circle(x, y, 9 * k).fill({ color: 0xFBF4E6, alpha: 0.95 }); });
-      const f1 = E.out3(span(t, B.fill1, B.fill1 + 1.6)); fills.alpha = f1; fills.scale.set(0.92 + 0.08 * f1);
-      const f2 = E.out3(span(t, B.fill2, B.fill2 + 1.6)); fills2.alpha = f2; fills2.scale.set(0.96 + 0.04 * f2);
-      C.rise(welcome, t, B.muggu + 2.2, 1.6); welcome.sweep(t, B.muggu + 4.2, 2.0); C.rise(wen, t, B.muggu + 3.0, 1.4, 14);
-      settle.forEach(p => { const k = span(t, p.t0, p.t0 + 2.2), e = E.out3(k); p.sp.visible = k > 0; p.sp.position.set(p.x + 40 * (1 - e) * Math.sin(p.rot + t), p.y - 260 * (1 - e)); p.sp.rotation = p.rot + 2 * (1 - e); p.sp.scale.set(p.s, p.s * (0.7 + 0.3 * e)); p.sp.alpha = clamp(k * 3); });
-      s.cam.y = 1010; s.cam.s = 1.07 - 0.07 * E.out3(span(t, B.muggu, B.muggu + 3.5)) + 0.05 * E.inOut(span(t, 31.0, B.bride + XF));
-      fg(t, 0, 20 * E.inOut(span(t, B.muggu, B.bride)), 0.9);
-      C.cam.dust = 0.45; C.cam.dustTint = 0xffd9a8; C.cam.grain = 0.15;
     };
   }, XF));
 
@@ -164,17 +114,17 @@
       p.ls = p.lines.map((l, i) => { const x = C.text(l, { font: C.TE2, size: 44, fill: 0x4a3a2c }); x.position.set(540, 1446 + i * 54); g.addChild(x); return x; });
       return p;
     });
-    s.prep = async (t) => { for (const p of people) if (t >= p.t0 - 0.2 && t < p.t1 + XF) await p.ink.set(span(t, p.t0 + 1.8, p.t0 + 4.6)); };
+    s.prep = async (t) => { for (const p of people) if (t >= p.t0 - 0.2 && t < p.t1 + XF) await p.ink.set(span(t, p.t0 + 0.9, p.t0 + 3.0)); };
     return (t) => {
       sheen(t, B.bride, B.stars);
       people.forEach((p, i) => {
         const on = t >= p.t0 - 0.1 && t < p.t1 + XF; p.g.visible = on; if (!on) return;
-        p.pic.set(E.out3(span(t, p.t0 + 0.2, p.t0 + 2.6))); p.frame.set(span(t, p.t0 + 0.3, p.t0 + 2.8));
+        p.pic.set(E.out3(span(t, p.t0 + 0.1, p.t0 + 1.9))); p.frame.set(span(t, p.t0 + 0.2, p.t0 + 2.0));
         const inK = i ? E.smooth(span(t, p.t0, p.t0 + XF)) : 1, outK = i ? 0 : E.smooth(span(t, p.t1, p.t1 + XF));
         p.g.alpha = inK * (1 - outK);
-        C.rise(p.roleT, t, p.t0 + 1.2, 1.2, 10); p.rule.alpha = E.smooth(span(t, p.t0 + 4.0, p.t0 + 5.0));
-        C.rise(p.nm, t, p.t0 + 4.3, 1.3, 14);
-        p.ls.forEach((l, j) => C.rise(l, t, p.t0 + 5.0 + j * 0.45, 1.3, 12));
+        C.rise(p.roleT, t, p.t0 + 0.6, 1.0, 10); p.rule.alpha = E.smooth(span(t, p.t0 + 2.5, p.t0 + 3.2));
+        C.rise(p.nm, t, p.t0 + 2.7, 1.1, 14);
+        p.ls.forEach((l, j) => C.rise(l, t, p.t0 + 3.2 + j * 0.35, 1.0, 12));
       });
       s.cam.s = 1 + 0.025 * E.inOut(span(t, B.bride, B.groom)) + 0.025 * E.inOut(span(t, B.groom, B.stars));
       C.cam.dust = 0.18; C.cam.dustTint = 0xffe2b0; C.cam.grain = 0.1;
@@ -204,7 +154,7 @@
       const d = x.getImageData(0, 0, W, 400).data, pts = []; for (let py = 0; py < 400; py += step) for (let px = 0; px < W; px += step) if (d[(py * W + px) * 4 + 3] > 140) pts.push([px, y - 200 + py]); return pts;
     }
     const rr = rng(91), parts = [];
-    [['నిఖిత', 230, 860, 7, B.nik, 2.4], ['సాయి కౌండిన్య', 158, 1110, 6, B.sai, 3.0]].forEach(([str, size, y, step, t0, dur]) => {
+    [['నిఖిత', 230, 860, 7, B.nik, 1.4], ['సాయి కౌండిన్య', 158, 1110, 6, B.sai, 1.8]].forEach(([str, size, y, step, t0, dur]) => {
       const pts = targets(str, size, y, step), xs = pts.map(p => p[0]), x0 = Math.min(...xs), x1 = Math.max(...xs);
       pts.forEach(([x, y]) => { const sp = new PIXI.Sprite(C.dotTex()); sp.anchor.set(0.5); sp.blendMode = 'add'; sp.tint = rr() < 0.3 ? 0xffffff : 0xffd98c; root.addChild(sp);
         parts.push({ s: sp, x, y, t0: t0 + (x - x0) / (x1 - x0 || 1) * dur * 0.8 + rr() * 0.15, fly: 0.9 + rr() * 0.5, cx: (rr() - 0.5) * 520, cy: -120 - rr() * 260, sz: 0.045 + rr() * 0.03, ph: rr() * 6 }); });
@@ -220,23 +170,23 @@
       const lt = t - B.stars;
       stars.forEach(p => { p.s.position.set(p.x, p.y); p.s.scale.set(p.sz); p.s.alpha = p.a; });
       // draw the seven sages, then glide in to the second star of the handle
-      cons.clear(); const ck = span(t, B.stars + 0.4, B.stars + 2.6); C.drawPart(cons, DIPPER.concat([DIPPER[3]]), E.inOut(ck)); cons.stroke({ width: 2, color: 0xcfd8ff, alpha: 0.55 });
+      cons.clear(); const ck = span(t, B.stars + 0.2, B.stars + 1.5); C.drawPart(cons, DIPPER.concat([DIPPER[3]]), E.inOut(ck)); cons.stroke({ width: 2, color: 0xcfd8ff, alpha: 0.55 });
       const after = 1 - E.smooth(span(t, B.merge, B.merge + 1.6));
-      big.forEach(b => { const kk = E.out3(span(t, B.stars + 0.3 + b.i * 0.18, B.stars + 1.0 + b.i * 0.18)); b.d.scale.set(0.5 * kk); b.d.alpha = 0.5 * after; b.c.scale.set(0.16 * kk); b.c.alpha = after; });
-      const z = E.inOut(span(t, B.stars + 2.2, B.merge - 0.6)), zs = 1 + 1.9 * z;
+      big.forEach(b => { const kk = E.out3(span(t, B.stars + 0.15 + b.i * 0.1, B.stars + 0.6 + b.i * 0.1)); b.d.scale.set(0.5 * kk); b.d.alpha = 0.5 * after; b.c.scale.set(0.16 * kk); b.c.alpha = after; });
+      const z = E.inOut(span(t, B.stars + 1.3, B.merge - 0.3)), zs = 1 + 1.9 * z;
       sky.scale.set(zs); sky.pivot.set(lerp(540, MIZAR[0], z), lerp(960, MIZAR[1], z)); sky.position.set(540, lerp(960, 700, z));
       cons.alpha = (1 - 0.7 * z) * after;
-      C.rise(sap, t, B.stars + 0.8, 1.3, 12); C.rise(sapEn, t, B.stars + 1.3, 1.2, 10); sap.alpha *= 1 - E.smooth(span(t, B.merge - 1.4, B.merge - 0.4)); sapEn.alpha *= 1 - E.smooth(span(t, B.merge - 1.4, B.merge - 0.4));
+      C.rise(sap, t, B.stars + 0.4, 1.0, 12); C.rise(sapEn, t, B.stars + 0.7, 1.0, 10); sap.alpha *= 1 - E.smooth(span(t, B.merge - 0.9, B.merge - 0.2)); sapEn.alpha *= 1 - E.smooth(span(t, B.merge - 0.9, B.merge - 0.2));
       const pc = [540 + (MIZAR[0] - sky.pivot.x) * zs, sky.position.y + (MIZAR[1] - sky.pivot.y) * zs];
-      const k = span(t, B.stars, B.merge), rad = (14 + 120 * z) * (1 - E.inOut(span(t, B.merge - 1.6, B.merge))), ang = 2.2 + 5 * Math.pow(k, 1.5), merged = t >= B.merge;
+      const k = span(t, B.stars, B.merge), rad = (14 + 120 * z) * (1 - E.inOut(span(t, B.merge - 1.0, B.merge))), ang = 2.2 + 5 * Math.pow(k, 1.5), merged = t >= B.merge;
       [[vas, 1], [aru, -1]].forEach(([st, sg]) => { st.c.visible = !merged && z > 0.05; st.c.alpha = E.smooth(span(z, 0.05, 0.4)); st.c.position.set(pc[0] + sg * Math.cos(ang) * rad, pc[1] + sg * Math.sin(ang) * rad * 0.55);
         st.g.scale.set(1.0 + 0.6 * k); st.g.alpha = 0.55; st.f.scale.set(0.5 + 0.4 * k); st.f.rotation = lt * 0.2; st.d.scale.set(0.22); });
-      const rise = E.inOut(span(t, B.merge + 0.6, B.merge + 2.4)), oy = lerp(700, 470, rise);
+      const rise = E.inOut(span(t, B.merge + 0.3, B.merge + 1.3)), oy = lerp(700, 470, rise);
       one.c.visible = merged; one.c.position.set(540, oy);
       const m = merged ? Math.exp(-(t - B.merge) * 1.2) : 0;
       one.g.scale.set(1.6 + 2.2 * m); one.g.alpha = 0.7; one.f.scale.set(0.9 + 1.0 * m); one.f.rotation = 0.2 + lt * 0.05; one.d.scale.set(0.3 + 0.25 * m);
       bloom.position.set(540, 700); bloom.scale.set(5 + 8 * (1 - m)); bloom.alpha = merged ? 0.8 * m : 0;
-      ring.clear(); const rk = span(t, B.merge, B.merge + 2.6); if (rk > 0 && rk < 1) ring.circle(540, 700, 40 + 620 * E.out3(rk)).stroke({ width: 2, color: 0xffd98c, alpha: 0.45 * (1 - rk) });
+      ring.clear(); const rk = span(t, B.merge, B.merge + 1.8); if (rk > 0 && rk < 1) ring.circle(540, 700, 40 + 620 * E.out3(rk)).stroke({ width: 2, color: 0xffd98c, alpha: 0.45 * (1 - rk) });
       parts.forEach(p => { const q = span(t, p.t0, p.t0 + p.fly); if (q <= 0) { p.s.visible = false; return; } p.s.visible = true;
         const e = E.inOut(q), sx = 540, sy = oy, mx = (sx + p.x) / 2 + p.cx, my = (sy + p.y) / 2 + p.cy;
         p.s.position.set((1 - e) * (1 - e) * sx + 2 * (1 - e) * e * mx + e * e * p.x + (q >= 1 ? 1.2 * Math.sin(t * 2 + p.ph) : 0), (1 - e) * (1 - e) * sy + 2 * (1 - e) * e * my + e * e * p.y);
@@ -244,7 +194,7 @@
       const lock = E.smooth(span(t, B.lock - 0.6, B.lock + 0.6)); n1.alpha = n2.alpha = lock; glowN.alpha = 0.5 * lock;
       n1.sweep(t, B.lock + 0.8, 1.8); n2.sweep(t, B.lock + 1.1, 1.9);
       orn.clear(); const ok = E.out3(span(t, B.lock + 0.4, B.lock + 1.6)); if (ok > 0) { orn.moveTo(540 - 120 * ok, 985).lineTo(522, 985).moveTo(558, 985).lineTo(540 + 120 * ok, 985).stroke({ width: 2, color: C.GOLD }); orn.poly([540, 975, 550, 985, 540, 995, 530, 985]).fill(C.GOLD); }
-      C.rise(wit, t, B.lock + 0.8, 1.5); C.rise(wen, t, B.lock + 1.5, 1.3, 12);
+      C.rise(wit, t, B.lock + 0.3, 1.0); C.rise(wen, t, B.lock + 0.7, 1.0, 12);
       s.cam.s = 1 + 0.04 * E.inOut(span(t, B.stars, B.muhurtham + XF));
       C.cam.grain = 0.07;
     };
@@ -390,12 +340,12 @@
       garland.set(t, B.shubham + 0.6, 1.8); C.rise(orn, t, B.shubham + 0.4, 1.5, 12);
       const wk = E.out3(span(t, B.shubham + 0.6, B.shubham + 2.4)); word.alpha = wk; word.scale.set(1.06 - 0.06 * wk); glow.scale.copyFrom(word.scale); glow.alpha = 0.5 * wk;
       word.sweep(t, B.shubham + 2.4, 2.2);
-      inv.forEach((l, i) => C.rise(l, t, B.invite + i * 0.6, 1.4, 12));
-      C.rise(names, t, 115.61, 1.5); nA.sweep(t, 117.0, 1.8); nB.sweep(t, 117.3, 2.0); C.rise(sign, t, B.sign, 1.4, 12); C.rise(date, t, B.sign + 0.8, 1.3, 10);
+      inv.forEach((l, i) => C.rise(l, t, B.invite + i * 0.4, 1.1, 12));
+      C.rise(names, t, B.shubham + 2.9, 1.1); nA.sweep(t, 117.0, 1.8); nB.sweep(t, 117.3, 2.0); C.rise(sign, t, B.sign, 1.0, 12); C.rise(date, t, B.sign + 0.5, 1.0, 10);
       s.cam.s = 1 + 0.03 * E.inOut(span(t, B.shubham, B.end));
       fg(t, 0, -14 * E.inOut(span(t, B.shubham, B.end)), 0.95);
       C.cam.dust = 0.5; C.cam.dustTint = 0xffd27a; C.cam.petals = 0.4; C.cam.grain = 0.09;
-      C.cam.floodColor = 0x000000; C.cam.flood = E.inOut(span(t, B.end - 2.2, B.end));
+      C.cam.floodColor = 0x000000; C.cam.flood = E.inOut(span(t, B.end - 1.3, B.end));
     };
   }, XF));
 })();

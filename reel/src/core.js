@@ -117,6 +117,7 @@
   C.cam = { x: W / 2, y: H / 2, s: 1, r: 0, shake: 0, flood: 0, floodColor: 0xffffff, zoomBlur: 0, zoomCenter: [W / 2, H / 2], shock: null, rgb: 0, grain: 0.16 };
 
   C.renderAt = async function (t) {
+    t += C.OFFSET || 0;   // scenes are written in the song's own time
     const cam = C.cam;
     Object.assign(cam, { x: W / 2, y: H / 2, s: 1, r: 0, shake: 0, flood: 0, floodColor: 0xffffff, zoomBlur: 0, zoomCenter: [W / 2, H / 2], shock: null, rgb: 0, grain: 0.16, floodAdd: false, dust: 0, dustTint: 0xffd58a, petals: 0 });
     if (C.trans) { C.trans.clear(); C.trans.visible = true; }

@@ -6,13 +6,14 @@ from scipy.signal import butter, sosfilt
 
 SR = 48000
 out = sys.argv[1] if len(sys.argv) > 1 else 'out/sound.wav'
-DUR = float(sys.argv[2]) if len(sys.argv) > 2 else 121.5
-raw = subprocess.run(['ffmpeg', '-v', 'error', '-t', str(DUR), '-i', '../audio/dichotomy-of-fame.mp3', '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'],
+DUR = float(sys.argv[2]) if len(sys.argv) > 2 else 74.17
+START = float(sys.argv[3]) if len(sys.argv) > 3 else 35.34
+raw = subprocess.run(['ffmpeg', '-v', 'error', '-ss', str(START), '-t', str(DUR), '-i', '../audio/dichotomy-of-fame.mp3', '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'],
                      capture_output=True, check=True).stdout
 song = np.frombuffer(raw, np.float32).reshape(-1, 2).copy()
 n = int(DUR * SR); song = np.pad(song, ((0, max(0, n - len(song))), (0, 0)))[:n]
 t = np.arange(n) / SR
-song *= (np.clip((DUR - t) / 3.0, 0, 1) ** 1.6)[:, None]
+song *= (np.clip(t / 1.2, 0, 1) * np.clip((DUR - t) / 2.2, 0, 1) ** 1.6)[:, None]
 
 fx = np.zeros((n, 2)); rng = np.random.default_rng(4)
 def low(x, f): return sosfilt(butter(2, f, btype='low', fs=SR, output='sos'), x)
@@ -28,11 +29,12 @@ def swell(length):  # a warm, low bloom for the moment the arch fills with light
     air = low(rng.standard_normal(m), 900) * np.exp(-tt * 2.5) * 0.4
     return (body + air) * np.clip(tt / 0.08, 0, 1)
 
-place(shimmer(3.0, 1318), 3.2, 0.035)     # Ganesha written in light
-place(shimmer(3.2, 1760), 52.66, 0.045)   # two stars become one
-place(shimmer(2.6, 2093), 60.72, 0.035)   # the names settle in gold
-place(swell(3.5), 87.7, 0.16)             # the arch fills with light
-place(shimmer(3.0, 1568), 113.8, 0.03)    # light crosses శుభం
+for song_t, sig, gain in [(37.6, shimmer(2.6, 1318), 0.035),   # Ganesha gathers from gold
+                          (63.4, shimmer(3.0, 1760), 0.045),   # two stars become one
+                          (66.9, shimmer(2.4, 2093), 0.035),   # the names settle in gold
+                          (87.7, swell(3.5), 0.16),            # the arch fills with light
+                          (104.4, shimmer(2.6, 1568), 0.03)]:  # శుభం
+    place(sig, song_t - START, gain)
 
 mix = song + fx
 mix *= min(1.0, 0.89 / np.max(np.abs(mix)))
