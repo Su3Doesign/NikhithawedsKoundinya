@@ -41,17 +41,16 @@
   /* ------------------------------------------------------------ gold foil */
   const goldFill = (y0, y1) => { const g = new PIXI.FillGradient(0, y0, 0, y1);
     [[0, 0xFFF1C1], [0.28, 0xE9BE5C], [0.5, 0xB98328], [0.7, 0xF2CF78], [1, 0x9E6C1E]].forEach(([o, c]) => g.addColorStop(o, c)); return g; };
-  // stamped gold-foil text: a soft cast shadow, a gradient foil face and a light that sweeps across it
+  // Lettering colour by ground: kumkum ink on ivory (as on the website's patrika),
+  // clean champagne gold with a soft halo on red silk and night. No gradients, no sweeps.
+  C.GOLD_TEXT = 0xF2D28C;
   C.foil = function (parent, str, o) {
-    const c = new PIXI.Container(); parent.addChild(c); const size = o.size || 80;
-    const sh = C.text(str, Object.assign({}, o, { fill: o.shadow || 0x2a0805 })); sh.position.set(2, 4); sh.alpha = 0.55; sh.filters = [new PIXI.BlurFilter({ strength: Math.max(2, size / 28), quality: 3 })]; c.addChild(sh);
-    const face = C.text(str, Object.assign({}, o, { fill: goldFill(-size * 0.55, size * 0.6) })); c.addChild(face);
-    const tex = C.app.renderer.generateTexture({ target: face, resolution: 2 }); const m = new PIXI.Sprite(tex);
-    const b = face.getLocalBounds(); m.position.set(b.x, b.y); m.width = b.width; m.height = b.height; c.addChild(m);
-    const sweep = new PIXI.Sprite(C.linear(200, 8, [[0, 'rgba(255,255,255,0)'], [0.5, 'rgba(255,252,236,.95)'], [1, 'rgba(255,255,255,0)']], false));
-    sweep.anchor.set(0.5); sweep.height = b.height * 2.4; sweep.width = Math.max(120, size * 1.6); sweep.rotation = 0.35; sweep.blendMode = 'add'; sweep.mask = m; c.addChild(sweep);
-    c.sweep = (t, t0, dur = 1.8) => { const k = span(t, t0, t0 + dur); sweep.visible = k > 0 && k < 1; sweep.position.set(lerp(b.x - 150, b.x + b.width + 150, E.inOut(k)), b.y + b.height / 2); };
-    c.sweep(-1, 0); return c;
+    const c = new PIXI.Container(); parent.addChild(c);
+    const light = o.on === 'light', fill = o.fill ?? (light ? C.KUM : C.GOLD_TEXT);
+    if (!light && o.glow !== false) { const g = C.text(str, Object.assign({}, o, { fill: 0xffb45a })); g.alpha = 0.35; g.blendMode = 'add'; g.filters = [new PIXI.BlurFilter({ strength: Math.max(4, (o.size || 80) / 9), quality: 3 })]; c.addChild(g); }
+    const face = C.text(str, Object.assign({}, o, { fill })); c.addChild(face);
+    c.sweep = () => {};
+    return c;
   };
 
   /* ------------------------------------------------------------ filigree */

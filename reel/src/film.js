@@ -25,7 +25,7 @@
     const orbit = Array.from({ length: 28 }, (_, i) => { const d = new PIXI.Sprite(C.dotTex()); d.anchor.set(0.5); d.blendMode = 'add'; d.tint = 0xffd27a; root.addChild(d); return { d, a: i / 28 * 6.283, r: 360 + (i % 3) * 26 }; });
     const gc = new PIXI.Container(); root.addChild(gc);
     const gGlow = new PIXI.Sprite(C.A.ganesha), gan = new PIXI.Sprite(C.A.ganesha), gm = new PIXI.Sprite(C.A.ganesha);
-    gGlow.tint = 0xffb84a; gGlow.blendMode = 'add'; gGlow.filters = [new PIXI.BlurFilter({ strength: 26, quality: 4 })]; gan.tint = 0xE2B04A;
+    gGlow.tint = 0xffb84a; gGlow.blendMode = 'add'; gGlow.filters = [new PIXI.BlurFilter({ strength: 26, quality: 4 })]; gan.tint = 0xF0CF86;
     const gk = 580 / gan.texture.height; [gGlow, gan, gm].forEach(g => { g.anchor.set(0.5); g.scale.set(gk); g.position.set(540, 610); gc.addChild(g); });
     const sweep = new PIXI.Sprite(C.linear(200, 8, [[0, 'rgba(255,255,255,0)'], [0.5, 'rgba(255,250,230,.9)'], [1, 'rgba(255,255,255,0)']], false)); sweep.anchor.set(0.5); sweep.width = 220; sweep.height = 1200; sweep.rotation = 0.35; sweep.blendMode = 'add'; sweep.mask = gm; gc.addChild(sweep);
     const wm = C.wipeMask(root, 160, 290, 760, 660); gc.mask = wm.g;
@@ -54,13 +54,12 @@
   SCENES.push(() => C.scene(B.patrika, B.muggu + XF, (root, s) => {
     C.bg(root, C.silkTex());
     const sheen = C.sheen(root, 0.1);
-    const wmark = C.watermark(root, 540, 1000, 420, C.GOLD, 0.13);
     const frame = new PIXI.Sprite(C.A.frame); frame.anchor.set(0.5); const fk = C.fit(frame, 1010, 1520); frame.position.set(540, 960); root.addChild(frame);
     const gan = new PIXI.Sprite(C.A.ganesha); gan.anchor.set(0.5); gan.tint = C.KUM; gan.scale.set(150 / gan.texture.height); gan.position.set(540, 525); root.addChild(gan);
     const au = C.text('శ్రీరస్తు     శుభమస్తు     అవిఘ్నమస్తు', { font: C.TE2, size: 42, fill: C.KUM }); au.position.set(540, 410); root.addChild(au);
     const l1 = C.text('చల్లపల్లి వారి', { font: C.TE, size: 100, fill: C.KUM }); l1.position.set(540, 735); root.addChild(l1);
-    const l2 = C.foil(root, 'పెండ్లి పిలుపు', { font: C.TE, size: 150, shadow: 0x6b3a12 }); l2.position.set(540, 895);
-    const rule = new PIXI.Graphics(); root.addChild(rule); const glint = C.glint(root);
+    const l2 = C.foil(root, 'పెండ్లి పిలుపు', { font: C.TE, size: 150, on: 'light' }); l2.position.set(540, 895);
+    const rule = new PIXI.Graphics(); root.addChild(rule);
     const names = C.namePair(root, 'నిఖిత', 'సాయి కౌండిన్య', { font: C.TE, size: 72, fill: C.INK, gap: 86 }); names.y = 1150;
     const en = C.label('NIKHITHA  ×  SAI KOUNDINYA', { size: 30, fill: C.GOLD_D, ls: 10 }); en.position.set(540, 1252); root.addChild(en);
     const vv = C.text('వివాహ మహోత్సవ శుభ ఆహ్వానము', { font: C.TE2, size: 46, fill: C.INK2 }); vv.position.set(540, 1330); root.addChild(vv);
@@ -71,8 +70,7 @@
       a.position.set(x + (i % 2 ? 22 : -22), y); b.position.set(x + (i % 2 ? -26 : 26), y + 4); return { a, b, i }; });
     const fg = C.foreground(root, [['marigold', -10, 170, 1.4, 0, 16], ['leaf', 90, 60, 1.3, 2.2, 12], ['marigold', 1090, 210, 1.3, 0.5, 18], ['leaf', 1000, 40, 1.2, -2.3, 12]]);
     return (t) => {
-      sheen(t, B.patrika, B.muggu + XF); wmark(t, E.smooth(span(t, B.patrika + 0.5, B.patrika + 3)));
-      glint(t, 250, 830, 1022, B.line2 + 2.4, 2.2); if (t > B.en + 1) glint(t, 250, 830, 1022, B.en + 1.2, 2.2);
+      sheen(t, B.patrika, B.muggu + XF);
       const f = E.out3(span(t, B.patrika, B.patrika + 2.6)); frame.scale.set(fk * (1.05 - 0.05 * f));
       C.rise(gan, t, B.patrika + 0.9, 1.3, 12); C.rise(au, t, B.patrika + 1.3, 1.3, 12);
       C.rise(l1, t, B.line1, 1.4); C.rise(l2, t, B.line2, 1.6, 26); l2.sweep(t, B.line2 + 1.6, 2.0);
@@ -84,7 +82,7 @@
         d.b.alpha = E.smooth(span(t, ta + 0.4, ta + 1.3)); d.b.scale.set(0.38 + 0.04 * E.out3(span(t, ta + 0.4, ta + 1.3))); });
       s.cam.s = 1 + 0.04 * E.inOut(span(t, B.patrika, B.muggu + XF)); s.cam.y = 960 - 20 * E.inOut(span(t, B.patrika, B.muggu));
       fg(t, -18 * E.inOut(span(t, B.patrika, B.muggu)), 0, E.smooth(span(t, B.patrika, B.patrika + 2)));
-      C.cam.petals = 0.75 * E.smooth(span(t, B.line2, B.line2 + 2)); C.cam.dust = 0.18; C.cam.dustTint = 0xffe6b0; C.cam.grain = 0.12;
+      C.cam.petals = 0.4 * E.smooth(span(t, B.line2, B.line2 + 2)); C.cam.dust = 0.18; C.cam.dustTint = 0xffe6b0; C.cam.grain = 0.12;
     };
   }, XF));
 
@@ -118,7 +116,7 @@
     for (let i = 0; i < 8; i++) fills.poly(petal(48, 205, i * 0.7854 - 1.5708, 0.3, 1).flat()).fill(C.TUR);
     fills.circle(0, 0, 26).fill(C.KUM);
     for (let i = 0; i < 16; i++) fills2.poly(petal(250, 342, i * 0.3927 - 1.5708 + 0.196, 0.12, 1).flat()).fill(C.KUM);
-    const welcome = C.foil(root, 'మా ఇంటి ముంగిట మీకు స్వాగతం', { font: C.TE2, size: 74, shadow: 0x2a0602 }); welcome.position.set(540, 285);
+    const welcome = C.foil(root, 'మా ఇంటి ముంగిట మీకు స్వాగతం', { font: C.TE2, size: 74 }); welcome.position.set(540, 285);
     const wen = C.label('WELCOME TO OUR HOME', { size: 26, fill: 0xF6D6A6, ls: 12 }); wen.position.set(540, 372); root.addChild(wen);
     const lamps = [C.diya(root, 150, 1770, 170), C.diya(root, 930, 1770, 170)];
     const pr = rng(66), ptex = [C.petalTex('#ffb23a', '#f07a12', 1), C.petalTex('#e8473a', '#a81e18', 3), C.petalTex('#ffd36a', '#f2a21e', 2)];
@@ -140,48 +138,48 @@
       fg(t, 0, 20 * E.inOut(span(t, B.muggu, B.bride)), 0.9);
       C.cam.dust = 0.45; C.cam.dustTint = 0xffd9a8; C.cam.grain = 0.15;
     };
-  }, XF, 'swipe'));
+  }, XF));
 
   /* ============================================================ 4 · the bride, the groom, and their families */
   SCENES.push(() => C.scene(B.bride, B.stars + XF, (root, s) => {
     C.bg(root, C.silkTex());
-    const sheen = C.sheen(root, 0.08); const wmark = C.watermark(root, 540, 650, 520, C.GOLD, 0.08); const corners = C.corners(root, C.GOLD, 40);
+    const sheen = C.sheen(root, 0.07);
     const LOBES = [[50, 34, 1], [36, 48, 0.85], [64, 46, 0.88], [44, 70, 0.82], [58, 20, 0.8], [52, 90, 0.78], [22, 80, 0.7], [80, 78, 0.7]];
-    const box = { x: 540, y: 650, w: 840, h: 920 };
+    const FX = 160, FY = 190, FW = 760, FH = 840;                       // the frame, shared by both
     const people = [
-      { tex: C.A.bride, ink: 'bride', zoom: 1.28, dy: 0, t0: B.bride, t1: B.groom, role: 'THE BRIDE',
+      { tex: C.A.bride, ink: 'bride', zoom: 1.42, dy: 40, t0: B.bride, t1: B.groom, role: 'THE BRIDE',
         name: 'చి.ల.సౌ. నిఖిత', lines: ['శ్రీ చల్లపల్లి శ్రీధర్ గారు', 'శ్రీమతి వెంకట కృష్ణవేణి గార్ల కుమార్తె'] },
-      { tex: C.A.groom, ink: 'groom', zoom: 1.18, dy: 10, t0: B.groom, t1: B.stars, role: 'THE GROOM',
+      { tex: C.A.groom, ink: 'groom', zoom: 0.98, dy: 0, t0: B.groom, t1: B.stars, role: 'THE GROOM',
         name: 'చి. సాయి కౌండిన్య', lines: ['కొవ్వూరు వాస్తవ్యులు', 'శ్రీ కొక్కిరాల వి.వి. హరిమోహన్ గారు', 'శ్రీమతి శైలజ గార్ల కుమారుడు'] },
     ].map(p => {
       const g = new PIXI.Container(); root.addChild(g); p.g = g;
-      p.pic = C.bloomPortrait(g, p.tex, Object.assign({}, box, { y: box.y + p.dy }), LOBES, p.zoom);
-      const clip = new PIXI.Graphics().rect(124, 194, 832, 912).fill(0xffffff); g.addChild(clip); p.pic.c.mask = clip;
-      p.frame = C.filigree(g, 110, 180, 860, 940, { crest: true });
-      p.sprig = C.sprigs(g, [[118, 1112, -0.5, 'leaf', 0.42, 0], [150, 1100, 0, 'marigold', 0.32, 0.25], [962, 1112, 0.5, 'leaf', 0.42, 0.15], [930, 1100, 0, 'marigold', 0.32, 0.4], [118, 190, -2.6, 'leaf', 0.36, 0.3], [962, 190, 2.6, 'leaf', 0.36, 0.45]]);
-      p.roleT = C.label(p.role, { size: 24, fill: C.GOLD_D, ls: 12 }); p.roleT.position.set(540, 1158); g.addChild(p.roleT);
-      p.ink = C.inkLettering(g, p.ink, 540, 1272, 400);
-      p.nm = C.foil(g, p.name, { font: C.TE, size: 66, shadow: 0x6b3a12 }); p.nm.position.set(540, 1418); p.nmWipe = C.inkWipe(g, p.nm);
-      p.ls = p.lines.map((l, i) => { const x = C.text(l, { font: C.TE2, size: 44, fill: C.INK2 }); x.position.set(540, 1498 + i * 52 - (p.lines.length - 2) * 26); g.addChild(x); return x; });
+      p.pic = C.bloomPortrait(g, p.tex, { x: 540, y: FY + FH / 2 + p.dy, w: FW - 40, h: FH - 40 }, LOBES, p.zoom);
+      p.pic.s.tint = 0xF7EFDF;                                          // the painting's white paper takes the page's tone
+      const clip = new PIXI.Graphics().rect(FX + 8, FY + 8, FW - 16, FH - 16).fill(0xffffff); g.addChild(clip); p.pic.c.mask = clip;
+      p.frame = C.filigree(g, FX, FY, FW, FH, { crest: true });
+      p.roleT = C.label(p.role, { size: 25, fill: C.GOLD_D, ls: 12 }); p.roleT.position.set(540, 1095); g.addChild(p.roleT);
+      p.ink = C.inkLettering(g, p.ink, 540, 1200, 380);
+      p.rule = new PIXI.Graphics().moveTo(450, 1302).lineTo(526, 1302).moveTo(554, 1302).lineTo(630, 1302).stroke({ width: 1.5, color: C.GOLD }).poly([540, 1295, 547, 1302, 540, 1309, 533, 1302]).fill(C.GOLD); g.addChild(p.rule);
+      p.nm = C.text(p.name, { font: C.TE, size: 64, fill: C.KUM }); p.nm.position.set(540, 1370); g.addChild(p.nm);
+      p.ls = p.lines.map((l, i) => { const x = C.text(l, { font: C.TE2, size: 44, fill: 0x4a3a2c }); x.position.set(540, 1446 + i * 54); g.addChild(x); return x; });
       return p;
     });
     s.prep = async (t) => { for (const p of people) if (t >= p.t0 - 0.2 && t < p.t1 + XF) await p.ink.set(span(t, p.t0 + 1.8, p.t0 + 4.6)); };
     return (t) => {
-      sheen(t, B.bride, B.stars); wmark(t); corners(t, span(t, B.bride + 0.5, B.bride + 3));
+      sheen(t, B.bride, B.stars);
       people.forEach((p, i) => {
         const on = t >= p.t0 - 0.1 && t < p.t1 + XF; p.g.visible = on; if (!on) return;
         p.pic.set(E.out3(span(t, p.t0 + 0.2, p.t0 + 2.6))); p.frame.set(span(t, p.t0 + 0.3, p.t0 + 2.8));
         const inK = i ? E.smooth(span(t, p.t0, p.t0 + XF)) : 1, outK = i ? 0 : E.smooth(span(t, p.t1, p.t1 + XF));
         p.g.alpha = inK * (1 - outK);
-        C.rise(p.roleT, t, p.t0 + 1.4, 1.2, 10);
-        p.nmWipe(t, p.t0 + 4.2, 1.6); p.nm.sweep(t, p.t0 + 5.6, 1.8);
-        p.sprig(t, p.t0 + 2.4);
-        p.ls.forEach((l, j) => C.rise(l, t, p.t0 + 4.9 + j * 0.5, 1.3, 12));
+        C.rise(p.roleT, t, p.t0 + 1.2, 1.2, 10); p.rule.alpha = E.smooth(span(t, p.t0 + 4.0, p.t0 + 5.0));
+        C.rise(p.nm, t, p.t0 + 4.3, 1.3, 14);
+        p.ls.forEach((l, j) => C.rise(l, t, p.t0 + 5.0 + j * 0.45, 1.3, 12));
       });
-      s.cam.s = 1 + 0.03 * E.inOut(span(t, B.bride, B.groom)) + 0.03 * E.inOut(span(t, B.groom, B.stars));
-      C.cam.dust = 0.22; C.cam.dustTint = 0xffe2b0; C.cam.grain = 0.1;
+      s.cam.s = 1 + 0.025 * E.inOut(span(t, B.bride, B.groom)) + 0.025 * E.inOut(span(t, B.groom, B.stars));
+      C.cam.dust = 0.18; C.cam.dustTint = 0xffe2b0; C.cam.grain = 0.1;
     };
-  }, XF, 'iris'));
+  }, XF));
 
   /* ============================================================ 5 · written in the stars */
   SCENES.push(() => C.scene(B.stars, B.muhurtham + XF, (root, s) => {
@@ -213,7 +211,7 @@
     });
     const glowN = new PIXI.Container(); root.addChild(glowN);
     [['నిఖిత', 230, 860], ['సాయి కౌండిన్య', 158, 1110]].forEach(([str, size, y]) => { const g = C.text(str, { font: C.TE, size, fill: 0xffb547 }); g.position.set(540, y); g.blendMode = 'add'; g.filters = [new PIXI.BlurFilter({ strength: 16, quality: 3 })]; glowN.addChild(g); });
-    const n1 = C.foil(root, 'నిఖిత', { font: C.TE, size: 230, shadow: 0x000000 }), n2 = C.foil(root, 'సాయి కౌండిన్య', { font: C.TE, size: 158, shadow: 0x000000 });
+    const n1 = C.foil(root, 'నిఖిత', { font: C.TE, size: 230, glow: false }), n2 = C.foil(root, 'సాయి కౌండిన్య', { font: C.TE, size: 158, glow: false });
     n1.position.set(540, 860); n2.position.set(540, 1110);
     const orn = new PIXI.Graphics(); root.addChild(orn);
     const wit = C.text('అరుంధతి నక్షత్రం సాక్షిగా', { font: C.TE2, size: 70, fill: C.CREAM }); wit.position.set(540, 1340); root.addChild(wit);
@@ -254,40 +252,33 @@
 
   /* ============================================================ 6 · the muhurtham and the venue */
   SCENES.push(() => C.scene(B.muhurtham, B.hush + XF, (root, s) => {
-    C.bg(root, RED()); const sheen = C.sheen(root, 0.12);
-    const frame = C.filigree(root, 70, 190, 940, 1420, { crest: true });
-    const head = C.foil(root, 'సుముహూర్తం', { font: C.TE, size: 128 }); head.position.set(540, 335);
-    const hen = C.label('THE MUHURTHAM', { size: 27, fill: C.GOLD_HI, ls: 14 }); hen.position.set(540, 432); root.addChild(hen);
-    const day = C.text('ఆదివారం  ·  13 డిసెంబర్ 2026', { font: C.TE, size: 60, fill: C.CREAM }); day.position.set(540, 565); root.addChild(day);
-    const den = C.label('SUNDAY · 13 DECEMBER 2026', { size: 27, fill: 0xF3D9A6, ls: 9 }); den.position.set(540, 642); root.addChild(den);
-    const astro = new PIXI.Graphics(); astro.position.set(540, 800); root.addChild(astro);
-    for (let i = 0; i < 120; i++) { const a = i / 120 * 6.283, r0 = i % 10 === 0 ? 268 : 280; astro.moveTo(Math.cos(a) * r0, Math.sin(a) * r0).lineTo(Math.cos(a) * 292, Math.sin(a) * 292); }
-    astro.stroke({ width: 1.4, color: C.GOLD_HI, alpha: 0.55 }); astro.circle(0, 0, 300).stroke({ width: 2, color: C.GOLD, alpha: 0.6 }); astro.circle(0, 0, 256).stroke({ width: 1, color: C.GOLD, alpha: 0.45 });
-    for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283; astro.circle(Math.cos(a) * 316, Math.sin(a) * 316, 5).fill({ color: C.GOLD_HI, alpha: 0.7 }); }
-    const clock = new PIXI.Container(); clock.position.set(540, 800); root.addChild(clock);
-    ['8:19', '8:20', '8:21', '8:22'].forEach((str, i) => { const x = C.foil(clock, str, { font: C.EN, size: 220, weight: '400', ls: 6 }); x.y = i * 230; });
-    const cm = new PIXI.Graphics().rect(140, 680, 800, 240).fill(0xffffff); root.addChild(cm); clock.mask = cm;
-    const pm = C.label('PM  ·  రాత్రి', { size: 30, fill: C.GOLD_HI, ls: 10 }); pm.position.set(540, 948); root.addChild(pm);
-    const pin = new PIXI.Graphics().circle(0, -10, 18).fill(C.GOLD_HI).poly([-16, -2, 16, -2, 0, 28]).fill(C.GOLD_HI).circle(0, -10, 7).fill(0x8a1912); pin.position.set(540, 1102); root.addChild(pin);
-    const v1 = C.text('శ్రీ కొత్తపల్లి శ్రీరాములు కనకమ్మ\nలయన్స్ A/C కళ్యాణమండపం', { font: C.TE2, size: 56, fill: C.CREAM, lh: 76 }); v1.position.set(540, 1245); root.addChild(v1);
-    const v2 = C.text('Sri Kothapalli Sriramulu Kanakamma\nLions A/C Kalyana Mandapam', { font: C.EN, size: 32, fill: 0xF3D9A6, weight: '400', lh: 46, ls: 1 }); v2.position.set(540, 1405); root.addChild(v2);
-    const v3 = C.label('R.T.C COMPLEX ROAD · NIDADAVOLU 534301', { size: 25, fill: C.GOLD_HI, ls: 6 }); v3.position.set(540, 1495); root.addChild(v3);
+    C.bg(root, RED()); const sheen = C.sheen(root, 0.1);
+    const frame = C.filigree(root, 80, 200, 920, 1380, { crest: true });
+    const div = (y) => { const g = new PIXI.Graphics().moveTo(400, y).lineTo(526, y).moveTo(554, y).lineTo(680, y).stroke({ width: 1.5, color: C.GOLD_HI, alpha: 0.85 }).poly([540, y - 8, 548, y, 540, y + 8, 532, y]).fill(C.GOLD_HI); root.addChild(g); return g; };
+    const head = C.foil(root, 'సుముహూర్తం', { font: C.TE, size: 124 }); head.position.set(540, 345);
+    const hen = C.label('THE MUHURTHAM', { size: 26, fill: C.GOLD_TEXT, ls: 14 }); hen.position.set(540, 440); root.addChild(hen);
+    const d1 = div(505);
+    const dayTe = C.text('ఆదివారం, 13 డిసెంబర్ 2026', { font: C.TE2, size: 60, fill: 0xFBEFD8 }); dayTe.position.set(540, 590); root.addChild(dayTe);
+    const dayEn = C.label('SUNDAY · 13 DECEMBER 2026', { size: 26, fill: C.GOLD_TEXT, ls: 9 }); dayEn.position.set(540, 665); root.addChild(dayEn);
+    const time = C.foil(root, '8:22', { font: C.EN, size: 210, weight: '300', ls: 4 }); time.position.set(540, 830);
+    const timeTe = C.text('రాత్రి 8:22 గంటలకు', { font: C.TE2, size: 50, fill: 0xFBEFD8 }); timeTe.position.set(540, 985); root.addChild(timeTe);
+    const d2 = div(1065);
+    const pin = new PIXI.Graphics().circle(0, -10, 16).fill(C.GOLD_TEXT).poly([-14, -2, 14, -2, 0, 24]).fill(C.GOLD_TEXT).circle(0, -10, 6).fill(0x8a1912); pin.position.set(540, 1135); root.addChild(pin);
+    const v1 = C.text('శ్రీ కొత్తపల్లి శ్రీరాములు కనకమ్మ\nలయన్స్ A/C కళ్యాణమండపం', { font: C.TE2, size: 54, fill: 0xFBEFD8, lh: 74 }); v1.position.set(540, 1255); root.addChild(v1);
+    const v2 = C.text('Sri Kothapalli Sriramulu Kanakamma\nLions A/C Kalyana Mandapam', { font: C.EN, size: 31, fill: C.GOLD_TEXT, weight: '400', lh: 44 }); v2.position.set(540, 1410); root.addChild(v2);
+    const v3 = C.label('R.T.C COMPLEX ROAD · NIDADAVOLU 534301', { size: 24, fill: C.GOLD_TEXT, ls: 6 }); v3.position.set(540, 1497); root.addChild(v3);
     const fg = C.foreground(root, [['marigold', -30, 1880, 1.4, 0, 16], ['leaf', 70, 1960, 1.3, 0.4, 12], ['marigold', 1100, 1850, 1.3, 0.4, 18], ['leaf', 1020, 1960, 1.2, -0.5, 12]]);
     return (t) => {
       sheen(t, B.muhurtham, B.hush + XF); frame.set(span(t, B.muhurtham + 0.3, B.muhurtham + 3.2));
-      C.rise(head, t, B.muhurtham + 0.6, 1.5); head.sweep(t, B.muhurtham + 2.2, 2.0); C.rise(hen, t, B.muhurtham + 1.3, 1.3, 12);
-      C.rise(day, t, B.day, 1.4); C.rise(den, t, B.day + 0.6, 1.3, 12);
-      let k = 0; for (let i = 0; i < 3; i++) k += E.inOut(span(t, B.time + 0.7 + i * 1.0, B.time + 1.45 + i * 1.0));
-      clock.alpha = E.smooth(span(t, B.time, B.time + 0.9)); clock.y = 800 - k * 230;
-      astro.alpha = E.smooth(span(t, B.time - 0.6, B.time + 1.2)); astro.rotation = -0.25 * E.inOut(span(t, B.time, B.time + 4)) + 0.01 * (t - B.time); astro.scale.set(0.94 + 0.06 * astro.alpha);
-      clock.children[3].sweep(t, B.time + 3.9, 1.8);
-      C.rise(pm, t, B.time + 3.5, 1.1, 10);
+      C.rise(head, t, B.muhurtham + 0.6, 1.5); C.rise(hen, t, B.muhurtham + 1.3, 1.3, 12); d1.alpha = E.smooth(span(t, B.muhurtham + 1.8, B.muhurtham + 2.8));
+      C.rise(dayTe, t, B.day, 1.4); C.rise(dayEn, t, B.day + 0.6, 1.3, 12);
+      C.rise(time, t, B.time, 1.8, 30); C.rise(timeTe, t, B.time + 1.4, 1.4, 12); d2.alpha = E.smooth(span(t, B.time + 2.6, B.time + 3.6));
       C.rise(pin, t, B.venue, 1.1, 14); C.rise(v1, t, B.venue + 0.4, 1.5); C.rise(v2, t, B.venue + 1.3, 1.4, 14); C.rise(v3, t, B.venue + 2.0, 1.3, 10);
-      s.cam.s = 1 + 0.03 * E.inOut(span(t, B.muhurtham, B.hush + XF));
+      s.cam.s = 1 + 0.025 * E.inOut(span(t, B.muhurtham, B.hush + XF));
       fg(t, 0, -20 * E.inOut(span(t, B.muhurtham, B.hush)), 0.95);
-      C.cam.dust = 0.4; C.cam.dustTint = 0xffd27a; C.cam.grain = 0.09;
+      C.cam.dust = 0.35; C.cam.dustTint = 0xffd27a; C.cam.grain = 0.09;
     };
-  }, XF, 'iris'));
+  }, XF));
 
   /* ============================================================ 7–8 · the hush, then the moment */
   SCENES.push(() => C.scene(B.hush, B.events + XF, (root, s) => {
@@ -315,7 +306,7 @@
     const hushRice = []; for (let i = 0; i < 80; i++) { const sp = new PIXI.Sprite(C.riceTex()); sp.anchor.set(0.5); rl.addChild(sp); hushRice.push({ s: sp, x: r() * W, y0: H * (0.3 + r()), v: 30 + r() * 60, ph: r() * 6, sz: 0.4 + r() * 0.5 }); }
     const archLamps = [C.diya(root, 95, 1400, 150), C.diya(root, 985, 1400, 150)];
     const garland = C.toranam(root, 70, 9);
-    const tal = C.foil(root, 'తలంబ్రాలు', { font: C.TE2, size: 62 }); tal.position.set(540, 300);
+    const tal = C.foil(root, 'తలంబ్రాలు', { font: C.TE2, size: 62 }); tal.position.set(540, 395);
     const names = new PIXI.Container(); root.addChild(names);
     const nA = C.foil(names, 'నిఖిత', { font: C.TE, size: 82 }), nB = C.foil(names, 'సాయి కౌండిన్య', { font: C.TE, size: 82 });
     const wA = nA.getLocalBounds().width, wB = nB.getLocalBounds().width, gap = 100, x0 = 540 - (wA + gap + wB) / 2; nA.x = x0 + wA / 2; nB.x = x0 + wA + gap + wB / 2;
@@ -377,12 +368,12 @@
       s.cam.s = 1 + 0.025 * E.inOut(span(t, B.events, B.shubham + XF));
       C.cam.petals = 0.3; C.cam.dust = 0.15; C.cam.dustTint = 0xffe6b0; C.cam.grain = 0.12;
     };
-  }, XF, 'swipe'));
+  }, XF));
 
   /* ============================================================ 10 · శుభం, and the family's invitation */
   SCENES.push(() => C.scene(B.shubham, B.end + 0.1, (root, s) => {
     C.bg(root, RED()); const sheen = C.sheen(root, 0.13);
-    const rays = C.rays(root, 540, 650, 0xffd08a, 2.4); const wmark = C.watermark(root, 540, 660, 460, C.GOLD_HI, 0.14);
+    const rays = C.rays(root, 540, 650, 0xffd08a, 2.4); const wmark = C.watermark(root, 540, 660, 460, C.GOLD_HI, 0.07);
     const garland = C.toranam(root, 60, 13);
     const orn = new PIXI.Sprite(C.A.ornament); orn.anchor.set(0.5); orn.tint = C.GOLD_HI; orn.scale.set(600 / orn.texture.width); orn.position.set(540, 395); root.addChild(orn);
     const glow = C.text('శుభం', { font: C.TE, size: 310, fill: 0xffa53a }); glow.position.set(540, 660); glow.blendMode = 'add'; glow.filters = [new PIXI.BlurFilter({ strength: 26, quality: 3 })]; root.addChild(glow);
@@ -409,5 +400,5 @@
       C.cam.dust = 0.5; C.cam.dustTint = 0xffd27a; C.cam.petals = 0.4; C.cam.grain = 0.09;
       C.cam.floodColor = 0x000000; C.cam.flood = E.inOut(span(t, B.end - 2.2, B.end));
     };
-  }, XF, 'iris'));
+  }, XF));
 })();
