@@ -75,9 +75,11 @@
 
   /* ------------------------------------------------------------ stage */
   C.scenes = [];
-  C.scene = (t0, t1, build) => {
+  // A scene is visible from t0 to t1 and dissolves in over `fade` seconds, on top
+  // of the scene before it. It moves its own camera by writing s.cam.
+  C.scene = (t0, t1, build, fade = 0) => {
     const root = new PIXI.Container(); root.visible = false;
-    const s = { t0, t1, root, update: null };
+    const s = { t0, t1, fade, root, update: null, prep: null, cam: null };
     s.update = build(root, s) || (() => {});
     C.scenes.push(s); C.world.addChild(root);
     return s;
@@ -113,14 +115,20 @@
   // per-frame camera state that scenes may write
   C.cam = { x: W / 2, y: H / 2, s: 1, r: 0, shake: 0, flood: 0, floodColor: 0xffffff, zoomBlur: 0, zoomCenter: [W / 2, H / 2], shock: null, rgb: 0, grain: 0.16 };
 
-  C.renderAt = function (t) {
+  C.renderAt = async function (t) {
     const cam = C.cam;
-    Object.assign(cam, { x: W / 2, y: H / 2, s: 1, r: 0, shake: 0, flood: 0, floodColor: 0xffffff, zoomBlur: 0, zoomCenter: [W / 2, H / 2], shock: null, rgb: 0, grain: 0.16, floodAdd: false });
+    Object.assign(cam, { x: W / 2, y: H / 2, s: 1, r: 0, shake: 0, flood: 0, floodColor: 0xffffff, zoomBlur: 0, zoomCenter: [W / 2, H / 2], shock: null, rgb: 0, grain: 0.16, floodAdd: false, dust: 0, dustTint: 0xffd58a, petals: 0 });
     for (const s of C.scenes) {
       const on = t >= s.t0 && t < s.t1;
       s.root.visible = on;
-      if (on) s.update(t, t - s.t0);
+      if (!on) continue;
+      if (s.prep) await s.prep(t);
+      s.cam = { x: W / 2, y: H / 2, s: 1, r: 0 };
+      s.update(t, t - s.t0);
+      s.root.alpha = s.fade ? E.smooth(span(t, s.t0, s.t0 + s.fade)) : 1;
+      s.root.pivot.set(s.cam.x, s.cam.y); s.root.position.set(W / 2, H / 2); s.root.scale.set(s.cam.s); s.root.rotation = s.cam.r;
     }
+    if (C.layers) C.layers(t);
     // camera: scale and rotate about (cam.x, cam.y), plus seeded shake
     const sx = cam.shake * noise1(t * 38, 1) * 26, sy = cam.shake * noise1(t * 41, 2) * 26;
     C.camera.pivot.set(cam.x, cam.y);
