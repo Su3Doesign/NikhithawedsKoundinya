@@ -244,9 +244,11 @@
     var view = BOOK ? BOOK.viewport() : { height: window.innerHeight, width: window.innerWidth };
     vh = view.height; vw = view.width;
     root.style.setProperty('--vh', (vh * 0.01) + 'px');
-    scenes.forEach(function (s) {
-      var sceneHeight = BOOK ? BOOK.viewport(s.el.id).height : vh;
-      if (MOTION) { s.el.style.height = Math.round((BOOK ? 1 : s.len) * sceneHeight) + 'px'; s.stage.style.height = sceneHeight + 'px'; }
+    // Read every scene's page size first, then set the heights: alternating a
+    // read and a write would lay the whole book out again for every scene.
+    var heights = scenes.map(function (s) { return BOOK ? BOOK.viewport(s.el.id).height : vh; });
+    scenes.forEach(function (s, i) {
+      if (MOTION) { s.el.style.height = Math.round((BOOK ? 1 : s.len) * heights[i]) + 'px'; s.stage.style.height = heights[i] + 'px'; }
     });
     scenes.forEach(function (s) { if (s.h.resize) safe(s.h.resize); });
     docH = Math.max(doc.body.scrollHeight, root.scrollHeight);

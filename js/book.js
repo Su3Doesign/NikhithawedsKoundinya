@@ -105,46 +105,74 @@
     for (var i = 0; i < pages.length; i++) if (pages[i].chapter[0] === id) return i;
     return -1;
   }
-  function fitPages() {
-    if (!renderer) return;
-    if (busy) { pendingReflow = true; return; }
-    pendingReflow = false;
-    root.classList.add('book-measuring');
-    pages.forEach(function (p) {
-      if (!p.fit) return;
-      var width = p.content.clientWidth, height = p.content.clientHeight;
-      if (!width || !height) return;
-      // Reflow at the complete paper width, even when a short screen needs smaller
-      // type. Scaling a fixed-width card used to leave large empty side margins.
-      // Nodes stay in their section: one leaf, no duplicated or hidden wording.
-      p.fit.style.width = width + 'px'; p.fit.style.height = 'auto';
-      p.section.style.transform = 'none'; p.section.style.position = 'relative';
-      p.section.style.height = 'auto'; p.section.style.minHeight = '0';
-      function measuredHeight(scale) {
-        p.section.style.width = (width / scale) + 'px';
-        return p.section.offsetHeight * scale;
-      }
-      var available = height - 2, scale = 1;
-      if (measuredHeight(1) > available) {
+  // Fitting measures a page by laying it out repeatedly, which is slow on a modest
+  // phone. The page being read and its neighbours are fitted at once; the rest
+  // follow one page per task so no single pause is long. Each page remembers its
+  // last scale, so a refit after fonts load or a resize needs two or three
+  // measurements instead of fourteen when the scale has not moved.
+  var fitQueue = [], fitTimer = null;
+  function fitOne(p) {
+    if (!p || !p.fit) return;
+    var width = p.content.clientWidth, height = p.content.clientHeight;
+    if (!width || !height) return;
+    p.section.classList.add('book-measuring');
+    // Reflow at the complete paper width, even when a short screen needs smaller
+    // type. Scaling a fixed-width card used to leave large empty side margins.
+    // Nodes stay in their section: one leaf, no duplicated or hidden wording.
+    p.fit.style.width = width + 'px'; p.fit.style.height = 'auto';
+    p.section.style.transform = 'none'; p.section.style.position = 'relative';
+    p.section.style.height = 'auto'; p.section.style.minHeight = '0';
+    function measuredHeight(scale) {
+      p.section.style.width = (width / scale) + 'px';
+      return p.section.offsetHeight * scale;
+    }
+    var available = height - 2, scale = 1, step = 0.9 / 4096, known = p.fitScale;
+    if (measuredHeight(1) > available) {
+      if (known && known < 1 && measuredHeight(known) <= available && measuredHeight(known + step) > available) {
+        scale = known;
+      } else {
         var low = 0.1, high = 1;
-        for (var step = 0; step < 12; step++) {
+        for (var i = 0; i < 12; i++) {
           var candidate = (low + high) / 2;
           if (measuredHeight(candidate) <= available) low = candidate;
           else high = candidate;
         }
         scale = low;
       }
-      var fittedHeight = measuredHeight(scale);
-      if (p.chapter[0] === 'letter' || p.chapter[0] === 'letter-en') {
-        fittedHeight = available;
-        p.section.style.height = (available / scale) + 'px';
-      }
-      p.fit.style.height = fittedHeight + 'px';
-      p.section.style.position = 'absolute'; p.section.style.transform = 'scale(' + scale + ')';
-      p.leaf.setAttribute('data-fit-scale', scale.toFixed(3));
-    });
-    root.classList.remove('book-measuring');
+    }
+    p.fitScale = scale;
+    var fittedHeight = measuredHeight(scale);
+    if (p.chapter[0] === 'letter' || p.chapter[0] === 'letter-en') {
+      fittedHeight = available;
+      p.section.style.height = (available / scale) + 'px';
+    }
+    p.fit.style.height = fittedHeight + 'px';
+    p.section.style.position = 'absolute'; p.section.style.transform = 'scale(' + scale + ')';
+    p.leaf.setAttribute('data-fit-scale', scale.toFixed(3));
+    p.section.classList.remove('book-measuring');
+  }
+  function fitNow(i) {
+    var p = pages[i], at = fitQueue.indexOf(p);
+    if (at >= 0) { fitQueue.splice(at, 1); fitOne(p); return true; }
+    return false;
+  }
+  function drainFits() {
+    clearTimeout(fitTimer);
+    fitTimer = setTimeout(function () {
+      if (busy) { pendingReflow = true; return; }
+      fitOne(fitQueue.shift());
+      if (fitQueue.length) drainFits();
+      else if (layout) layout();
+    }, 0);
+  }
+  function fitPages() {
+    if (!renderer) return;
+    if (busy) { pendingReflow = true; return; }
+    pendingReflow = false;
+    fitQueue = pages.slice();
+    [index, index + 1, index - 1].forEach(fitNow);
     if (layout) layout();
+    if (fitQueue.length) drainFits();
   }
   function scheduleReflow() {
     clearTimeout(reflowTimer);
@@ -220,6 +248,8 @@
   }
   function activate(i, announce) {
     index = i; elapsed = 0; readElapsed = 0; last = null; pausedEffects = false; finished = false;
+    // a page still waiting in the fitting queue is fitted before it is shown
+    [index, index + 1, index - 1].forEach(fitNow);
     var p = pages[index];
     if (renderer) renderer(p.chapter[0], reduced.matches ? 1 : 0);
     if (layout) layout();

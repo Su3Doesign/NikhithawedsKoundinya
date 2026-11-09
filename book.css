@@ -2,7 +2,13 @@
 .book-mode { --book-width:min(46vw,560px); --book-height:calc(100dvh - 132px); --book-x:25vw; --book-top:52px; background:#88572e; }
 .book-mode body { height:100vh; height:100dvh; overflow:hidden; background:#88572e; }
 .book-set { position:fixed; inset:0; overflow:hidden; background:#ad7947 url("img/pooja-overhead.jpg") right center / cover no-repeat;
-  background-image:image-set(url("img/pooja-overhead.webp") type("image/webp"),url("img/pooja-overhead.jpg") type("image/jpeg")); }
+  background-image:image-set(url("img/pooja-overhead.avif") type("image/avif"),url("img/pooja-overhead.webp") type("image/webp"),url("img/pooja-overhead.jpg") type("image/jpeg")); }
+/* Upright screens only ever show the right half of the photograph (cover, anchored right).
+   That half alone draws the same pixels at a third of the download. */
+@media (max-aspect-ratio:3/4) {
+  .book-set { background-image:url("img/pooja-overhead-portrait.jpg");
+    background-image:image-set(url("img/pooja-overhead-portrait.avif") type("image/avif"),url("img/pooja-overhead-portrait.webp") type("image/webp"),url("img/pooja-overhead-portrait.jpg") type("image/jpeg")); }
+}
 .pooja-surround { position:absolute; inset:0; pointer-events:none; }
 .desk-heading { position:absolute; z-index:2; left:32px; top:22px; display:flex; align-items:center; gap:16px; color:#f3dfbb; }
 .desk-monogram { font:400 26px/1 Georgia,serif; letter-spacing:.08em; }
@@ -291,7 +297,7 @@
 .book-leaf[data-chapter="letter"] .leaf-front::after,
 .book-leaf[data-chapter="letter-en"] .leaf-front::after { content:none; }
 .book-mode .hero,.book-mode .patrika { --frame-top:42px; --frame-side:16px; --frame-bottom:12px; }
-.book-mode .hero::before { content:""; position:absolute; inset:0; pointer-events:none; border:0 solid transparent; border-image-source:url("img/patrika-frame-clear.png"); border-image-source:image-set(url("img/patrika-frame-clear.webp") type("image/webp"),url("img/patrika-frame-clear.png") type("image/png")); border-image-slice:230 85 65 85; border-image-width:var(--frame-top) var(--frame-side) var(--frame-bottom); border-image-repeat:stretch; }
+.book-mode .hero::before { content:""; position:absolute; inset:0; pointer-events:none; border:0 solid transparent; border-image-source:url("img/patrika-frame-clear.png"); border-image-source:image-set(url("img/patrika-frame-clear.avif") type("image/avif"),url("img/patrika-frame-clear.webp") type("image/webp"),url("img/patrika-frame-clear.png") type("image/png")); border-image-slice:230 85 65 85; border-image-width:var(--frame-top) var(--frame-side) var(--frame-bottom); border-image-repeat:stretch; }
 .book-mode .hero-in { position:relative; height:100%; padding:54px 26px 24px; }
 .book-mode .cover-family span { font-size:clamp(24px,4.5cqh,34px); }
 .book-mode .cover-family strong { font-size:clamp(38px,7.5cqh,58px); line-height:1.2; }

@@ -432,7 +432,7 @@ a{ color:inherit; }
 .cover-family,.cover-names,.head .te,.patrika-masthead h2,.patrika-person h3,
 .star-name-bride,.star-name-groom,.end-names { font-family:var(--te-display); font-weight:400; }
 .patrika { --frame-top:42px; --frame-side:16px; --frame-bottom:12px; position:relative; color:#49502c; background:#f6e8c8; padding:54px 0 26px; }
-.patrika::before { content:""; position:absolute; z-index:0; inset:0; pointer-events:none; border:0 solid transparent; border-image-source:url("img/patrika-frame-clear.png"); border-image-source:image-set(url("img/patrika-frame-clear.webp") type("image/webp"),url("img/patrika-frame-clear.png") type("image/png")); border-image-slice:230 85 65 85; border-image-width:var(--frame-top) var(--frame-side) var(--frame-bottom); border-image-repeat:stretch; }
+.patrika::before { content:""; position:absolute; z-index:0; inset:0; pointer-events:none; border:0 solid transparent; border-image-source:url("img/patrika-frame-clear.png"); border-image-source:image-set(url("img/patrika-frame-clear.avif") type("image/avif"),url("img/patrika-frame-clear.webp") type("image/webp"),url("img/patrika-frame-clear.png") type("image/png")); border-image-slice:230 85 65 85; border-image-width:var(--frame-top) var(--frame-side) var(--frame-bottom); border-image-repeat:stretch; }
 .patrika .wrap { position:relative; z-index:1; padding:0 28px; max-width:720px; }
 .patrika-masthead { border:0; padding-bottom:4px; margin-bottom:9px; }
 .patrika-auspicious { display:flex; justify-content:space-between; gap:8px; font-size:11px; color:#876c3e; }
