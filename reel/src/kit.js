@@ -104,10 +104,10 @@
   };
 
   /* ------------------------------------------------------------ rice, petals, toranam */
-  C.riceTex = () => C._rice || (C._rice = C.canvasTex(24, 56, (x, w, h) => {
-    const g = x.createLinearGradient(0, 0, w, 0); g.addColorStop(0, '#c98a12'); g.addColorStop(0.45, '#ffd76a'); g.addColorStop(1, '#d99a1e');
-    x.fillStyle = g; x.beginPath(); x.ellipse(w / 2, h / 2, w / 2 - 1, h / 2 - 1, 0, 0, 6.283); x.fill();
-    x.fillStyle = 'rgba(255,255,240,.55)'; x.beginPath(); x.ellipse(w * 0.4, h * 0.38, 3, 10, 0, 0, 6.283); x.fill();
+  // a single grain of akshinthalu: small, pale turmeric, with a faint sheen
+  C.riceTex = () => C._rice || (C._rice = C.canvasTex(20, 44, (x, w, h) => {
+    const g = x.createLinearGradient(0, 0, w, 0); g.addColorStop(0, '#e9b34a'); g.addColorStop(0.5, '#fbe3a0'); g.addColorStop(1, '#e2a83c');
+    x.fillStyle = g; x.beginPath(); x.ellipse(w / 2, h / 2, w / 2 - 1.5, h / 2 - 1.5, 0, 0, 6.283); x.fill();
   }));
   C.petalTex = (c1, c2, seed) => C.canvasTex(60, 90, (x, w, h) => {
     const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, c1); g.addColorStop(1, c2); x.fillStyle = g;

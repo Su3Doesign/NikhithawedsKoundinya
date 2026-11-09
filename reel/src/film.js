@@ -301,9 +301,9 @@
       for (let i = 0; i <= 40; i++) { const a = Math.PI + i / 40 * Math.PI; pts.push([Math.cos(a) * w, top + w + Math.sin(a) * w]); } pts.push([w, bot], [-w, bot]); return pts; };
     const outer = archPts(-10), inner = archPts(-24);
     const r = rng(101), rice = [], rl = new PIXI.Container(); root.addChild(rl);
-    [B.drop, B.toss2, B.toss3].forEach((t0) => { for (let i = 0; i < 150; i++) { const sp = new PIXI.Sprite(C.riceTex()); sp.anchor.set(0.5); rl.addChild(sp);
-      const a = -Math.PI / 2 + (r() - 0.5) * 1.9, v = 700 + r() * 900; rice.push({ s: sp, t0: t0 + r() * 0.35, x0: 540 + (r() - 0.5) * 760, y0: 1980 + r() * 120, vx: Math.cos(a) * v, vy: Math.sin(a) * v, sp: (r() - 0.5) * 6, ph: r() * 6, sz: 0.55 + r() * 0.7 }); } });
-    const hushRice = []; for (let i = 0; i < 80; i++) { const sp = new PIXI.Sprite(C.riceTex()); sp.anchor.set(0.5); rl.addChild(sp); hushRice.push({ s: sp, x: r() * W, y0: H * (0.3 + r()), v: 30 + r() * 60, ph: r() * 6, sz: 0.4 + r() * 0.5 }); }
+    [B.drop, B.toss2, B.toss3].forEach((t0) => { for (let i = 0; i < 40; i++) { const sp = new PIXI.Sprite(C.riceTex()); sp.anchor.set(0.5); rl.addChild(sp);
+      const a = -Math.PI / 2 + (r() - 0.5) * 1.9, v = 700 + r() * 900; rice.push({ s: sp, t0: t0 + r() * 0.35, x0: 540 + (r() - 0.5) * 760, y0: 1980 + r() * 120, vx: Math.cos(a) * v, vy: Math.sin(a) * v, sp: (r() - 0.5) * 6, ph: r() * 6, sz: 0.2 + r() * 0.14 }); } });
+    const hushRice = []; for (let i = 0; i < 26; i++) { const sp = new PIXI.Sprite(C.riceTex()); sp.anchor.set(0.5); rl.addChild(sp); hushRice.push({ s: sp, x: r() * W, y0: H * (0.3 + r()), v: 30 + r() * 60, ph: r() * 6, sz: 0.2 + r() * 0.12 }); }
     const garland = C.toranam(root, 70, 9);
     const tal = C.foil(root, 'తలంబ్రాలు', { font: C.TE2, size: 62 }); tal.position.set(540, 395);
     const names = new PIXI.Container(); root.addChild(names);
