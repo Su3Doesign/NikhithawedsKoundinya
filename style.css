@@ -422,8 +422,8 @@ a{ color:inherit; }
 .cover-family strong { display:block; font-size:52px; font-weight:600; }
 .cover-names { font-size:35px; line-height:1.3; color:#49321f; }
 .cover-union { display:block; font-size:22px; color:var(--gold); margin:8px 0; }
-.hero-sub.te { font-size:18px; color:var(--leaf); }
-.hero-date.te { font-size:17px; letter-spacing:0; }
+.hero-sub.te { font-size:24px; color:var(--leaf); }
+.hero-date.te { font-size:23px; letter-spacing:0; }
 .sc-couple .stage { flex-direction:column; }
 .portrait-heading { flex:none; }
 .portrait-sequence { width:min(88%,600px); }

@@ -240,7 +240,7 @@
   .book-mode .om { grid-column:1; grid-row:3; margin:0; font-size:11px; }
   .book-mode .cover-family { grid-column:1; grid-row:4/6; margin:0; }.book-mode .cover-family span { font-size:16px; }.book-mode .cover-family strong { font-size:25px; }
   .book-mode .cover-names { grid-column:2; grid-row:2/6; margin:0; font-size:23px; }.book-mode .cover-union { font-size:15px; margin:0; }
-  .book-mode .hero-sub.te { grid-column:1/-1; margin:3px 0 0; font-size:12px; }.book-mode .hero-date.te { grid-column:1/-1; margin:0; font-size:12px; }
+  .book-mode .hero-sub.te { grid-column:1/-1; margin:3px 0 0; font-size:15px; }.book-mode .hero-date.te { grid-column:1/-1; margin:0; font-size:15px; }
   .book-mode .head { margin-bottom:8px; }.book-mode .head .te { font-size:23px; }.book-mode .head .lab { font-size:8px; }
   .book-mode .patrika-masthead h2 { font-size:22px; line-height:1.2; }
   .book-mode .patrika-masthead h2 span span { display:inline; font-size:17px; margin-right:7px; }
@@ -286,8 +286,8 @@
   .book-mode .cover-family strong { font-size:30px; }
   .book-mode .cover-names { margin-top:12px; font-size:23px; }
   .book-mode .cover-union { font-size:17px; margin:1px 0; }
-  .book-mode .hero-sub.te { font-size:12px; margin-top:12px; }
-  .book-mode .hero-date.te { font-size:12px; margin-top:8px; }
+  .book-mode .hero-sub.te { font-size:15px; margin-top:12px; }
+  .book-mode .hero-date.te { font-size:15px; margin-top:8px; }
 }
 @media (prefers-reduced-motion:reduce) {
   .book-mode .sc-tal,.book-mode .sc-tal .stage { height:auto; }
@@ -312,8 +312,8 @@
 .book-mode .cover-family span { font-size:clamp(24px,4.5cqh,34px); }
 .book-mode .cover-family strong { font-size:clamp(38px,7.5cqh,58px); line-height:1.2; }
 .book-mode .cover-names { font-size:clamp(29px,5.5cqh,42px); line-height:1.25; }
-.book-mode .hero-sub.te { line-height:1.8; font-size:clamp(12px,2cqh,15px); }
-.book-mode .hero-date.te { font-size:clamp(12px,2cqh,15px); }
+.book-mode .hero-sub.te { line-height:1.6; font-size:clamp(17px,3.3cqh,25px); }
+.book-mode .hero-date.te { font-size:clamp(17px,3.2cqh,24px); }
 .book-mode .head .te { font-weight:400; font-size:clamp(31px,6cqh,46px); line-height:1.25; }
 .book-mode .letter { padding:54px 0 24px; background:transparent; }
 .book-mode .patrika .wrap { display:flex; flex-direction:column; height:100%; max-width:none; padding:0 26px; }
@@ -354,8 +354,8 @@
   .book-mode .cover-family strong { font-size:35px; }
   .book-mode .cover-names { margin-top:10px; font-size:28px; }
   .book-mode .cover-union { margin:0; font-size:15px; }
-  .book-mode .hero-sub.te { font-size:11px; margin-top:9px; }
-  .book-mode .hero-date.te { font-size:11px; margin-top:6px; }
+  .book-mode .hero-sub.te { font-size:16px; margin-top:9px; }
+  .book-mode .hero-date.te { font-size:16px; margin-top:6px; }
 }
 @container (max-height:660px) {
   .book-mode .hero,.book-mode .patrika { --frame-top:28px; --frame-side:13px; --frame-bottom:10px; }
@@ -392,7 +392,7 @@
   .book-mode .when .btn { font-size:9px; padding:7px 10px; margin:2px; }
   .book-mode .hero-in { padding:35px 24px 18px; gap:2px 8px; }
   .book-mode .cover-family span { font-size:18px; }.book-mode .cover-family strong { font-size:27px; }
-  .book-mode .cover-names { font-size:25px; }.book-mode .hero-sub.te,.book-mode .hero-date.te { font-size:10px; }
+  .book-mode .cover-names { font-size:25px; }.book-mode .hero-sub.te,.book-mode .hero-date.te { font-size:13px; }
   .book-mode .head .te { font-size:28px; }.book-mode .head .lab { font-size:8px; }
   .book-mode .letter { padding:31px 0 16px; }
   .book-mode .patrika-masthead h2 { margin:2px 0; font-size:24px; line-height:1.15; }
