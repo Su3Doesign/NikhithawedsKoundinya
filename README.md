@@ -85,7 +85,9 @@ fewer motes, and the dimmed sky stops redrawing while the names are written.
 Reduced-motion users see the finished names. The courtyard and seven-step
 scenes have pause/replay controls.
 
-**శుభారంభం · An auspicious beginning** replaces the three-knots chapter in
+**శుభారంభం · An auspicious beginning** (the courtyard page) is switched off in
+both views, leaving ten book pages; set `sections.courtyard: true` in
+`details.js` to bring it back. When it is shown, it works as follows.  replaces the three-knots chapter in
 both views with a ceremonial welcome, using the invitation’s existing fonts
 and font-loading setup. Its original SVG illustration depicts a
 tiled eave, carved teak doors, jasmine and a marigold-and-mango-leaf toranam.
@@ -156,8 +158,7 @@ kumkuma to a shubhalekha; see the [Telugu reference](https://telugu.hashtagu.in/
 
 ## Bring back Talambralu
 
-Talambralu is disabled in both the book and scroll views, leaving eleven book
-pages. Its full markup, four verses, rice animation, assets, styling and
+Talambralu is disabled in both the book and scroll views. Its full markup, four verses, rice animation, assets, styling and
 original chapter position are retained. To restore it, set
 **`sections.talambralu: true` in `details.js`** and redeploy.
 `js/sections.js` applies that setting before chapters and effects initialize.

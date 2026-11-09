@@ -22,10 +22,11 @@ window.INVITE = {
     pixelsPerSecond: 80,
   },
 
-  /* Talambralu is retained, but removed from both invitation views.
-     Set true to bring back its original page, verse and rice effects. */
+  /* Talambralu and the courtyard are retained, but removed from both views.
+     Set either to true to bring back its original page and effects. */
   sections: {
     talambralu: false,
+    courtyard: false,   // the శుభారంభం courtyard page; true brings it back
   },
 
   bride: {
