@@ -27,8 +27,8 @@ window.INVITE = {
   sections: {
     talambralu: false,
     courtyard: false,   // the శుభారంభం courtyard page; true brings it back
-    journey: false,     // preview A: engagement to wedding, printed page
-    album: false,       // preview B: engagement in the family album
+    journey: false,     // alternative: engagement to wedding as a printed page
+    album: true,        // the engagement in the family album, after the celebrations
   },
 
   bride: {

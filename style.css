@@ -232,8 +232,7 @@ a{ color:inherit; }
 .motion .jr-art{ flex:1; min-height:0; }
 
 /* ---------------------------------------------------------------- the family album (preview B) */
-.sc-album{ overflow:hidden; }
-.al-garland{ flex:none; display:flex; justify-content:space-between; align-items:flex-start; width:calc(100% + 20px); margin:0 -10px; height:58px; position:relative; }
+.al-garland{ flex:none; display:flex; justify-content:space-between; align-items:flex-start; width:100%; margin:0; height:58px; position:relative; overflow:hidden; }
 .al-garland::before{ content:""; position:absolute; left:0; right:0; top:3px; height:14px; border-top:1.5px solid #8a6a3a; border-radius:50%/0 0 100% 100%; }
 .al-garland img{ position:relative; display:block; transform-origin:50% 0; }
 .al-garland img[src$="leaf.png"]{ width:16px; height:auto; margin-top:4px; }
