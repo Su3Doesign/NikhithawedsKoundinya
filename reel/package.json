@@ -1,0 +1,17 @@
+{
+  "name": "reel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "pixi-filters": "^6.0.5",
+    "pixi.js": "^8.6.6"
+  }
+}
