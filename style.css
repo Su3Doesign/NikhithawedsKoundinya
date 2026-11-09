@@ -192,21 +192,36 @@ a{ color:inherit; }
 .ev p{ font-size:15px; line-height:1.5; }
 .ev .where{ color:var(--ink-2); }
 
-/* ---------------------------------------------------------------- an auspicious beginning */
-.sc-home{ background:var(--paper); text-align:center; }
-.sc-home .stage{ display:flex; flex-direction:column; align-items:center; }
-.sc-home .head{ flex:none; width:100%; margin:0; }
-.home-illustration{ width:100%; max-width:620px; margin:0 auto; }
-.home-art{ display:block; width:100%; height:auto; }
-.home-caption{ flex:none; padding:0 18px; }
-.home-caption .te{ color:var(--kum); font-size:27px; line-height:1.45; }
-.home-caption .en{ color:var(--ink-2); font-size:14px; line-height:1.6; }
-.motion .sc-home .stage{ padding:52px 0 56px; }
-.motion .home-illustration{ flex:1; min-height:0; position:relative; }
-.motion .home-art{ position:absolute; inset:0; height:100%; }
-/* The SVG's authored state is the complete scene for no-JS and reduced motion.
-   Only progress-driven attributes animate; pause, replay and reverse are exact. */
-.home-door{ will-change:transform; }
+/* ---------------------------------------------------------------- the muhurtham */
+.sc-moment{ background:var(--paper); text-align:center; }
+.sc-moment .stage{ display:flex; flex-direction:column; align-items:center; }
+.sc-moment .head{ flex:none; width:100%; margin:0; }
+.moment-art{ position:relative; width:100%; max-width:520px; margin:0 auto; }
+/* The painting's own paper fades into the page at its edges. */
+.moment-frame{ position:relative; width:100%; aspect-ratio:3/4;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 94%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 94%,transparent);
+  mask-composite:intersect; }
+.moment-frame>img,.moment-frame>svg{ position:absolute; left:0; top:0; width:100%; height:100%; display:block; max-width:none; }
+.moment-line{ opacity:.92; }
+/* The authored state is the finished moment: no cloth, the painting in colour.
+   With motion, progress alone drives the clock, the cloth and the colour. */
+.moment-frame>.moment-cloth{ display:none; overflow:hidden; }
+.motion .moment-frame>.moment-cloth{ display:block; }
+.moment-foot{ flex:none; padding:0 18px; }
+.moment-time{ display:flex; align-items:baseline; justify-content:center; gap:.3em; margin:10px 0 2px; color:var(--kum); font-weight:300; font-size:30px; line-height:1.2; letter-spacing:.04em; font-variant-numeric:tabular-nums; }
+.mt-clock{ display:inline-block; height:1.2em; overflow:hidden; }
+.mt-roll{ display:flex; flex-direction:column; }
+.mt-roll>span{ display:block; height:1.2em; }
+.mt-ap{ font-size:.5em; letter-spacing:.16em; text-transform:uppercase; }
+.moment-caption .te{ color:var(--kum); font-size:27px; line-height:1.45; }
+.moment-caption .en{ color:var(--ink-2); font-size:14px; line-height:1.6; }
+.moment-ask{ display:block; color:var(--ink); }
+.motion .sc-moment .stage{ padding:52px 0 56px; }
+.motion .moment-art{ flex:1; min-height:0; max-width:none; }
+.motion .moment-frame{ position:absolute; aspect-ratio:auto; }
+.tera{ will-change:transform; }
 
 /* ---------------------------------------------------------------- talambralu */
 .sc-tal{ background:var(--night); color:var(--cream); text-align:center; }
@@ -487,7 +502,7 @@ a{ color:inherit; }
 .star-name-bride,.star-name-groom,.end-names { font-synthesis:none; }
 .auspicious,.om,.hero-sub,.hero-date,.patrika-auspicious,.patrika-subtitle,.patrika-opening,
 .portrait-slide figcaption.te,.portrait-slide .portrait-name,.w-day .te,.v-te,.panch,.ev h3 .te,
-.sakha .te,.sky-cap .te,.home-caption .te,.star-names-blessing,.verse .te,#akBtn .te,.ak-n .te,.page-heading [lang="te"],
+.sakha .te,.sky-cap .te,.moment-caption .te,.star-names-blessing,.verse .te,#akBtn .te,.ak-n .te,.page-heading [lang="te"],
 .subham .te,.subham-blessing,.subham .end-names { font-family:var(--te-short); }
 
 /* The English invitation: the same card and hierarchy, set in the site's English face. */

@@ -85,19 +85,21 @@ fewer motes, and the dimmed sky stops redrawing while the names are written.
 Reduced-motion users see the finished names. The courtyard and seven-step
 scenes have pause/replay controls.
 
-**శుభారంభం · An auspicious beginning** replaces the three-knots chapter in
-both views with a ceremonial welcome, using the invitation’s existing fonts
-and font-loading setup. Its original SVG illustration depicts a
-tiled eave, carved teak doors, jasmine and a marigold-and-mango-leaf toranam.
-The open courtyard is bright and decorated with hanging flowers; loose petals
-rest on the verandah. This scene contains no lamps, flames or offering plate.
-A smaller rice-flour muggu is foreshortened onto the terracotta verandah,
-inset from every edge and clipped to the floor surface. The caption reads
-**శ్రీరస్తు శుభమస్తు** / “May joy and blessings fill this celebration.”
-The doors open to reveal the floral decorations and the muggu draws. Every animated attribute
-derives from scene progress, so Pause, Replay and scrolling backwards remain
-deterministic. The complete illustration is visible without JavaScript or with
-reduced motion. The chapter stays on one leaf with its 16-second scene duration.
+**జీలకర్ర బెల్లం · The muhurtham** replaces the courtyard chapter in both
+views, and the ceremony pages now follow the wedding's own order: జీలకర్ర బెల్లం,
+then సప్తపది, then అరుంధతి. It opens on the pencil drawing of the couple
+(`img/paint/silk-line-*.webp`) with a silk తెర held between their faces: a
+kumkum border, a lotus muggu, pasupu and kumkuma touches and gold tassels, drawn
+as inline SVG. A clock rolls through the last minutes to the muhurtham
+(8:19, 8:20, 8:21, **8:22**, all derived from `muhurtham` in `details.js`), the
+cloth is lowered, and colour spreads outward from where their eyes meet until
+the drawing becomes the painting (`img/paint/silk-art-*.webp`). Then
+**కనులు కలిసే శుభ ఘడియ** appears above "At 8:22 pm the cloth between them is
+lowered. Be there to see it." Every animated value derives from scene progress,
+so Pause, Replay and reverse stay exact. Without JavaScript or with reduced
+motion the page shows the finished painting with no cloth. The paintings wait
+until the reader is one page away. The chapter keeps the 16-second duration.
+The previous courtyard illustration is in the git history.
 The Shubham page closes on a kumkum-red silk card set in the ivory leaf, never
 black: a marigold and mango-leaf toranam across the top, a cream lotus muggu
 turning slowly behind gold **శుభం**, and a gold lotus-and-lamps ornament with
