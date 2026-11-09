@@ -3,7 +3,7 @@
 `venue-terrain.png` shows the venue marked in the owner's Google Maps link:
 https://maps.app.goo.gl/Jujf5zxxT4sRujSr8
 
-- Venue: Kothapali Sri Ramulu Kanakamma Lions Club Auditorium, Nidadavolu.
+- Venue: Sri Kothapalli Sriramulu Kanakamma Lions A/C Kalyana Mandapam, Nidadavolu.
 - The supplied local Plus Code `WM2C+29P` resolves to `7M83WM2C+29P`.
 - Pin: 16.9000875° N, 81.670953125° E; north is up; zoom 14.
 - Map source: https://opentopomap.org/#map=14/16.9000875/81.670953125

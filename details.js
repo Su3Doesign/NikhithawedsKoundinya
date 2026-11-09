@@ -60,9 +60,9 @@ window.INVITE = {
   },
 
   venue: {
-    name: "Kothapali Sri Ramulu Kanakamma Lions Club Auditorium",
-    nameTe: "",          // e.g. "శ్రీ కన్య కన్వెన్షన్"
-    address: "Nidadavolu, Andhra Pradesh 534301",
+    name: "Sri Kothapalli Sriramulu Kanakamma Lions A/C Kalyana Mandapam",
+    nameTe: "శ్రీ కొత్తపల్లి శ్రీరాములు కనకమ్మ లయన్స్\u00a0A/C\u00a0కళ్యాణమండపం",
+    address: "R.T.C Complex Road, Nidadavolu, Andhra Pradesh 534301",
     mapUrl: "https://maps.app.goo.gl/Jujf5zxxT4sRujSr8",   // opens from the Directions button
     previewImage: "img/venue-map.jpg",  // supplied illustrated map; tapping it opens mapUrl
   },
@@ -71,9 +71,9 @@ window.INVITE = {
      when: free text, e.g. "Friday · 11 December · 6:00 pm"
      where: leave empty if it is at home; the line is then left out. */
   events: {
-    gorintaku:    { show: true,  when: "Friday · 11 December", where: "" },
-    haldi:        { show: true,  when: "Saturday · 12 December", where: "" },
-    pellikuthuru: { show: true,  when: "Saturday · 12 December", where: "" },
+    gorintaku:    { show: true,  when: "Friday · 11 December · 4:00 pm onwards", where: "" },
+    haldi:        { show: true,  when: "Saturday · 12 December · 3:30 pm onwards", where: "" },
+    pellikuthuru: { show: true,  when: "Saturday · 12 December · 9:25 am", where: "" },
     sangeet:      { show: false, when: "", where: "" },
     vivaham:      { show: true,  when: "", where: "" },   // left blank, it uses the muhurtham and venue above
     vindu:        { show: false, when: "", where: "" },

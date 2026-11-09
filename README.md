@@ -28,7 +28,7 @@ The bookmark has been removed. Small textured pasupu and kumkuma touches sit
 in the four outer corners of each leaf, clear of the text.
 
 The main invitation opens in Telugu, with a traditional family, bride, groom,
-muhurtham and invitation hierarchy headed **చల్లపల్లి వారి పెళ్లి పిలుపు**.
+muhurtham and invitation hierarchy headed **చల్లపల్లి వారి పెండ్లి పిలుపు**.
 Ramabhadra sets the Telugu headings, names and invitation wording. Gurajada sets
 the short lines (శ్రీరస్తు శుభమస్తు అవిఘ్నమస్తు, శ్రీ గణేశాయ నమః, captions, event
 names, the weekday) and the Shubham card's blessing and names, while its large
@@ -43,11 +43,11 @@ The entire family invitation, muhurtham and signoff remain on the same page.
 The surname follows the existing family spelling, Challapalli / చల్లపల్లి.
 Existing family names and wedding details are preserved; unprovided panchangam
 details are not invented.
-The full heading **చల్లపల్లి వారి పెళ్లి పిలుపు** on pages 1 and 3 and the
+The full heading **చల్లపల్లి వారి పెండ్లి పిలుపు** on pages 1 and 3 and the
 couple's names beneath it share one semibold: Ramabhadra's own weight with a
 fine ink stroke. A bold would fill in the Telugu letters, so none is used.
 On page 1, both heading lines are equal in size. Page 3 retains its earlier
-hierarchy: **చల్లపల్లి వారి** above a larger **పెళ్లి పిలుపు**. Their combined
+hierarchy: **చల్లపల్లి వారి** above a larger **పెండ్లి పిలుపు**. Their combined
 height keeps room for the rest of the card on a phone.
 The surrounding invitation wording stays regular.
 
@@ -55,7 +55,7 @@ Page 4 repeats the invitation in English, in the same frame, order and
 hierarchy: the auspicious line, the Challapalli family's wedding invitation,
 the bride's and groom's parents, the muhurtham, the invitation and the signoff.
 It uses the families' own English spellings from the engagement invitation
-(Sri Challapalli Sreedhar, Smt. Venkata Krishna Veni, Sri K. V. V. Hari Mohan,
+(Sri Challapalli Sreedhar, Smt. Venkata Krishna Veni, Sri Kokkirala V. V. Hari Mohan,
 Smt. Sailaja, of Kovvur), and the date and time come from `details.js`.
 
 The portrait scene crossfades from the original couple photograph to the two
@@ -132,14 +132,16 @@ photos, Telugu invitation and star-to-names sequence in a linear layout.
 
 ## Current event and RSVP details
 
-- Mehndi: Friday, **11 December 2026**.
-- Haldi and Pelli Kuthuru: Saturday, **12 December 2026**.
+- Gorintaku (Mehendi): Friday, **11 December 2026, 4:00 pm onwards**.
+- Haldi: Saturday, **12 December 2026, 3:30 pm onwards**.
+- Pendlikuthuru: Saturday, **12 December 2026, 9:25 am**.
 - Wedding: Sunday, **13 December 2026, 8:22 pm IST**.
 - Calls and WhatsApp: **+91 98663 12936**. Both links use `rsvp.whatsapp`.
 
 The calendar, countdown, Telugu invitation and wedding event row all use
-`muhurtham` in `details.js`. The venue is **Kothapali Sri Ramulu Kanakamma
-Lions Club Auditorium, Nidadavolu, Andhra Pradesh 534301**. The supplied map
+`muhurtham` in `details.js`. The venue is **Sri Kothapalli Sriramulu Kanakamma
+Lions A/C Kalyana Mandapam (శ్రీ కొత్తపల్లి శ్రీరాములు కనకమ్మ లయన్స్ A/C కళ్యాణమండపం),
+R.T.C Complex Road, Nidadavolu, Andhra Pradesh 534301**. The supplied map
 and Directions button both open https://maps.app.goo.gl/Jujf5zxxT4sRujSr8.
 `img/venue-map.jpg` is the owner's latest map without the white vignette,
 retained without cropping or redrawing. The venue leaf matches its paper color
