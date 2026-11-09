@@ -212,7 +212,7 @@ a{ color:inherit; }
 .sc-journey,.sc-album{ background:var(--paper); text-align:center; }
 .sc-journey .stage,.sc-album .stage{ display:flex; flex-direction:column; align-items:center; }
 .sc-journey .head,.sc-album .head{ flex:none; width:100%; margin:0; }
-.jr-art{ width:100%; max-width:440px; margin:14px auto 0; }
+.jr-art{ width:100%; max-width:460px; margin:14px auto 0; display:flex; align-items:center; }
 .jr-art img,.al-photo img{ display:block; width:100%; height:100%; object-fit:contain; }
 .jr-art img{ -webkit-mask-image:linear-gradient(to right,transparent,#000 8%,#000 92%,transparent),linear-gradient(to bottom,transparent,#000 5%,#000 94%,transparent);
   -webkit-mask-composite:source-in; mask-image:linear-gradient(to right,transparent,#000 8%,#000 92%,transparent),linear-gradient(to bottom,transparent,#000 5%,#000 94%,transparent); mask-composite:intersect; }
@@ -238,10 +238,10 @@ a{ color:inherit; }
 .al-garland img{ position:relative; display:block; transform-origin:50% 0; }
 .al-garland img[src$="leaf.png"]{ width:16px; height:auto; margin-top:4px; }
 .al-garland img[src$="marigold.png"]{ width:27px; height:27px; margin-top:8px; border-radius:50%; box-shadow:0 2px 3px rgba(120,60,0,.25); }
-.al-page{ position:relative; flex:1; min-height:0; width:calc(100% - 28px); max-width:500px; margin:10px auto 0; padding:16px 14px 12px;
+.al-page{ position:relative; flex:1; min-height:0; align-content:center; width:calc(100% - 28px); max-width:500px; margin:10px auto 0; padding:16px 14px 12px;
   background:#f4e7cd; border-radius:3px; box-shadow:inset 0 0 0 1px rgba(160,120,60,.18), inset 0 0 40px rgba(170,120,50,.14);
-  display:grid; grid-template-columns:1fr auto 1fr; grid-template-rows:minmax(0,1fr) auto auto; gap:6px 8px; }
-.al-photo{ position:relative; grid-column:1 / 4; min-height:0; margin:0 auto; height:100%; aspect-ratio:3/4; max-width:100%; padding:7px 7px 7px; background:#fffdf7;
+  display:grid; grid-template-columns:1fr auto 1fr; grid-template-rows:auto auto auto; gap:10px 8px; }
+.al-photo{ position:relative; grid-column:1 / 4; min-height:0; margin:0 auto; width:94%; aspect-ratio:4/3; padding:7px 7px 7px; background:#fffdf7;
   box-shadow:0 1px 1px rgba(60,35,10,.12),0 10px 22px -8px rgba(60,35,10,.45); transform:rotate(-2.2deg); }
 .al-photo img{ background:#f6efe2; }
 .al-corner{ position:absolute; width:22px; height:22px; background:linear-gradient(135deg,#e7c573,#b88a35); box-shadow:0 1px 1px rgba(60,35,10,.3); }
