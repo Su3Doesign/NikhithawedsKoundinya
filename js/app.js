@@ -52,8 +52,6 @@
     F.weekday = EN_DAYS[when.wd];
     F.weekdayTe = TE_DAYS[when.wd];
     F.time = (when.h % 12 || 12) + ':' + pad(when.mi) + (when.h < 12 ? ' am' : ' pm');
-    F.clock = (when.h % 12 || 12) + ':' + pad(when.mi);
-    F.ampm = when.h < 12 ? 'am' : 'pm';
   }
   var V = D.venue || {};
   if (V.name) F.venueName = V.name;
@@ -359,67 +357,24 @@
     } });
   });
 
-  /* 02 · the muhurtham: the clock reaches the moment, the cloth between them
-     is lowered, and colour spreads outward from where their eyes meet */
+  /* 02 · an auspicious beginning: open a flower-decorated entrance and draw the muggu */
   safe(function () {
-    var sec = $('#jeelakarra');
-    if (!sec || sec.hidden) return;
-    var art = $('.moment-art', sec), frame = $('.moment-frame', sec), paint = $('.moment-paint', sec);
-    var tera = $('#tera'), roll = $('.mt-roll', sec), clock = $('.moment-time', sec), words = $('.moment-words', sec);
-    var STEPS = 3, diagonal = 1;
-    // The last minutes before the muhurtham, each rolling up into place.
-    if (when && roll && MOTION) {
-      roll.innerHTML = '';
-      for (var k = STEPS; k >= 0; k--) {
-        var total = when.h * 60 + when.mi - k, h = Math.floor(((total % 1440) + 1440) % 1440 / 60), m = ((total % 60) + 60) % 60;
-        var item = doc.createElement('span');
-        item.textContent = (h % 12 || 12) + ':' + pad(m);
-        if (k) item.setAttribute('aria-hidden', 'true');
-        roll.appendChild(item);
-      }
-    }
-    // The meeting of their eyes, then the faces, the two figures and the garden.
-    var GAZE = [[51, 15, 1], [42, 30, 0.86], [61, 31, 0.86], [46, 56, 0.8], [62, 60, 0.8], [26, 66, 0.72], [80, 64, 0.72], [52, 88, 0.76]];
-    function colour(t) {
-      var mask = '';
-      if (t < 1) {
-        var feather = diagonal * (0.1 - 0.04 * t), layers = [];
-        GAZE.forEach(function (lobe) {
-          var r = diagonal * 0.66 * t * lobe[2];
-          layers.push('radial-gradient(circle at ' + lobe[0] + '% ' + lobe[1] + '%,#000 ' + Math.max(0, r - feather).toFixed(1) + 'px,transparent ' + Math.max(0.5, r).toFixed(1) + 'px)');
-        });
-        mask = layers.join(',');
-      }
-      if (paint.style.webkitMaskImage !== mask) { paint.style.webkitMaskImage = mask; paint.style.maskImage = mask; }
-    }
-    function mix(a, b, t) { return Math.round(a + (b - a) * t); }
-    scene('jeelakarra', function (p) {
-      // 1 · the clock: one minute at a time
-      var minutes = 0;
-      for (var i = 0; i < STEPS; i++) minutes += smooth(span(p, 0.1 + i * 0.09, 0.16 + i * 0.09));
-      roll.style.transform = 'translateY(' + (-minutes * 1.2).toFixed(3) + 'em)';
-      var now = smooth(span(p, 0.33, 0.4));
-      clock.style.color = 'rgb(' + mix(106, 179, now) + ',' + mix(93, 38, now) + ',' + mix(80, 30, now) + ')';
-      // 2 · the cloth: it stirs while held, then is lowered out of sight
-      var drop = smooth(span(p, 0.4, 0.58)), held = 1 - drop;
-      var sway = Math.sin(p * 19) * 0.7 * held + Math.sin(drop * 3.1) * 2.2;
-      tera.setAttribute('transform', 'translate(0 ' + (drop * 640).toFixed(1) + ') translate(370 40) scale(1 ' + (1 - 0.32 * drop).toFixed(4) + ') skewX(' + sway.toFixed(3) + ') translate(-370 -40)');
-      tera.style.opacity = (1 - span(p, 0.52, 0.58)).toFixed(3);
-      // 3 · colour from their gaze outward
-      colour(span(p, 0.46, 0.88));
-      // 4 · the words, once they see each other
-      var said = smooth(span(p, 0.56, 0.68));
-      words.style.opacity = said.toFixed(3);
-      words.style.transform = said === 1 ? '' : 'translateY(' + ((1 - said) * 10).toFixed(2) + 'px)';
-    }, { resize: function () {
-      // The painting keeps its 3:4 shape inside whatever room the page gives it.
-      var W = art.clientWidth, H = art.clientHeight;
-      if (!W || !H) return;
-      var w = Math.min(W, H * 0.75), h = w / 0.75;
-      frame.style.width = w + 'px'; frame.style.height = h + 'px';
-      frame.style.left = ((W - w) / 2) + 'px'; frame.style.top = ((H - h) / 2) + 'px';
-      diagonal = Math.sqrt(w * w + h * h) || 1;
-    } });
+    var home = $('#home');
+    if (!home) return;
+    var doors = $$('.home-door', home), lines = $$('.home-muggu-line', home);
+    scene('home', function (p) {
+      var opening = smooth(span(p, 0.04, 0.48));
+      var angle = opening * 1.39, width = Math.cos(angle), depth = Math.sin(angle) * 0.1;
+      doors.forEach(function (door) {
+        var side = door.getAttribute('data-home-door') === 'left' ? -1 : 1;
+        door.setAttribute('transform', 'matrix(' + width.toFixed(4) + ' ' + (side * depth).toFixed(4) + ' 0 1 0 0)');
+      });
+      lines.forEach(function (line, i) {
+        var drawn = smooth(span(p, 0.28 + i * 0.025, 0.57 + i * 0.025));
+        line.style.strokeDasharray = '1';
+        line.style.strokeDashoffset = (1 - drawn).toFixed(4);
+      });
+    });
   });
 
   /* 03 · talambralu: a handful of rice with each line of the verse */
