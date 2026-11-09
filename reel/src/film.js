@@ -10,7 +10,7 @@
     events: 103.58, shubham: 111.43, invite: 113.64, sign: 117.59, end: 121.5 };
   C.DURATION = B.end; C.B = B;
   const SCENES = window.SCENES = [];
-  const XF = 1.4; // dissolve length
+  const XF = 0.9; // dissolve length: soft, but never a muddy double exposure
   const RED = () => C._red || (C._red = C.brocadeTex('#b9271d', '#86170f', '#360604', 'rgba(255,214,150,.07)', 3));
   const DEEP = () => C._deep || (C._deep = C.brocadeTex('#3d0f0b', '#1c0605', '#060202', 'rgba(255,200,140,.045)', 4));
 
@@ -302,7 +302,7 @@
     const outer = archPts(-10), inner = archPts(-24);
     const r = rng(101), rice = [], rl = new PIXI.Container(); root.addChild(rl);
     [B.drop, B.toss2, B.toss3].forEach((t0) => { for (let i = 0; i < 150; i++) { const sp = new PIXI.Sprite(C.riceTex()); sp.anchor.set(0.5); rl.addChild(sp);
-      const a = -Math.PI / 2 + (r() - 0.5) * 1.9, v = 700 + r() * 900; rice.push({ s: sp, t0: t0 + r() * 0.2, x0: 540 + (r() - 0.5) * 300, y0: 1500, vx: Math.cos(a) * v, vy: Math.sin(a) * v, sp: (r() - 0.5) * 6, ph: r() * 6, sz: 0.55 + r() * 0.7 }); } });
+      const a = -Math.PI / 2 + (r() - 0.5) * 1.9, v = 700 + r() * 900; rice.push({ s: sp, t0: t0 + r() * 0.35, x0: 540 + (r() - 0.5) * 760, y0: 1980 + r() * 120, vx: Math.cos(a) * v, vy: Math.sin(a) * v, sp: (r() - 0.5) * 6, ph: r() * 6, sz: 0.55 + r() * 0.7 }); } });
     const hushRice = []; for (let i = 0; i < 80; i++) { const sp = new PIXI.Sprite(C.riceTex()); sp.anchor.set(0.5); rl.addChild(sp); hushRice.push({ s: sp, x: r() * W, y0: H * (0.3 + r()), v: 30 + r() * 60, ph: r() * 6, sz: 0.4 + r() * 0.5 }); }
     const garland = C.toranam(root, 70, 9);
     const tal = C.foil(root, 'తలంబ్రాలు', { font: C.TE2, size: 62 }); tal.position.set(540, 395);
@@ -332,7 +332,7 @@
       s.cam.s = 1 + 0.02 * E.inOut(span(t, B.hush, B.drop));
       fg(t, 0, -16 * E.inOut(span(t, B.drop, B.events)), E.smooth(span(t, B.drop, B.drop + 2)));
       C.cam.dust = 0.5 + 0.3 * E.smooth(span(t, B.drop, B.drop + 2)); C.cam.dustTint = 0xffd27a;
-      C.cam.petals = 0.85 * E.smooth(span(t, B.toss2, B.toss2 + 2)); C.cam.grain = 0.09;
+      C.cam.petals = 0.4 * E.smooth(span(t, B.toss2, B.toss2 + 2)) * (1 - 0.6 * E.smooth(span(t, B.coupleNames - 1, B.coupleNames + 1))); C.cam.grain = 0.09;
     };
   }, XF));
 
