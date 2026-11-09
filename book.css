@@ -565,7 +565,7 @@
 }
 
 /* Match the supplied map paper exactly; its original print needs no vignette. */
-.book-leaf[data-chapter="when"] .leaf-front { background-color:var(--map-paper); background-image:none; }
+
 
 /* Equal heading lines on the cover; retain the original lagna patrika hierarchy.
    Keep the same overall heading area so the phone layout stays spacious. */

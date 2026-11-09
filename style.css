@@ -528,7 +528,7 @@ a{ color:inherit; }
 
 /* The supplied map is a complete portrait print, never a cropped thumbnail. */
 .venue-map { max-width:310px; }
-.when { background:var(--map-paper); }
+.when { background:var(--paper); }
 .venue-map-link { background:transparent; border:0; border-radius:0; box-shadow:none; }
 .venue-map img { object-fit:contain; }
 

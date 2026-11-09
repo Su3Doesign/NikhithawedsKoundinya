@@ -121,13 +121,13 @@ with sync_playwright() as p:
         page.locator('#autoScroll').tap()
         page.locator('#nextPage').tap(); turn_done(page)
         page.clock.run_for(30000)
-        check(page.evaluate('Book.currentId() === "album" && !AutoScroll.isOn()'),
+        check(page.evaluate('Book.currentId() === "saptapadi" && !AutoScroll.isOn()'),
               'only the Pause button stops automatic turns, including after manual navigation')
         hidden(page, True); page.clock.run_for(60000); hidden(page, False)
         page.clock.run_for(20000)
-        check(page.evaluate('Book.currentId() === "album" && !AutoScroll.isOn()'), 'explicit Pause survives away and return')
+        check(page.evaluate('Book.currentId() === "saptapadi" && !AutoScroll.isOn()'), 'explicit Pause survives away and return')
         page.locator('#autoScroll').tap(); page.clock.run_for(13000); turn_done(page)
-        check(page.evaluate('Book.currentId() === "saptapadi" && AutoScroll.isOn()'), 'the same control resumes page turning')
+        check(page.evaluate('Book.currentId() === "arundhati" && AutoScroll.isOn()'), 'the same control resumes page turning')
         print('Book navigation, interactive blessings and explicit Pause passed', flush=True)
 
     with opened(browser, '/#couple') as page:

@@ -145,9 +145,10 @@ The calendar, countdown, Telugu invitation and wedding event row all use
 Lions A/C Kalyana Mandapam (శ్రీ కొత్తపల్లి శ్రీరాములు కనకమ్మ లయన్స్ A/C కళ్యాణమండపం),
 R.T.C Complex Road, Nidadavolu, Andhra Pradesh 534301**. The supplied map
 and Directions button both open https://maps.app.goo.gl/Jujf5zxxT4sRujSr8.
-`img/venue-map.jpg` is the owner's latest map without the white vignette,
-retained without cropping or redrawing. The venue leaf matches its paper color
-(#f5ece3), with no image frame, shadow or added vignette.
+`img/venue-map.jpg` is the owner's latest map. The page shows
+`img/venue-map-clear.webp`, the same map at display size with its paper made
+transparent, so the roads and pin sit directly on the same ivory leaf as every
+other page; the When & where leaf no longer uses a different paper colour.
 The previous terrain image and its license remain in the repository as an
 unused alternative. The complete venue section still fits one leaf, including
 on a phone in landscape. Pre-wedding event times/locations and panchangam details
