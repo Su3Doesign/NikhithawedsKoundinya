@@ -10,7 +10,7 @@
     ['couple', 'Nikhitha & Sai Koundinya', 'వధూవరులు', 12],
     ['letter', 'With love, our families', 'ఆహ్వానం', 18],
     ['letter-en', 'The invitation in English', 'English', 14],
-    ['when', 'When & where', 'సుముహూర్తం', 15],
+    ['when', 'When & where', 'శుభ ముహూర్తం', 15],
     ['events', 'The celebrations', 'వేడుకలు', 15],
     ['home', 'An auspicious beginning', 'శుభారంభం', 16],
     ['journey', 'Our journey', 'మా ప్రయాణం', 14],

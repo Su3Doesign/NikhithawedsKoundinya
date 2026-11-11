@@ -30,7 +30,7 @@ in the four outer corners of each leaf, clear of the text.
 The main invitation opens in Telugu, with a traditional family, bride, groom,
 muhurtham and invitation hierarchy headed **చల్లపల్లి వారి పెండ్లి పిలుపు**.
 Ramabhadra sets the Telugu headings, names and invitation wording. Gurajada sets
-the short lines (శ్రీరస్తు శుభమస్తు అవిఘ్నమస్తు, శ్రీ గణేశాయ నమః, captions, event
+the short lines (శ్రీరస్తు శుభమస్తు అవిఘ్నమస్తు, ఓం శ్రీ గణేశాయ నమః, captions, event
 names, the weekday) and the Shubham card's blessing and names, while its large
 **శుభం** stays in Ramabhadra. Both faces have one weight, so emphasis comes from
 size and colour and no bold is synthesized. A slim temple border,

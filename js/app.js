@@ -101,7 +101,7 @@
   }
   var cal = when ? 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent('Wedding · Nikhitha & Sai Koundinya') +
     '&dates=' + stamp(when.t) + '/' + stamp(when.t + (D.durationHours || 3) * 3600000) +
-    '&details=' + encodeURIComponent('Muhurtham at ' + F.time + ' IST.') +
+    '&details=' + encodeURIComponent('Subha Muhurtham at ' + F.time + ' IST.') +
     (V.name ? '&location=' + encodeURIComponent(V.name + (V.address ? ', ' + V.address : '')) : V.mapUrl ? '&location=' + encodeURIComponent(V.mapUrl) : '') : null;
   setLink($('#calMain'), cal); setLink($('#calBless'), cal);
   setLink($('#mapLink'), V.mapUrl || (V.name ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(V.name + ' ' + (V.address || '')) : null));
