@@ -273,7 +273,15 @@ film.mbHint = (t) => 0;
 
 /* ============================================================ the frame */
 film.prep = async (t) => { for (const p of PEOPLE) if (t > p.t0 - 0.3 && t < p.t1 + 1.5) await p.ink.set(span(t, p.t0 + 1.4, p.t0 + 3.3)); };
+/* scenes appear out of the distance as the camera nears them, and dissolve just before it passes through */
+const FADED = new Set();
+function restoreFades() { FADED.forEach(m => { m.opacity = m.userData.pre; }); FADED.clear(); }
+function fadeScene(g, o) { const dz = camera.position.z - g.position.z; let k = 1;
+  if (o.leave) k *= 1 - E.smooth(span(film.t, o.leave, o.leave + 0.6)); if (o.in) k *= E.smooth(span(dz, 23, 15));
+  if (k >= 0.999 || !g.visible) return; if (k <= 0.001) { g.visible = false; return; }
+  g.traverse(m => { if (!m.material || m.material.isShaderMaterial || FADED.has(m.material)) return; const mt = m.material; mt.userData.pre = mt.opacity; mt.transparent = true; mt.opacity *= k; FADED.add(mt); }); }
 film.update = (t) => {
+  film.t = t; restoreFades();
   // sky: red silk, night for the stars, a darker hush before the arch fills with light
   const nightK = E.smooth(span(t, S.stars - 0.2, S.stars + 0.9)) * (1 - E.smooth(span(t, S.muh - 0.4, S.muh + 0.6)));
   backMat.uniforms.k.value = nightK; backMat.uniforms.dim.value = 1 - 0.55 * E.smooth(span(t, S.hush, S.hush + 1.5)) * (1 - E.smooth(span(t, S.drop - 0.2, S.drop + 1.5)));
@@ -374,6 +382,10 @@ film.update = (t) => {
 
   { const cz = camera.position.z; PORTALS.forEach((p, i) => { p.rotation.z = t * 0.12 * (i % 2 ? -1 : 1); const d = cz - p.position.z, k = E.smooth(span(d, 15, 7)) * E.smooth(span(d, -2.5, -0.5));
     p.visible = k > 0.003; p.children.forEach(c => { c.material.transparent = true; c.material.opacity = k; }); }); }
+
+  // each scene leaves the moment the camera sets off from it (the keys where its hold ends)
+  fadeScene(ttlG, { in: 1, leave: 11.0 }); PEOPLE.forEach(p => fadeScene(p.g, { in: 1, leave: 19.2 })); fadeScene(sky, { leave: 25.2 });
+  fadeScene(muh, { in: 1, leave: 38.6 }); fadeScene(arch, { leave: 52.2 }); fadeScene(ev, { in: 1, leave: 58.3 }); fadeScene(sh, { in: 1 });
 };
 
 window.renderAt = renderAt; window.duration = film.duration; window.ready = true;
