@@ -30,10 +30,10 @@ def swell(length):  # a warm, low bloom for the moment the arch fills with light
     return (body + air) * np.clip(tt / 0.08, 0, 1)
 
 for song_t, sig, gain in [(46.6, shimmer(2.6, 1318), 0.035),   # Ganesha gathers from gold
-                          (66.6, shimmer(3.0, 1760), 0.045),   # two stars become one
-                          (69.3, shimmer(2.4, 2093), 0.035),   # the names settle in gold
+                          (67.31, shimmer(3.0, 1760), 0.045),   # two stars become one
+                          (69.5, shimmer(2.4, 2093), 0.035),   # the names settle in gold
                           (87.7, swell(3.5), 0.16),            # the arch fills with light
-                          (104.4, shimmer(2.6, 1568), 0.03)]:  # శుభం
+                          (104.0, shimmer(2.6, 1568), 0.03)]:  # శుభం
     place(sig, song_t - START, gain)
 
 mix = song + fx

@@ -315,7 +315,7 @@ film.update = (t) => {
     DIP.forEach(([x, y], i) => { const p = bright.items[i], k = E.out3(span(t, S.stars + 0.2 + i * 0.12, S.stars + 0.8 + i * 0.12));
       p.x = x; p.y = y; p.z = 0; p.s = 0.05 * k; p.r = 0.95; p.g = 0.95; p.b = 1; p.a = nightK * (i === 1 ? 0 : 1) * (1 - E.smooth(span(t, S.merge, S.merge + 1.2))); });
     [[0, 1], [1, -1]].forEach(([j, sg]) => { const p = bright.items[7 + j]; p.x = MIZ[0] + sg * Math.cos(ang) * sep; p.y = MIZ[1] + sg * Math.sin(ang) * sep * 0.6; p.z = 0; p.s = 0.06; p.r = j ? 1 : 0.85; p.g = j ? 0.88 : 0.92; p.b = j ? 0.7 : 1; p.a = merged ? 0 : nightK; });
-    { const p = bright.items[9], lift = E.inOut(span(t, S.merge + 0.2, S.merge + 1.2)); p.x = lerp(MIZ[0], 0, lift); p.y = lerp(MIZ[1], 1.55, lift); p.z = 0; p.s = 0.09 + 0.5 * m; p.r = 1; p.g = 0.95; p.b = 0.85; p.a = merged ? 1 : 0; }
+    { const p = bright.items[9], lift = E.inOut(span(t, S.merge + 0.2, S.merge + 1.2)); p.x = lerp(MIZ[0], 0, lift); p.y = lerp(MIZ[1], 1.55, lift); p.z = 0; p.s = 0.075 + 0.12 * m; p.r = 1; p.g = 0.95; p.b = 0.85; p.a = merged ? 1 : 0; }
     bright.update();
     const star = bright.items.find(() => true);
     const sx = lerp(MIZ[0], 0, E.inOut(span(t, S.merge + 0.2, S.merge + 1.2))), sy = lerp(MIZ[1], 1.55, E.inOut(span(t, S.merge + 0.2, S.merge + 1.2)));
