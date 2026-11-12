@@ -356,13 +356,14 @@ a{ color:inherit; }
 /* The couple's names in a bold, classic Telugu print face. */
 .subham .end-names{ font-family:var(--te); font-weight:700; line-height:1.35; }
 .back{ display:inline-block; margin-top:22px; text-decoration:none; border-bottom:1px solid #a485555c; padding-bottom:4px; }
-.subham .back{ color:#fbe7c4; border:1px solid #f1c46d80; border-radius:999px; padding:9px 18px; }
+.subham .back{ color:#fbe7c4b3; border:1px solid #f1c46d4d; border-radius:999px; padding:6px 13px; font-size:9.5px; margin-top:20px; }
 /* The last word: a quiet note, under a hairline, that their coming is gift enough. */
-.subham-gift{ margin:20px 0 0; padding-top:14px; border-top:1px solid #f1c46d40; width:min(86%,320px); text-align:center; }
-.subham-gift .te{ display:block; color:#f8e0b4; font-size:16px; line-height:1.7; word-spacing:.14em; }
-.subham-gift .gift-h{ color:#f3c66c; font-size:13px; letter-spacing:0; margin-bottom:2px; }
-.subham-gift .gift-s{ color:#f8e0b4cc; font-size:14px; line-height:1.6; }
-.subham-gift .en{ display:block; margin-top:3px; color:#efcf98e0; font-size:11px; letter-spacing:.08em; line-height:1.5; }
+.subham-gift{ margin:26px 0 0; padding-top:18px; border-top:1px solid #f1c46d59; width:min(92%,360px); text-align:center; }
+.subham-gift .te{ display:block; color:#f8e0b4; font-size:17px; line-height:1.7; word-spacing:.14em; }
+.subham-gift .gift-h{ color:#f3c66c; font-size:15px; margin-bottom:4px; }
+.subham .subham-gift .gift-l{ font-family:var(--te); font-weight:700; color:#f4cd78; font-size:21px; line-height:1.5; word-spacing:.1em; }
+.subham-gift .gift-s{ color:#f8e0b4e6; font-size:16px; line-height:1.7; margin-top:4px; }
+.subham-gift .en{ display:block; margin-top:6px; color:#efcf98; font-size:13px; letter-spacing:.08em; line-height:1.5; }
 /* Motion runs only while the card is in view: the ornament draws itself, the
    lamps flicker, a gleam crosses the letters and the muggu turns very slowly. */
 .motion .subham .orn-line path{ stroke-dasharray:1 1; stroke-dashoffset:0; }
