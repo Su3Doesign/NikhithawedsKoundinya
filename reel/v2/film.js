@@ -76,7 +76,12 @@ function fitUV(g) { g.computeBoundingBox(); const b = g.boundingBox, p = g.attri
 // a flat picture
 function picture(img, h, o = {}) { const w = h * img.width / img.height; const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: imgTex(img), transparent: true, toneMapped: false, depthWrite: false, fog: o.fog ?? true })); m.renderOrder = o.order ?? 5; return m; }
 // a left-aligned label
+const fit3 = (tx, maxW) => { tx.group.updateMatrixWorld(true); const b = new THREE.Box3().setFromObject(tx.group), w = b.max.x - b.min.x;
+  if (w > maxW) tx.group.scale.multiplyScalar(maxW / w); return tx; };
 const fitW = (m, maxW) => { if (m.userData.w > maxW) m.scale.multiplyScalar(maxW / m.userData.w); return m; };
+function pairRow(a, b, maxW, y, z, parent) { const wOf = (t) => { const bx = new THREE.Box3().setFromObject(t.group); return bx.max.x - bx.min.x; };
+  let w1 = wOf(a), w2 = wOf(b), gap = 0.26; const k = Math.min(1, maxW / (w1 + gap + w2)); [a, b].forEach(t => t.group.scale.multiplyScalar(k)); w1 *= k; w2 *= k; gap *= k;
+  const x0 = -(w1 + gap + w2) / 2; a.group.position.set(x0 + w1 / 2, y, z); b.group.position.set(x0 + w1 + gap + w2 / 2, y, z); parent.add(a.group, b.group); }
 const leftLabel = (text, o, x, y, z = 0) => { const m = label(text, o); m.position.set(x + m.userData.w / 2, y, z); return m; };
 // a gold ring to fly through
 function portal(R) { const g = new THREE.Group(); g.add(new THREE.Mesh(new THREE.TorusGeometry(R, 0.035, 14, 220), G()));
@@ -100,8 +105,8 @@ const cx2 = cv.getContext('2d'); cx2.filter = 'blur(2.2px)'; cx2.drawImage(IMG.g
 const relH = 2.1, relW = relH * RW / RH, relief = new THREE.PlaneGeometry(relW, relH, RW - 1, RH - 1);
 { const p = relief.attributes.position; for (let i = 0; i < p.count; i++) { const a = hd[i * 4 + 3] / 255; p.setZ(i, a < 0.04 ? -0.02 : 0.085 * Math.pow(a, 0.7)); } relief.computeVertexNormals(); }
 const reliefMesh = new THREE.Mesh(relief, G({ roughness: 0.16, color: 0xffc35e })); reliefMesh.position.z = 0.0; medal.add(reliefMesh);
-const ganTx = text3d('ganesha', { size: 0.31, depth: 0.1 }); ganTx.group.position.set(0, -1.62, 0); gan.add(ganTx.group);
-const shloka = label('శ్రీరస్తు   ·   శుభమస్తు   ·   అవిఘ్నమస్తు', { font: 'Gurajada', size: 0.17, px: 110, color: '#f4dcab' }); shloka.position.set(0, -2.12, 0); gan.add(shloka);
+const ganTx = fit3(text3d('ganesha', { size: 0.31, depth: 0.1 }), 2.75); ganTx.group.position.set(0, -1.9, 0.12); gan.add(ganTx.group);
+const shloka = label('శ్రీరస్తు   ·   శుభమస్తు   ·   అవిఘ్నమస్తు', { font: 'Gurajada', size: 0.17, px: 110, color: '#f4dcab' }); shloka.position.set(0, -2.36, 0.05); gan.add(shloka);
 // the dust that becomes him
 const ganPts = []; for (let y = 0; y < RH; y += 2) for (let x = 0; x < RW; x += 2) if (hd[(y * RW + x) * 4 + 3] > 150) ganPts.push([(x / RW - 0.5) * relW, (0.5 - y / RH) * relH, y / RH]);
 const GN = Math.min(1800, ganPts.length), gDust = new Sprites(GN, dotTex, { additive: true, blur: 0.8 }); gan.add(gDust.mesh);
@@ -110,8 +115,8 @@ const gr = rng(21), gm = Array.from({ length: GN }, (_, i) => { const p = ganPts
 
 /* ============================================================ 2 · చల్లపల్లి వారి పెండ్లి పిలుపు */
 const ttlG = new THREE.Group(); ttlG.position.z = Z.title; scene.add(ttlG);
-const fam = text3d('family', { size: 0.62, depth: 0.14 }); fam.group.position.set(0, 1.05, 0); ttlG.add(fam.group);
-const ttl = text3d('title', { size: 0.74, depth: 0.18 }); ttl.group.position.set(0, -0.12, 0); ttlG.add(ttl.group);
+const fam = fit3(text3d('family', { size: 0.62, depth: 0.14 }), 2.7); fam.group.position.set(0, 1.05, 0); ttlG.add(fam.group);
+const ttl = fit3(text3d('title', { size: 0.74, depth: 0.18 }), 3.05); ttl.group.position.set(0, -0.12, 0); ttlG.add(ttl.group);
 const ttlEn = label('NIKHITHA  ×  SAI KOUNDINYA', { size: 0.12, ls: 0.3, weight: 500, color: '#f2d28c' }); ttlEn.position.set(0, -1.18, 0.05); ttlG.add(ttlEn);
 const ttlSub = label('వివాహ మహోత్సవ శుభ ఆహ్వానము', { font: 'Gurajada', size: 0.19, px: 110, color: '#f4dcab' }); ttlSub.position.set(0, -1.55, 0.05); ttlG.add(ttlSub);
 const ttlMandala = mandala(2.9); ttlMandala.position.set(0, 0.3, -3.2); ttlG.add(ttlMandala);
@@ -146,7 +151,7 @@ const PEOPLE = [
   p.pic = picture(p.img, p.h); p.pic.position.set(0, p.py, 0); g.add(p.pic);
   p.roleT = label(p.role, { size: 0.085, ls: 0.35, weight: 500, color: '#9c6e24' }); p.roleT.position.set(0, -1.2, 0.02); g.add(p.roleT);
   p.ink = new Ink(SVG[p.key], 1.25); p.ink.mesh.position.set(0, -1.62, 0.02); g.add(p.ink.mesh);
-  p.nm = text3d(p.name, { size: p.nameSize, depth: 0.07, material: G({ color: 0xc9302a, metalness: 0.35, roughness: 0.35 }) }); p.nm.group.position.set(0, -2.12, 0.04); g.add(p.nm.group);
+  p.nm = fit3(text3d(p.name, { size: p.nameSize, depth: 0.07, material: G({ color: 0xc9302a, metalness: 0.35, roughness: 0.35 }) }), 2.4); p.nm.group.position.set(0, -2.12, 0.04); g.add(p.nm.group);
   p.ls = p.lines.map((l, i) => { const m = fitW(label(l, { font: 'Gurajada', size: 0.14, px: 110, color: '#5a4636' }), 2.9); m.position.set(0, -2.45 - i * 0.19, 0.02); g.add(m); return m; });
   return p;
 });
@@ -162,8 +167,8 @@ const cons = new THREE.Line(consGeo, new THREE.LineBasicMaterial({ color: 0xbfd0
 const bright = new Sprites(10, dotTex, { additive: true, blur: 0.3, depthTest: false }); sky.add(bright.mesh);
 const sapT = label('సప్తర్షి మండలం', { font: 'Gurajada', size: 0.24, px: 110, color: '#f4e6c8' }); sapT.position.set(0, 2.85, 0); sky.add(sapT);
 const sapE = label('THE SAPTARISHI · SEVEN SAGES', { size: 0.075, ls: 0.3, weight: 500, color: '#d9b06a' }); sapE.position.set(0, 2.58, 0); sky.add(sapE);
-const nik = text3d('bride', { size: 0.62, depth: 0.12 }); nik.group.position.set(0, 0.35, 0); sky.add(nik.group);
-const sai = text3d('groom', { size: 0.44, depth: 0.1 }); sai.group.position.set(0, -0.55, 0); sky.add(sai.group);
+const nik = fit3(text3d('bride', { size: 0.62, depth: 0.12 }), 1.5); nik.group.position.set(0, 0.35, 0); sky.add(nik.group);
+const sai = fit3(text3d('groom', { size: 0.44, depth: 0.1 }), 2.6); sai.group.position.set(0, -0.55, 0); sky.add(sai.group);
 const wit = label('అరుంధతి నక్షత్రం సాక్షిగా', { font: 'Gurajada', size: 0.21, px: 110, color: '#f4e6c8' }); wit.position.set(0, -1.32, 0); sky.add(wit);
 const witE = label('WITH ARUNDHATI AS OUR WITNESS', { size: 0.075, ls: 0.3, weight: 500, color: '#d9b06a' }); witE.position.set(0, -1.6, 0); sky.add(witE);
 // stardust targets on the names
@@ -175,16 +180,16 @@ function onto(pts, tx, j) { const b = new THREE.Box3().setFromObject(tx.group); 
 sky.updateMatrixWorld(true);
 const namePts = [...onto(sampleText('నిఖిత', 'Ramabhadra', 260, 1, 0, 0, 4), nik, 0), ...onto(sampleText('సాయి కౌండిన్య', 'Ramabhadra', 260, 1, 0, 0, 4), sai, 1)];
 const ND = namePts.length, nDust = new Sprites(ND, dotTex, { additive: true, blur: 0.3, depthTest: false }); sky.add(nDust.mesh);
-const nr = rng(91), nd = namePts.map(p => ({ x: p[0], y: p[1], t0: S.names + p[3] * 0.85 + p[2] * 0.75 + nr() * 0.15, fly: 0.7 + nr() * 0.4, cx: (nr() - 0.5) * 2, cy: 0.6 + nr() * 0.8, s: 0.011 + nr() * 0.006 }));
+const nr = rng(91), nd = namePts.map(p => ({ x: p[0], y: p[1], t0: S.names + p[3] * 0.45 + p[2] * 0.5 + nr() * 0.1, fly: 0.6 + nr() * 0.3, cx: (nr() - 0.5) * 2, cy: 0.6 + nr() * 0.8, s: 0.011 + nr() * 0.006 }));
 
 /* ============================================================ 5 · శుభ ముహూర్తం */
 const muh = new THREE.Group(); muh.position.z = Z.muh; scene.add(muh);
 const muhMandala = mandala(3.0, { rings: 3 }); muhMandala.position.set(0, -0.1, -3.4); muh.add(muhMandala);
-const muhTx = text3d('muhurtham', { size: 0.5, depth: 0.12 }); muhTx.group.position.set(0, 1.85, 0); muh.add(muhTx.group);
+const muhTx = fit3(text3d('muhurtham', { size: 0.5, depth: 0.12 }), 2.9); muhTx.group.position.set(0, 1.85, 0); muh.add(muhTx.group);
 const muhEn = label('SUBHA MUHURTHAM', { size: 0.085, ls: 0.4, weight: 500, color: '#f2d28c' }); muhEn.position.set(0, 1.38, 0); muh.add(muhEn);
 const dayTe = label('ఆదివారం, 13 డిసెంబర్ 2026', { font: 'Gurajada', size: 0.2, px: 110, color: '#fbefd8' }); fitW(dayTe, 3.0); dayTe.position.set(0, 0.98, 0); muh.add(dayTe);
 const dayEn = label('SUNDAY · 13 DECEMBER 2026', { size: 0.085, ls: 0.3, weight: 500, color: '#f2d28c' }); dayEn.position.set(0, 0.7, 0); muh.add(dayEn);
-const timeTx = text3d('time', { size: 1.05, depth: 0.22 }); timeTx.group.position.set(0, -0.12, 0.05); muh.add(timeTx.group);
+const timeTx = fit3(text3d('time', { size: 1.05, depth: 0.22 }), 2.5); timeTx.group.position.set(0, -0.12, 0.05); muh.add(timeTx.group);
 const timeTe = label('రాత్రి 8:22 గంటలకు', { font: 'Gurajada', size: 0.2, px: 110, color: '#fbefd8' }); timeTe.position.set(0, -0.95, 0); muh.add(timeTe);
 const v1 = label('శ్రీ కొత్తపల్లి శ్రీరాములు కనకమ్మ\nలయన్స్ A/C కళ్యాణమండపం', { font: 'Gurajada', size: 0.17, px: 110, lh: 1.25, color: '#fbefd8' }); fitW(v1, 3.0); v1.position.set(0, -1.62, 0); muh.add(v1);
 const v2 = label('Sri Kothapalli Sriramulu Kanakamma\nLions A/C Kalyana Mandapam', { size: 0.095, px: 90, lh: 1.35, color: '#f2d28c' }); fitW(v2, 3.0); v2.position.set(0, -2.12, 0); muh.add(v2);
@@ -201,7 +206,7 @@ const archF = archFrame(AW + 0.24, AH + 0.24, 0.12, 0.1); archF.position.set(0, 
 const coupleTex = imgTex(IMG.couple), photo = archPicture(coupleTex, AW, AH, IMG.couple.width / IMG.couple.height); photo.position.set(0, 0.15, 0); arch.add(photo);
 const talT = label('తలంబ్రాలు', { font: 'Gurajada', size: 0.24, px: 110, color: '#f2d28c' }); talT.position.set(0, 2.3, 0.1); arch.add(talT);
 const cn1 = text3d('bride', { size: 0.34, depth: 0.08 }), cn2 = text3d('groom', { size: 0.27, depth: 0.07 });
-{ const gap = 0.3, w1 = cn1.w, w2 = cn2.w, x0 = -(w1 + gap + w2) / 2; cn1.group.position.set(x0 + w1 / 2, -2.05, 0.1); cn2.group.position.set(x0 + w1 + gap + w2 / 2, -2.05, 0.1); arch.add(cn1.group, cn2.group); }
+pairRow(cn1, cn2, 2.7, -2.05, 0.1, arch);
 const cWhen = label('13 · 12 · 2026  ·  8:22 PM', { size: 0.09, ls: 0.35, weight: 500, color: '#f2d28c' }); cWhen.position.set(0, -2.45, 0.1); arch.add(cWhen);
 const RICEN = 330, rice = new Sprites(RICEN, riceTex, { aspect: 2, blur: 1.0, energy: 1.2 }); arch.add(rice.mesh);
 const rr = rng(101), grains = Array.from({ length: RICEN }, (_, i) => { const toss = [S.drop, S.toss2, S.toss3][i % 3], a = -Math.PI / 2 + (rr() - 0.5) * 1.6, v = 3.2 + rr() * 2.6;
@@ -228,10 +233,10 @@ const ROWS = [[IMG.gorintaku, 'గోరింటాకు', 'MEHENDI', 'FRI · 
 /* ============================================================ 8 · శుభం */
 const sh = new THREE.Group(); sh.position.z = Z.shubham; scene.add(sh);
 const shMandala = mandala(2.6, { rings: 4 }); shMandala.position.set(0, 1.1, -2.6); sh.add(shMandala);
-const shTx = text3d('shubham', { size: 1.05, depth: 0.24 }); shTx.group.position.set(0, 1.05, 0); sh.add(shTx.group);
+const shTx = fit3(text3d('shubham', { size: 1.05, depth: 0.24 }), 2.5); shTx.group.position.set(0, 1.05, 0); sh.add(shTx.group);
 const inv = ['మీరు సకుటుంబ సపరివార సమేతంగా విచ్చేసి,', 'నూతన వధూవరులను ఆశీర్వదించవలసినదిగా', 'సాదరంగా ఆహ్వానిస్తున్నాము.'].map((l, i) => { const m = fitW(label(l, { font: 'Gurajada', size: 0.155, px: 110, color: '#fbefd8' }), 3.1); m.position.set(0, -0.15 - i * 0.24, 0); sh.add(m); return m; });
 const shN1 = text3d('bride', { size: 0.3, depth: 0.07 }), shN2 = text3d('groom', { size: 0.24, depth: 0.06 });
-{ const gap = 0.28, x0 = -(shN1.w + gap + shN2.w) / 2; shN1.group.position.set(x0 + shN1.w / 2, -1.12, 0); shN2.group.position.set(x0 + shN1.w + gap + shN2.w / 2, -1.12, 0); sh.add(shN1.group, shN2.group); }
+pairRow(shN1, shN2, 2.8, -1.12, 0, sh);
 const sign = fitW(label('ఇట్లు, చల్లపల్లి కుటుంబ సభ్యులు', { font: 'Gurajada', size: 0.18, px: 110, color: '#f4dcab' }), 3.1); sign.position.set(0, -1.58, 0); sh.add(sign);
 const shDate = label('SUNDAY · 13 · 12 · 2026 · 8:22 PM · NIDADAVOLU', { size: 0.07, ls: 0.25, weight: 500, color: '#f2d28c' }); fitW(shDate, 3.1); shDate.position.set(0, -1.86, 0); sh.add(shDate);
 
@@ -246,22 +251,22 @@ const camT = track([      // [x, y, z, look x, y, z, aperture]; distances chosen
   { t: 6.5, v: [0.3, 0.2, -1.5, 0, 0.1, -16, 0.04] },
   { t: 7.6, v: [0, 0.1, -6.2, 0, 0.1, -16, 0.06] },
   { t: 11.0, v: [0.12, 0.05, -6.9, 0, 0.05, -16, 0.06] },
-  { t: 12.5, v: [0, -0.2, -24.4, 0, -0.2, -34, 0.05] },
-  { t: 15.3, v: [0, -0.2, -24.9, 0, -0.2, -34, 0.05], stop: true },
-  { t: 16.6, v: [7.2, -0.2, -24.6, 7.2, -0.2, -34, 0.05] },
-  { t: 19.2, v: [7.2, -0.2, -25.1, 7.2, -0.2, -34, 0.05], stop: true },
+  { t: 12.5, v: [0, -0.2, -23.4, 0, -0.2, -34, 0.05] },
+  { t: 15.3, v: [0, -0.2, -23.8, 0, -0.2, -34, 0.05], stop: true },
+  { t: 16.6, v: [7.2, -0.2, -23.5, 7.2, -0.2, -34, 0.05] },
+  { t: 19.2, v: [7.2, -0.2, -24.0, 7.2, -0.2, -34, 0.05], stop: true },
   { t: 20.5, v: [1.2, 1.0, -53.0, 0, 1.0, -66, 0.04] },
   { t: 22.2, v: [0, 1.0, -57.6, 0, 1.0, -66, 0.05] },
   { t: 24.4, v: [0, 0.4, -57.9, 0, 0.35, -66, 0.05], stop: true },
   { t: 25.2, v: [0, 0.4, -58.2, 0, 0.35, -66, 0.05] },
-  { t: 26.5, v: [0, 0.1, -82.6, 0, 0.0, -92, 0.05] },
-  { t: 38.6, v: [0.1, 0.05, -83.3, 0, -0.05, -92, 0.05], stop: true },
-  { t: 42.2, v: [0, 0.1, -113.2, 0, 0.0, -122, 0.05] },
-  { t: 52.2, v: [0, 0.05, -114.0, 0, -0.05, -122, 0.05], stop: true },
-  { t: 53.6, v: [0, -0.2, -142.4, 0, -0.2, -152, 0.05] },
-  { t: 58.3, v: [0, -0.2, -142.9, 0, -0.2, -152, 0.05], stop: true },
-  { t: 59.7, v: [0, 0.15, -168.4, 0, 0.15, -178, 0.05] },
-  { t: 64.6, v: [0, 0.15, -169.3, 0, 0.15, -178, 0.05] },
+  { t: 26.5, v: [0, 0.0, -81.6, 0, -0.1, -92, 0.05] },
+  { t: 38.6, v: [0.1, -0.05, -82.3, 0, -0.15, -92, 0.05], stop: true },
+  { t: 42.2, v: [0, 0.1, -111.6, 0, 0.0, -122, 0.05] },
+  { t: 52.2, v: [0, 0.05, -112.4, 0, -0.05, -122, 0.05], stop: true },
+  { t: 53.6, v: [0, -0.2, -141.5, 0, -0.2, -152, 0.05] },
+  { t: 58.3, v: [0, -0.2, -142.0, 0, -0.2, -152, 0.05], stop: true },
+  { t: 59.7, v: [0, 0.15, -167.8, 0, 0.15, -178, 0.05] },
+  { t: 64.6, v: [0, 0.15, -168.7, 0, 0.15, -178, 0.05] },
 ]);
 film.cam = (t) => { const v = camT(t); const sway = 0.04 * noise1(t * 0.35, 3); return { pos: [v[0] + sway, v[1] + 0.03 * noise1(t * 0.3, 4), v[2]], look: [v[3], v[4], v[5]], fov: 38, aperture: v[6] }; };
 film.mbHint = (t) => 0;
@@ -317,7 +322,7 @@ film.update = (t) => {
     nd.forEach((d, i) => { const p = nDust.items[i], q = span(t, d.t0, d.t0 + d.fly), e = E.inOut(q);
       const mx = (sx + d.x) / 2 + d.cx, my = (sy + d.y) / 2 + d.cy;
       p.x = (1 - e) * (1 - e) * sx + 2 * (1 - e) * e * mx + e * e * d.x; p.y = (1 - e) * (1 - e) * sy + 2 * (1 - e) * e * my + e * e * d.y; p.z = 0.05; p.s = q > 0 ? d.s : 0;
-      p.r = 1; p.g = 0.86; p.b = 0.55; p.a = (1 - E.smooth(span(t, S.lock, S.lock + 0.9))); }); nDust.update();
+      p.r = 1; p.g = 0.86; p.b = 0.55; p.a = (1 - E.smooth(span(t, S.lock + 0.1, S.lock + 0.8))); }); nDust.update();
     const lock = E.smooth(span(t, S.lock - 0.4, S.lock + 0.5)); [nik, sai].forEach(x => { x.group.visible = lock > 0.01; x.letters.forEach(l => { l.material.transparent = lock < 1; l.material.opacity = lock; }); });
     rise(sapT, t, S.stars + 0.6, 0.8, 0.06); rise(sapE, t, S.stars + 0.9, 0.8, 0.04); [sapT, sapE].forEach(o => { o.material.opacity *= 1 - E.smooth(span(t, S.merge - 0.8, S.merge)); });
     rise(wit, t, S.lock + 0.3, 0.8, 0.06); rise(witE, t, S.lock + 0.55, 0.8, 0.04);

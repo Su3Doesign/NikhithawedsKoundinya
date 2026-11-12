@@ -9,7 +9,7 @@ from fontTools.pens.basePen import decomposeQuadraticSegment
 import pathops
 
 STRINGS = {
-    'ganesha': ('Gurajada', 'ఓం శ్రీ గణేశాయ నమః'),
+    'ganesha': ('Ramabhadra', 'ఓం శ్రీ గణేశాయ నమః'),
     'family': ('Ramabhadra', 'చల్లపల్లి వారి'),
     'title': ('Ramabhadra', 'పెండ్లి పిలుపు'),
     'bride': ('Ramabhadra', 'నిఖిత'),

@@ -193,7 +193,9 @@ export class Sprites {
 // tangents; a key marked stop has zero velocity, so the camera settles there.
 export function track(keys) {
   const arr = keys.map(k => ({ t: k.t, v: Array.isArray(k.v) ? k.v : [k.v], stop: !!k.stop })), n = arr[0].v.length, scalar = !Array.isArray(keys[0].v);
-  const m = arr.map((k, i) => { if (k.stop || i === 0 || i === arr.length - 1) return new Array(n).fill(0); const a = arr[i - 1], b = arr[i + 1]; return k.v.map((_, j) => (b.v[j] - a.v[j]) / (b.t - a.t)); });
+  // monotone tangents (harmonic mean of the neighbouring slopes): a fast move never overshoots into a slow hold
+  const m = arr.map((k, i) => { if (k.stop || i === 0 || i === arr.length - 1) return new Array(n).fill(0); const a = arr[i - 1], b = arr[i + 1];
+    return k.v.map((_, j) => { const d0 = (k.v[j] - a.v[j]) / (k.t - a.t), d1 = (b.v[j] - k.v[j]) / (b.t - k.t); return d0 * d1 <= 0 ? 0 : 2 / (1 / d0 + 1 / d1); }); });
   return (t) => {
     let i = 0; while (i < arr.length - 2 && t > arr[i + 1].t) i++;
     const a = arr[i], b = arr[i + 1], dt = b.t - a.t, u = clamp((t - a.t) / dt), u2 = u * u, u3 = u2 * u;
