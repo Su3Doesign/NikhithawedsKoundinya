@@ -22,7 +22,7 @@ async function openPage(browser, port) {
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
   page.on('pageerror', e => console.error('page error:', e.message));
   page.on('console', m => { if (m.type() === 'error') console.error('console:', m.text()); });
-  await page.goto(`http://localhost:${port}/reel/reel.html`);
+  await page.goto(`http://localhost:${port}/reel/${arg('page', 'reel.html')}`);
   await page.waitForFunction(() => window.ready || window.failed, null, { timeout: 120000 });
   const failed = await page.evaluate(() => window.failed);
   if (failed) throw new Error(failed);

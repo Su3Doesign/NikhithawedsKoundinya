@@ -32,7 +32,7 @@ export const camera = new THREE.PerspectiveCamera(36, W / H, 0.05, 900);
 const rt = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 });
 export const composer = new EffectComposer(renderer, rt);
 composer.addPass(new RenderPass(scene, camera));
-export const bloom = new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), 0.32, 0.75, 0.92); composer.addPass(bloom);
+export const bloom = new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), 0.16, 0.6, 0.97); composer.addPass(bloom);
 composer.addPass(new OutputPass());
 // the lens: a soft vignette, fine grain, and a fade to black
 export const lens = new ShaderPass({
@@ -56,11 +56,17 @@ export function buildEnvironment() {
   panel(7, 3, 0xffb060, 4, [0, -7, 9]);             // warm floor bounce
   panel(4, 4, 0xfff6e8, 10, [5, 6, 12]);            // a key, front right
   panel(16, 10, 0x4a0d08, 1.2, [0, 0, -14]);        // deep red wall behind
+  // in front of the type: dark, crossed by bright strips, so flat gold faces show a
+  // gradient of reflections that slides as letters tilt
+  panel(14, 1.1, 0xfff0d8, 9, [0, 4.5, 15]);
+  panel(14, 0.6, 0xffd9a0, 5, [0, -2.5, 15]);
+  panel(3, 3, 0xffffff, 6, [-5, 6, 12]);
+  panel(18, 12, 0x2a0805, 1.0, [0, 0, 18]);
   const pm = new THREE.PMREMGenerator(renderer); const tex = pm.fromScene(env, 0.035).texture; pm.dispose();
   scene.environment = tex; return tex;
 }
-export const GOLD = 0xffcf78;
-export const goldMat = (o = {}) => new THREE.MeshPhysicalMaterial(Object.assign({ color: GOLD, metalness: 1, roughness: 0.24, envMapIntensity: 1.15 }, o));
+export const GOLD = 0xf3b44e;
+export const goldMat = (o = {}) => new THREE.MeshPhysicalMaterial(Object.assign({ color: GOLD, metalness: 1, roughness: 0.2, envMapIntensity: 1.35 }, o));
 
 /* ------------------------------------------------------------ canvas helpers */
 export function canvasTex(w, h, draw, o = {}) {
@@ -90,12 +96,24 @@ export function rise(obj, t, t0, dur = 1.0, dist = 0.12) {
 /* ------------------------------------------------------------ 3D type from shaped outlines */
 let OUT = null; export const setOutlines = (o) => { OUT = o; };
 function shapesOf(d) {
-  const sp = new THREE.ShapePath();
-  for (const c of d) { if (c[0] === 'M') sp.moveTo(c[1], c[2]); else if (c[0] === 'L') sp.lineTo(c[1], c[2]); else if (c[0] === 'Q') sp.quadraticCurveTo(c[1], c[2], c[3], c[4]); else if (c[0] === 'C') sp.bezierCurveTo(c[1], c[2], c[3], c[4], c[5], c[6]); }
-  const area = (shapes) => shapes.reduce((a, s) => a + Math.abs(THREE.ShapeUtils.area(s.getPoints(8))) - s.holes.reduce((b, h) => b + Math.abs(THREE.ShapeUtils.area(h.getPoints(8))), 0), 0);
-  const a = sp.toShapes(false), b = sp.toShapes(true);
-  // the right winding reading is the one that leaves counters as holes (less filled area)
-  return area(a) <= area(b) ? a : b;
+  // split into contours, then classify by winding: contours wound like the largest one are
+  // solid; the rest are holes, each given to the smallest solid that contains it
+  const contours = []; let cur = null;
+  for (const c of d) {
+    if (c[0] === 'M') { cur = new THREE.Path(); cur.moveTo(c[1], c[2]); contours.push(cur); }
+    else if (c[0] === 'L') cur.lineTo(c[1], c[2]); else if (c[0] === 'Q') cur.quadraticCurveTo(c[1], c[2], c[3], c[4]);
+    else if (c[0] === 'C') cur.bezierCurveTo(c[1], c[2], c[3], c[4], c[5], c[6]);
+  }
+  const info = contours.map(p => { const pts = p.getPoints(10); return { p, pts, area: THREE.ShapeUtils.area(pts) }; }).filter(o => Math.abs(o.area) > 1e-7);
+  if (!info.length) return [];
+  const sign = Math.sign(info.reduce((m, o) => Math.abs(o.area) > Math.abs(m.area) ? o : m).area);
+  const inside = (pt, poly) => { let r = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const a = poly[i], b = poly[j]; if ((a.y > pt.y) !== (b.y > pt.y) && pt.x < (b.x - a.x) * (pt.y - a.y) / (b.y - a.y) + a.x) r = !r; } return r; };
+  const solids = info.filter(o => Math.sign(o.area) === sign).map(o => { const sh = new THREE.Shape(); sh.curves = o.p.curves; sh.currentPoint = o.p.currentPoint; o.shape = sh; return o; });
+  info.filter(o => Math.sign(o.area) !== sign).forEach(h => {
+    const owners = solids.filter(s2 => inside(h.pts[0], s2.pts)).sort((x, y) => Math.abs(x.area) - Math.abs(y.area));
+    if (owners.length) owners[0].shape.holes.push(h.p);
+  });
+  return solids.map(o => o.shape);
 }
 // returns { group, letters[], w, h } with the group centred on the string; size = world units per em
 export function text3d(key, o = {}) {
