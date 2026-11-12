@@ -613,3 +613,18 @@
 .book-mode .patrika-en .patrika-masthead h2>span { font-size:clamp(14px,2.6cqh,20px); }
 .book-mode .patrika-en .patrika-person h3 { font-size:clamp(24px,4.4cqh,33px); }
 .book-mode .patrika-en .patrika-flow { font-size:clamp(12px,2cqh,15px); }
+
+/* The closing card in the book: its pieces share the leaf evenly, from under the toranam to above the frame line,
+   the names sit on one line, and the way back is a small, quiet link. */
+@media not all and (max-height:500px) and (orientation:landscape) {
+  .book-mode .subham { padding-bottom:34px; }
+  .book-mode .subham .back { padding:4px 11px; font-size:8px; letter-spacing:.18em; border-color:#f1c46d40; color:#fbe7c4a6; margin:0 auto; }
+  .book-mode .subham-in { flex:1 1 auto; align-self:stretch; min-height:0; justify-content:space-evenly; }
+  .book-mode .subham-in > * { margin-top:0; margin-bottom:0; }
+  .book-mode .subham .sign-end { display:flex; flex-wrap:wrap; justify-content:center; align-items:baseline; gap:0 .3em; margin:0 auto; font-size:clamp(21px,3.8cqh,30px); line-height:1.35; }
+  .book-mode .subham .end-names>p { margin:0; }
+  .book-mode .subham .end-names>span { display:inline; font-size:.8em; line-height:1; }
+  .book-mode .subham-ornament { max-height:15cqh; }
+  .book-mode .subham-gift { padding-top:clamp(8px,1.6cqh,14px); }
+  .book-mode .subham-blessing { font-size:clamp(13px,2.3cqh,17px); }
+}
