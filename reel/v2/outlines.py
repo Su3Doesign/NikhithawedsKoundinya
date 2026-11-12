@@ -17,6 +17,8 @@ STRINGS = {
     'muhurtham': ('Ramabhadra', 'శుభ ముహూర్తం'),
     'time': ('Jost-400', '8:22'),
     'shubham': ('Ramabhadra', 'శుభం'),
+    'gift1': ('Ramabhadra', 'కానుకల కన్నా'),
+    'gift2': ('Ramabhadra', 'మీ రాకే మాకు కానుక'),
 }
 
 def load(prefix, sample):

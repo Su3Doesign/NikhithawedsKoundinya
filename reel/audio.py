@@ -6,7 +6,7 @@ from scipy.signal import butter, sosfilt
 
 SR = 48000
 out = sys.argv[1] if len(sys.argv) > 1 else 'out/sound.wav'
-DUR = float(sys.argv[2]) if len(sys.argv) > 2 else 64.6
+DUR = float(sys.argv[2]) if len(sys.argv) > 2 else 69.0
 START = float(sys.argv[3]) if len(sys.argv) > 3 else 44.91
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-ss', str(START), '-t', str(DUR), '-i', '../audio/dichotomy-of-fame.mp3', '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'],
                      capture_output=True, check=True).stdout
@@ -33,7 +33,8 @@ for song_t, sig, gain in [(46.6, shimmer(2.6, 1318), 0.035),   # Ganesha gathers
                           (67.31, shimmer(3.0, 1760), 0.045),   # two stars become one
                           (69.5, shimmer(2.4, 2093), 0.035),   # the names settle in gold
                           (87.7, swell(3.5), 0.16),            # the arch fills with light
-                          (104.0, shimmer(2.6, 1568), 0.03)]:  # శుభం
+                          (104.0, shimmer(2.6, 1568), 0.03),   # శుభం
+                          (109.0, shimmer(2.8, 1318), 0.025)]:  # the last, quiet note
     place(sig, song_t - START, gain)
 
 mix = song + fx

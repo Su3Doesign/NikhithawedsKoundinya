@@ -3,7 +3,7 @@
 import { THREE, W, H, scene, camera, renderer, film, renderAt, buildEnvironment, goldMat, text3d, riseLetters, setOutlines, label, rise, canvasTex, loadImage, span, clamp, E, lerp, rng, noise1, Sprites, focus, track, bloom, lens } from './engine.js';
 
 const S = { gan: 0, title: 5.76, bride: 11.7, groom: 15.81, stars: 19.78, merge: 22.4, names: 22.8, lock: 24.6, muh: 25.4, time: 27.6, venue: 30.2,
-  hush: 38.89, drop: 42.79, toss2: 44.67, toss3: 46.6, events: 52.68, shubham: 58.67, end: 64.6 };
+  hush: 38.89, drop: 42.79, toss2: 44.67, toss3: 46.6, events: 52.68, shubham: 58.67, note: 63.6, end: 69.0 };
 const Z = { gan: 0, title: -16, bride: -34, stars: -66, muh: -92, arch: -122, events: -152, shubham: -178 };
 film.duration = S.end;
 
@@ -239,6 +239,16 @@ const shN1 = text3d('bride', { size: 0.3, depth: 0.07 }), shN2 = text3d('groom',
 pairRow(shN1, shN2, 2.8, -1.12, 0, sh);
 const sign = fitW(label('ఇట్లు, చల్లపల్లి కుటుంబ సభ్యులు', { font: 'Gurajada', size: 0.18, px: 110, color: '#f4dcab' }), 3.1); sign.position.set(0, -1.58, 0); sh.add(sign);
 const shDate = label('SUNDAY · 13 · 12 · 2026 · 8:22 PM · NIDADAVOLU', { size: 0.07, ls: 0.25, weight: 500, color: '#f2d28c' }); fitW(shDate, 3.1); shDate.position.set(0, -1.86, 0); sh.add(shDate);
+// the last word: శుభం gives way to a quiet note, inside the same mandala
+const shMain = new THREE.Group(); [...sh.children].filter(c => c !== shMandala).forEach(c => shMain.add(c)); sh.add(shMain);
+const note = new THREE.Group(); note.position.set(0, 0, 0.2); sh.add(note);
+const shadeTex = canvasTex(256, 256, (x, w) => { const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2); g.addColorStop(0, 'rgba(34,4,3,.86)'); g.addColorStop(0.55, 'rgba(34,4,3,.6)'); g.addColorStop(1, 'rgba(34,4,3,0)'); x.fillStyle = g; x.fillRect(0, 0, w, w); });
+const noteShade = new THREE.Mesh(new THREE.PlaneGeometry(5.2, 4.2), new THREE.MeshBasicMaterial({ map: shadeTex, transparent: true, depthWrite: false, toneMapped: false })); noteShade.position.set(0, 0.75, -0.25); note.add(noteShade);
+const noteH = label('ఒక చిన్న మనవి', { font: 'Gurajada', size: 0.23, px: 110, color: '#f3c66c' }); noteH.position.set(0, 1.78, 0); note.add(noteH);
+const gift1 = fit3(text3d('gift1', { size: 0.5, depth: 0.12, material: G({ color: 0xffcb66, roughness: 0.16, envMapIntensity: 1.8 }) }), 2.3); gift1.group.position.set(0, 1.05, 0); note.add(gift1.group);
+const gift2 = fit3(text3d('gift2', { size: 0.4, depth: 0.1, material: G({ color: 0xffcb66, roughness: 0.16, envMapIntensity: 1.8 }) }), 2.6); gift2.group.position.set(0, 0.3, 0); note.add(gift2.group);
+const noteRule = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.006), new THREE.MeshBasicMaterial({ color: 0xe9bf6a, transparent: true })); noteRule.position.set(0, -0.12, 0); note.add(noteRule);
+const noteEn = label('YOUR PRESENCE IS OUR PRESENT', { size: 0.085, ls: 0.32, weight: 500, color: '#f2d28c' }); noteEn.position.set(0, -0.38, 0); note.add(noteEn);
 
 /* ------------------------------------------------------------ portals between worlds */
 const PORTALS = [[-46, 2.2], [-78, 2.3], [-138, 2.2], [-164, 2.2]].map(([z, R]) => { const p = portal(R); p.position.set(0, 0.15, z); scene.add(p); return p; });
@@ -266,7 +276,8 @@ const camT = track([      // [x, y, z, look x, y, z, aperture]; distances chosen
   { t: 53.6, v: [0, -0.2, -141.5, 0, -0.2, -152, 0.05] },
   { t: 58.3, v: [0, -0.2, -142.0, 0, -0.2, -152, 0.05], stop: true },
   { t: 59.7, v: [0, 0.15, -167.8, 0, 0.15, -178, 0.05] },
-  { t: 64.6, v: [0, 0.15, -168.7, 0, 0.15, -178, 0.05] },
+  { t: 63.6, v: [0, 0.15, -168.5, 0, 0.15, -178, 0.05] },
+  { t: 69.0, v: [0, 0.75, -169.4, 0, 0.75, -178, 0.05] },
 ]);
 film.cam = (t) => { const v = camT(t); const sway = 0.04 * noise1(t * 0.35, 3); return { pos: [v[0] + sway, v[1] + 0.03 * noise1(t * 0.3, 4), v[2]], look: [v[3], v[4], v[5]], fov: 38, aperture: v[6] }; };
 film.mbHint = (t) => 0;
@@ -374,18 +385,22 @@ film.update = (t) => {
 
   /* 8 · శుభం */
   sh.visible = t > S.shubham - 1.5;
-  if (sh.visible) { shMandala.userData.set(t, E.smooth(span(t, S.shubham + 0.2, S.shubham + 2)) * 0.6, 0.05);
+  if (sh.visible) { shMandala.userData.set(t, E.smooth(span(t, S.shubham + 0.2, S.shubham + 2)) * (0.6 - 0.3 * E.smooth(span(t, S.note, S.note + 1.2))), 0.05);
     riseLetters(shTx, t, S.shubham + 0.4, { stagger: 0.12, dur: 1.2, drop: 0.6 }); shTx.letters.forEach((l, i) => { if (t > S.shubham + 1.8) l.rotation.y = 0.1 * Math.sin(t * 0.7 + i * 1.3); });
     inv.forEach((l, i) => rise(l, t, S.shubham + 1.5 + i * 0.35, 0.8, 0.05));
     riseLetters(shN1, t, S.shubham + 2.7, { stagger: 0.06 }); riseLetters(shN2, t, S.shubham + 2.9, { stagger: 0.05 });
-    rise(sign, t, S.shubham + 3.4, 0.8, 0.05); rise(shDate, t, S.shubham + 3.8, 0.8, 0.04); }
+    rise(sign, t, S.shubham + 3.4, 0.8, 0.05); rise(shDate, t, S.shubham + 3.8, 0.8, 0.04);
+    note.visible = t > S.note; noteShade.material.opacity = E.smooth(span(t, S.note, S.note + 0.9)); rise(noteH, t, S.note + 0.5, 0.9, 0.05);
+    riseLetters(gift1, t, S.note + 0.75, { stagger: 0.08, dur: 1.0 }); riseLetters(gift2, t, S.note + 1.3, { stagger: 0.07, dur: 1.0 });
+    const rk = E.inOut(span(t, S.note + 2.1, S.note + 2.9)); noteRule.scale.x = Math.max(0.001, rk); noteRule.material.opacity = rk;
+    rise(noteEn, t, S.note + 2.4, 0.9, 0.04); }
 
   { const cz = camera.position.z; PORTALS.forEach((p, i) => { p.rotation.z = t * 0.12 * (i % 2 ? -1 : 1); const d = cz - p.position.z, k = E.smooth(span(d, 15, 7)) * E.smooth(span(d, -2.5, -0.5));
     p.visible = k > 0.003; p.children.forEach(c => { c.material.transparent = true; c.material.opacity = k; }); }); }
 
   // each scene leaves the moment the camera sets off from it (the keys where its hold ends)
   fadeScene(ttlG, { in: 1, leave: 11.0 }); PEOPLE.forEach(p => fadeScene(p.g, { in: 1, leave: 19.2 })); fadeScene(sky, { leave: 25.2 });
-  fadeScene(muh, { in: 1, leave: 38.6 }); fadeScene(arch, { leave: 52.2 }); fadeScene(ev, { in: 1, leave: 58.3 }); fadeScene(sh, { in: 1 });
+  fadeScene(muh, { in: 1, leave: 38.6 }); fadeScene(arch, { leave: 52.2 }); fadeScene(ev, { in: 1, leave: 58.3 }); fadeScene(sh, { in: 1 }); fadeScene(shMain, { leave: S.note });
 };
 
 window.renderAt = renderAt; window.duration = film.duration; window.ready = true;
