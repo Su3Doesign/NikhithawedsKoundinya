@@ -281,7 +281,12 @@ a{ color:inherit; }
 .ft{ position:relative; display:block; width:56px; margin:10px 14px; }
 .ft img{ display:block; width:100%; }
 .ft.r img{ -webkit-transform:scaleX(-1); transform:scaleX(-1); }
-.ft b{ display:block; font:600 18px/1.2 var(--te); color:var(--kum); }
+.ft b{ display:block; color:var(--kum); white-space:nowrap; }
+.ft b .num{ display:block; font:600 18px/1.2 var(--te); }
+.ft b .vow{ display:block; font:400 17px/1.25 var(--te-short); color:#7a2a1f; }
+.ft b .vow-en{ display:block; margin-top:1px; font:500 8.5px/1.3 var(--sans); letter-spacing:.16em; text-transform:uppercase; color:var(--ink-2); }
+/* an ellipsis set in the sans face: the Telugu face draws its dots as dashes */
+.ell{ font-family:var(--sans); font-weight:400; letter-spacing:.06em; }
 .sakha{ margin-top:28px; }
 .sakha .te{ display:block; font-weight:600; font-size:32px; font-size:clamp(30px,8vw,46px); color:var(--kum); line-height:1.3; }
 .sakha .en{ display:block; margin-top:4px; font-size:16px; color:var(--ink-2); }
@@ -289,10 +294,11 @@ a{ color:inherit; }
 .motion .sc-sap .head{ flex:none; padding-top:64px; margin-bottom:0; }
 .motion .walk{ position:relative; flex:1; width:100%; max-width:none; min-height:0; margin:0; display:block; }
 .motion .ft{ position:absolute; margin:0; width:48px; width:clamp(44px,11vw,62px); opacity:0;
-  -webkit-transform:translate(-50%,-50%) scale(1.4); transform:translate(-50%,-50%) scale(1.4); transition:opacity .45s ease, -webkit-transform .55s cubic-bezier(.2,1.5,.4,1); transition:opacity .45s ease, transform .55s cubic-bezier(.2,1.5,.4,1); }
+  -webkit-transform:translate(-50%,-50%) scale(1.4); transform:translate(-50%,-50%) scale(1.4); transition:opacity .35s ease, -webkit-transform .42s cubic-bezier(.2,1.5,.4,1); transition:opacity .35s ease, transform .42s cubic-bezier(.2,1.5,.4,1); }
 .motion .ft.on{ opacity:1; -webkit-transform:translate(-50%,-50%) scale(1); transform:translate(-50%,-50%) scale(1); }
-.motion .ft b{ position:absolute; top:28%; left:118%; }
-.motion .ft:not(.r) b{ left:auto; right:118%; }
+.motion .ft b{ position:absolute; top:14%; left:122%; text-align:left; }
+.motion .ft b .num{ display:inline; margin-right:6px; font-size:15px; }.motion .ft b .vow{ display:inline; }
+.motion .ft:not(.r) b{ left:auto; right:122%; text-align:right; }
 .motion .sakha{ flex:none; margin:0; padding:0 22px 92px; opacity:0; transition:opacity .7s ease; }
 .motion .sakha.on{ opacity:1; }
 

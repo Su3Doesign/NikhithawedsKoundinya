@@ -479,8 +479,8 @@
   safe(function () {
     var walk = $('#walk'), feet = $$('#walk .ft'), sakha = $('#saptapadi .sakha');
     scene('saptapadi', function (p) {
-      feet.forEach(function (f, i) { f.classList[p > 0.06 + i * 0.1 ? 'add' : 'remove']('on'); });
-      sakha.classList[p > 0.8 ? 'add' : 'remove']('on');
+      feet.forEach(function (f, i) { f.classList[p > 0.04 + i * 0.062 ? 'add' : 'remove']('on'); });
+      sakha.classList[p > 0.52 ? 'add' : 'remove']('on');
     }, { resize: function () {
       if (!MOTION) return;
       // seven prints up the stage, each sized so the column fits any screen

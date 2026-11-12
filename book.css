@@ -11,8 +11,10 @@
 }
 .pooja-surround { position:absolute; inset:0; pointer-events:none; }
 .desk-heading { position:absolute; z-index:2; left:32px; top:22px; display:flex; align-items:center; gap:16px; color:#f3dfbb; }
-.desk-monogram { font:400 26px/1 Georgia,serif; letter-spacing:.08em; }
-.desk-monogram i { font:italic 19px Georgia,serif; color:#d6b17a; }
+/* The monogram sits on its own soft pill, so it reads over the banana leaves and the cloth. */
+.desk-monogram { font:500 17px/1 var(--sans); letter-spacing:.32em; padding:9px 8px 9px 15px; color:#fbe9c6; background:#4a241bb3; border:1px solid #dfbb7a66; border-radius:999px;
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); text-shadow:0 1px 2px #2a0d0899; }
+.desk-monogram i { font:500 14px/1 var(--sans); font-style:normal; letter-spacing:.32em; color:#f1c46d; }
 .desk-caption { font:400 10px/1.5 var(--sans); text-transform:uppercase; letter-spacing:.2em; }
 .scroll-version { position:absolute; z-index:25; right:30px; top:28px; color:#fff1d7; font:400 11px/1 var(--sans); letter-spacing:.08em; text-decoration:none; border-bottom:1px solid #fff1d76b; padding-bottom:5px; }
 .book-spread { position:absolute; z-index:3; left:var(--book-x); top:var(--book-top); width:var(--book-width); height:var(--book-height); perspective:2000px; }
@@ -213,7 +215,7 @@
 @media (max-width:700px) {
   .book-mode { --book-x:7vw; --book-width:87vw; --book-top:44px; --book-height:calc(100dvh - 152px); }
   .book-set { background-position:right top; }
-  .desk-heading { left:20px; top:13px; }.desk-monogram { font-size:21px; }
+  .desk-heading { left:20px; top:13px; }.desk-monogram { font-size:15px; }
   .scroll-version { top:18px; right:20px; font-size:10px; }
   .book-cover { inset:0 -8px -9px -102%; }.left-page-border { inset:20px; }
   .page-content { top:36px; bottom:34px; left:13px; right:13px; }
@@ -344,7 +346,7 @@
   .book-mode .auto-scroll button,.book-mode .auto-scroll select { min-height:35px; }
   .book-mode .auto-scroll button { font-size:9px; padding-inline:9px; }
   .book-mode .auto-scroll select { font-size:10px; width:45px; }
-  .desk-heading { left:65px; top:13px; }.desk-monogram { font-size:19px; }
+  .desk-heading { left:58px; top:6px; }.desk-monogram { font-size:13px; padding:10px 6px 10px 12px; }.desk-monogram i { font-size:11px; }
   .scroll-version { display:none; }
   .book-mode .playback-message { top:47px; bottom:auto; }
   .page-content { top:29px; bottom:28px; left:10px; right:10px; }

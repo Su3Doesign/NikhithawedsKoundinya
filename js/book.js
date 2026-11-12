@@ -16,7 +16,7 @@
     ['journey', 'Our journey', 'మా ప్రయాణం', 14],
     ['album', 'From our family album', 'మా ఇంటి పండుగ', 14],
     ['talambralu', 'A shower of blessings', 'తలంబ్రాలు', 22],
-    ['saptapadi', 'Seven steps together', 'సప్తపది', 14],
+    ['saptapadi', 'Seven steps together', 'సప్తపది', 11],
     ['arundhati', 'Written in the stars', 'అరుంధతి', 24],
     ['rsvp', 'Your blessings', 'మీ ఆశీస్సులతో', 14],
     ['end', 'A beautiful beginning', 'శుభం', 9]
