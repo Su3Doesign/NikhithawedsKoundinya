@@ -17,7 +17,8 @@ STRINGS = {
     'muhurtham': ('Ramabhadra', 'శుభ ముహూర్తం'),
     'time': ('Jost-400', '8:22'),
     'shubham': ('Ramabhadra', 'శుభం'),
-    'gift1': ('Ramabhadra', 'కానుకల కన్నా'),
+    'gift1': ('Ramabhadra', 'కానుకలు స్వీకరించబడవు'),
+    'amp': ('Jost-400', '&'),
     'gift2': ('Ramabhadra', 'మీ రాకే మాకు కానుక'),
 }
 
