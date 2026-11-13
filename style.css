@@ -555,7 +555,11 @@ a{ color:inherit; }
 /* The wedding itself stands apart from the other gatherings: a kumkum card, edged in gold. */
 .ev li[data-ev="vivaham"]{ margin-top:14px; padding:16px 18px; border:0; border-radius:6px; color:#fbe9c6;
   background:linear-gradient(160deg,#b8291f,#8e1c16); box-shadow:inset 0 0 0 4px #b8291f, inset 0 0 0 5px #f1c46d8c, 0 10px 22px -14px #6a140f; }
-.ev li[data-ev="vivaham"] h3 .te{ color:#f6d38a; }
+.ev li[data-ev="vivaham"] h3{ display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 12px; margin:0 0 4px; line-height:1.1; }
+.ev li[data-ev="vivaham"] h3 .te{ color:#f6d38a; font-size:32px; line-height:1.15; }
+.ev li[data-ev="vivaham"] h3 .en{ display:inline; margin:0; font-size:11px; letter-spacing:.24em; }
+.ev li[data-ev="vivaham"] p{ font-size:16px; }
+.ev li[data-ev="vivaham"] img{ width:64px; height:64px; }
 .ev li[data-ev="vivaham"] h3 .en{ color:#f8e0b4; }
 .ev li[data-ev="vivaham"] p{ color:#fdf1dc; }
 .ev li[data-ev="vivaham"] .where{ color:#f8e0b4d9; }
