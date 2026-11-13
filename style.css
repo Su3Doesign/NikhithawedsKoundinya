@@ -539,11 +539,11 @@ a{ color:inherit; }
 .patrika-masthead h2>span { font-size:31px; line-height:1.15; }
 .cover-union,.patrika .patrika-person h3 small { font-weight:400; -webkit-text-stroke:0; }
 
-/* The supplied map is a complete portrait print, never a cropped thumbnail. */
-.venue-map { max-width:310px; }
+/* The supplied map is a wide street print: it runs the full width of the page, never cropped. */
+.venue-map { width:100%; max-width:640px; }
 .when { background:var(--paper); }
 .venue-map-link { background:transparent; border:0; border-radius:0; box-shadow:none; }
-.venue-map img { object-fit:contain; }
+.venue-map img { object-fit:contain; border-radius:4px; box-shadow:0 1px 0 #a4855526, 0 6px 18px -10px #5a3a1a40; }
 
 /* Telugu type: Ramabhadra throughout, Gurajada for short lines and the closing
    card. Both have a single weight, so weight changes never synthesize a bold. */

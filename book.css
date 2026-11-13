@@ -426,7 +426,7 @@
 .pasupu-corners i:nth-child(3) { right:0; bottom:0; transform:rotate(180deg); }
 .pasupu-corners i:nth-child(4) { left:0; bottom:0; transform:rotate(270deg); }
 
-/* Keep the complete portrait map with compact, readable venue details. */
+/* The complete wide map, across the page, with compact, readable venue details. */
 .book-mode .when .wrap { display:flex; flex-direction:column; align-items:center; gap:4px; padding-inline:8px; max-width:none; }
 .book-mode .when .head { margin-bottom:5px; }
 .book-mode .when-card { width:100%; }
@@ -434,7 +434,7 @@
 .book-mode .when .venue>.lab { font-size:8px; margin-top:7px; }
 .book-mode .when .venue.has-map .v-name { margin:0; max-width:440px; font-size:17px; line-height:1.35; }
 .book-mode .when .venue.has-map .v-adr { margin:0; font-size:11px; line-height:1.4; }
-.book-mode .when .venue-map { width:clamp(115px,27cqh,210px); max-width:70%; margin:7px auto 0; }
+.book-mode .when .venue-map { width:100%; max-width:none; margin:8px auto 0; }
 .book-mode .when .venue-map figcaption { font-size:8px; margin-top:4px; }
 .book-mode .when .btns { margin-top:6px; }
 .book-mode .when .w-date { font-size:clamp(23px,4cqh,32px); line-height:1.25; margin-top:4px; }
@@ -492,7 +492,7 @@
   .book-mode .when .venue.has-map .v-name { grid-column:2; grid-row:2/4; font-size:14px; }
   .book-mode .when .venue.has-map .v-adr { grid-column:2; grid-row:4/6; font-size:10px; }
   .book-mode .when .v-te { grid-column:2; grid-row:6; }
-  .book-mode .when .venue-map { grid-column:3; grid-row:1/7; width:calc(62cqh * .73125); max-width:100%; margin:0 auto; }
+  .book-mode .when .venue-map { grid-column:3; grid-row:1/7; width:100%; max-width:100%; margin:auto 0; align-self:center; }
   .book-mode .when .btns { grid-column:1/4; grid-row:7; margin-top:2px; }
   .book-mode .when .btn { font-size:8px; padding:6px 10px; }
   .book-mode .when .w-date { font-size:22px; }
