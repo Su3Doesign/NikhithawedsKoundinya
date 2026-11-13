@@ -543,7 +543,23 @@ a{ color:inherit; }
 .venue-map { width:100%; max-width:640px; }
 .when { background:var(--paper); }
 .venue-map-link { background:transparent; border:0; border-radius:0; box-shadow:none; }
-.venue-map img { object-fit:contain; border-radius:4px; box-shadow:0 1px 0 #a4855526, 0 6px 18px -10px #5a3a1a40; }
+/* the map's paper is taken out, so its roads are printed straight onto the page and fade away at the edges */
+.venue-map img { object-fit:contain; mix-blend-mode:multiply;
+  -webkit-mask-image:radial-gradient(ellipse 74% 72% at 50% 50%, #000 52%, transparent 100%); mask-image:radial-gradient(ellipse 74% 72% at 50% 50%, #000 52%, transparent 100%); }
+.venue-map .map-print { position:relative; margin:-4px auto 0; display:flex; flex-direction:column; align-items:center; text-align:center; color:#3b2c22; }
+.venue-map .map-print b { font:600 10px/1.6 var(--sans); letter-spacing:.3em; text-transform:uppercase; max-width:30em; }
+.venue-map .map-print .map-rule { display:block; width:42%; height:1px; margin:6px 0 5px; background:#8a6a4a59; }
+.venue-map .map-print .map-adr { font:400 10px/1.5 var(--sans); letter-spacing:.06em; text-transform:uppercase; color:#5a4636; }
+.venue-map .map-print small { margin-top:2px; font:400 8.5px/1.4 var(--sans); letter-spacing:.04em; color:#7a6655; }
+
+/* The wedding itself stands apart from the other gatherings: a kumkum card, edged in gold. */
+.ev li[data-ev="vivaham"]{ margin-top:14px; padding:16px 18px; border:0; border-radius:6px; color:#fbe9c6;
+  background:linear-gradient(160deg,#b8291f,#8e1c16); box-shadow:inset 0 0 0 4px #b8291f, inset 0 0 0 5px #f1c46d8c, 0 10px 22px -14px #6a140f; }
+.ev li[data-ev="vivaham"] h3 .te{ color:#f6d38a; }
+.ev li[data-ev="vivaham"] h3 .en{ color:#f8e0b4; }
+.ev li[data-ev="vivaham"] p{ color:#fdf1dc; }
+.ev li[data-ev="vivaham"] .where{ color:#f8e0b4d9; }
+.ev li[data-ev="vivaham"] img{ -webkit-filter:drop-shadow(0 0 6px #f6d38a66); filter:drop-shadow(0 0 6px #f6d38a66); }
 
 /* Telugu type: Ramabhadra throughout, Gurajada for short lines and the closing
    card. Both have a single weight, so weight changes never synthesize a bold. */

@@ -73,7 +73,7 @@ window.INVITE = {
     nameTe: "శ్రీ కొత్తపల్లి శ్రీరాములు కనకమ్మ లయన్స్\u00a0A/C\u00a0కళ్యాణమండపం",
     address: "R.T.C Complex Road, Nidadavolu, Andhra Pradesh 534301",
     mapUrl: "https://maps.app.goo.gl/Jujf5zxxT4sRujSr8",   // opens from the Directions button
-    previewImage: "img/venue-map-wide.webp",  // supplied wide street map; tapping it opens mapUrl
+    previewImage: "img/venue-map-ink.webp",  // the supplied street map, cropped to the pin and printed on the page; tapping it opens mapUrl
   },
 
   /* The gatherings, in the order they happen. Set show:false to hide one.

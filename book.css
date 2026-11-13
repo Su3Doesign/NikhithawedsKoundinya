@@ -435,7 +435,9 @@
 .book-mode .when .venue.has-map .v-name { margin:0; max-width:440px; font-size:17px; line-height:1.35; }
 .book-mode .when .venue.has-map .v-adr { margin:0; font-size:11px; line-height:1.4; }
 .book-mode .when .venue-map { width:100%; max-width:none; margin:8px auto 0; }
-.book-mode .when .venue-map figcaption { font-size:8px; margin-top:4px; }
+.book-mode .when .venue-map figcaption { font-size:8px; margin-top:-2px; }
+.book-mode .venue-map .map-print b { font-size:8.5px; letter-spacing:.24em; }.book-mode .venue-map .map-print .map-adr { font-size:8.5px; }.book-mode .venue-map .map-print small { font-size:7.5px; }
+.book-mode .ev li[data-ev="vivaham"] { margin-top:10px; padding:11px 13px; }
 .book-mode .when .btns { margin-top:6px; }
 .book-mode .when .w-date { font-size:clamp(23px,4cqh,32px); line-height:1.25; margin-top:4px; }
 .book-mode .when .w-time { font-size:20px; margin-top:5px; }
@@ -539,7 +541,7 @@
 .book-mode .portrait-role { width:clamp(132px,44cqw,205px); }
 .book-mode .portrait-name { font-size:clamp(17px,4.7cqw,24px); }
 .book-mode .venue-map-link { background:transparent; border:0; box-shadow:none; }
-.book-mode .venue-map img { mix-blend-mode:normal; }
+.book-mode .venue-map img { mix-blend-mode:multiply; }
 .book-mode .when .venue.has-map .v-name { font-weight:400; }
 @media (max-height:660px) and (orientation:portrait) {
   .book-mode .portrait-heading { top:5px; }
